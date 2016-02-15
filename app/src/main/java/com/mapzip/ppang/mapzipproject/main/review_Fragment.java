@@ -3,6 +3,8 @@ package com.mapzip.ppang.mapzipproject.main;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Paint;
+import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -400,6 +402,8 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
 
             TextView nameText = (TextView) convertView.findViewById(R.id.nameText_search);
             nameText.setText(getName(pos));
+            //nameText.setPaintFlags(nameText.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
+            //nameText.setTextSize(25);
             TextView addressText = (TextView) convertView.findViewById(R.id.hashText_search);
             addressText.setText(getAddress(pos));
 

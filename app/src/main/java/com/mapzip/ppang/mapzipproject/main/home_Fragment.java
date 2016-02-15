@@ -199,8 +199,8 @@ public class home_Fragment extends Fragment implements View.OnClickListener {
 
         // map name
         spinner = (Spinner) v.findViewById(R.id.spinner);
-        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, sppinerList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter = new ArrayAdapter(getActivity(),R.layout.spinner_centerhorizontal, sppinerList);
+        adapter.setDropDownViewResource(R.layout.spinner_centerhorizontal);
         spinner.setAdapter(adapter);
 
         // map select
@@ -213,7 +213,7 @@ public class home_Fragment extends Fragment implements View.OnClickListener {
                     imageview.setLayoutParams(imageLayout);
                     RelativeLayout.LayoutParams tagLayout = new RelativeLayout.LayoutParams(realWidth, realHeight / 14);// width, height
                     tagLayout.setMargins(10, (int) realHeight / 24 * 17, 10, 0);
-                    hashtaglayout.setLayoutParams(tagLayout);
+                    //hashtaglayout.setLayoutParams(tagLayout);
                     //hashstate.setLayoutParams(tagLayout);
 
                     JSONObject mapmeta = null;
@@ -850,8 +850,8 @@ public class home_Fragment extends Fragment implements View.OnClickListener {
 
         }
 
-        adapter = new ArrayAdapter(getActivity(), android.R.layout.simple_spinner_dropdown_item, sppinerList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter = new ArrayAdapter(getActivity(),R.layout.spinner_centerhorizontal, sppinerList);
+        adapter.setDropDownViewResource(R.layout.spinner_centerhorizontal);
         spinner.setAdapter(adapter);
 
         user.setMapmetaNum(0);

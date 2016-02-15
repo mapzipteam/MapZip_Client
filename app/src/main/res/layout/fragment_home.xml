@@ -4,414 +4,430 @@
     xmlns:sl="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/mymap_background"
     android:orientation="vertical">
 
-
-    <Button
-        android:id="@+id/mapsetting"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/spinner"
-        android:background="@drawable/map"
-
-        />
-
-    <TextView
-        android:id="@+id/mapstate"
-        android:layout_width="wrap_content"
-        android:layout_height="50dp"
-        android:layout_alignBottom="@+id/spinner"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="5dp"
-        android:gravity="center"
-        android:text="지도 선택: " />
-
-    <Spinner
-        android:id="@+id/spinner"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="5dp"
-        android:layout_toRightOf="@+id/mapstate"
-        android:paddingBottom="5dp"
-        android:paddingTop="5dp" />
-
-    <ImageView
-        android:id="@+id/mapimage"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_below="@id/spinner" />
-
-
-    <!--여기 새로 추가한곳-->
-    <com.mapzip.ppang.mapzipproject.ScalableLayout.ScalableLayout
-        android:id="@+id/scalablelayout"
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@id/spinner"
-        android:layout_marginTop="30dp"
-        android:background="@drawable/seoul2"
-        app:scale_base_height="4810"
-        app:scale_base_width="4950">
+        android:layout_margin="5dp"
+        android:background="@drawable/mymap_background2">
 
         <Button
-            android:id="@+id/DoBong"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="도봉구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
+            android:id="@+id/mapsetting"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_below="@+id/spinner"
+            android:background="@drawable/map"
+            />
 
-        <Button
-            android:id="@+id/NoWon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="노원구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/GangBuk"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="강북구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/SungBuk"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="성북구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/ZongRang"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="중랑구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/EunPhung"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="은평구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/ZongRo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="종로구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/DongDaeMon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="동대문구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/SuDaeMon"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="서대문구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/Zhong"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="중구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/SungDong"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="성동구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/GangZin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="광진구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/GangDong"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="강동구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/MaPho"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="마포구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/YongSan"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="용산구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/GangSue"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="강서구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-
-        <Button
-            android:id="@+id/YangChen"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="양천구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/GuRo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="구로구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/YongDengPo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="영등포구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/DongJack"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="동작구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-
-        <Button
-            android:id="@+id/GemChun"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="금천구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/GanAk"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="관악구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/SeoCho"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="서초구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="12" />
-
-        <Button
-            android:id="@+id/GangNam"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="강남구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="100" />
-
-        <Button
-            android:id="@+id/SongPa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@color/transparent"
-            android:text="송파구"
-            android:textSize="12dp"
-            android:visibility="gone"
-            sl:scale_textsize="100" />
-
-    </com.mapzip.ppang.mapzipproject.ScalableLayout.ScalableLayout>
-
-    <LinearLayout
-        android:id="@+id/taglayout"
-        android:gravity="center_horizontal"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-    <HorizontalScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/scalablelayout"
-        android:layout_gravity="center_horizontal">
-
-        <LinearLayout
+        <Spinner
+            android:id="@+id/spinner"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="10dp"
-            android:paddingRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:layout_alignParentTop="true"
+            android:paddingBottom="5dp"
+            android:paddingTop="5dp" />
+
+        <ImageView
+            android:id="@+id/mapimage"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_below="@id/spinner" />
+
+
+        <!--여기 새로 추가한곳-->
+        <com.mapzip.ppang.mapzipproject.ScalableLayout.ScalableLayout
+            android:id="@+id/scalablelayout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@id/spinner"
+            android:layout_marginTop="30dp"
+            android:background="@drawable/seoul2"
+            app:scale_base_height="4810"
+            app:scale_base_width="4950">
+
+            <Button
+                android:id="@+id/DoBong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="도봉구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/NoWon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="노원구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/GangBuk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="강북구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/SungBuk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="성북구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/ZongRang"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="중랑구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/EunPhung"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="은평구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/ZongRo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="종로구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/DongDaeMon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="동대문구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/SuDaeMon"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="서대문구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/Zhong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="중구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/SungDong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="성동구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/GangZin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="광진구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/GangDong"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="강동구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/MaPho"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="마포구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/YongSan"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="용산구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/GangSue"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="강서구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+
+            <Button
+                android:id="@+id/YangChen"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="양천구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/GuRo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="구로구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/YongDengPo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="영등포구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/DongJack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="동작구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+
+            <Button
+                android:id="@+id/GemChun"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="금천구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/GanAk"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="관악구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/SeoCho"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="서초구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="12" />
+
+            <Button
+                android:id="@+id/GangNam"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="강남구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="100" />
+
+            <Button
+                android:id="@+id/SongPa"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/transparent"
+                android:text="송파구"
+                android:textSize="12dp"
+                android:visibility="gone"
+                sl:scale_textsize="100" />
+
+        </com.mapzip.ppang.mapzipproject.ScalableLayout.ScalableLayout>
+
+        <ImageView
+            android:id="@+id/hash_divider"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/scalablelayout"
+            android:layout_margin="10dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="5dp"
+            android:src="@drawable/mymap_divider" />
+
+        <LinearLayout
+            android:id="@+id/taglayout"
+            android:layout_marginTop="10dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/hash_divider"
+            android:gravity="center_horizontal"
             android:orientation="horizontal">
 
-            <TextView
-                android:id="@+id/tagText"
+            <HorizontalScrollView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:background="@drawable/hashdraw"
-                android:gravity="center"
-                android:paddingBottom="5dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingTop="5dp"
-                android:singleLine="false"
-                android:text="#해"
-                android:textColor="@color/textbrown"
-                android:textSize="15dp" />
+                android:layout_gravity="center_horizontal">
 
-            <TextView
-                android:id="@+id/tagText2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/hashdraw"
-                android:gravity="center"
-                android:layout_marginLeft="10dp"
-                android:paddingBottom="5dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingTop="5dp"
-                android:singleLine="false"
-                android:text="#쉬"
-                android:textColor="@color/textbrown"
-                android:textSize="15dp" />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp">
 
-            <TextView
-                android:id="@+id/tagText3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/hashdraw"
-                android:gravity="center"
-                android:layout_marginLeft="10dp"
-                android:paddingBottom="5dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingTop="5dp"
-                android:singleLine="false"
-                android:text="#태"
-                android:textColor="@color/textbrown"
-                android:textSize="15dp" />
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="# "
+                        android:textColor="@color/hashtagbrown"
+                        android:textSize="20dp" />
 
-            <TextView
-                android:id="@+id/tagText4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/hashdraw"
-                android:gravity="center"
-                android:layout_marginLeft="10dp"
-                android:paddingBottom="5dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingTop="5dp"
-                android:singleLine="false"
-                android:text="#그"
-                android:textColor="@color/textbrown"
-                android:textSize="15dp" />
+                    <TextView
+                        android:id="@+id/tagText"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/hashdraw"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="5dp"
+                        android:singleLine="false"
+                        android:text="해"
+                        android:textColor="@color/hashtagbrown"
+                        android:textSize="18dp" />
 
-            <TextView
-                android:id="@+id/tagText5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/hashdraw"
-                android:gravity="center"
-                android:layout_marginLeft="10dp"
-                android:paddingBottom="5dp"
-                android:paddingLeft="12dp"
-                android:paddingRight="12dp"
-                android:paddingTop="5dp"
-                android:singleLine="false"
-                android:text="#맛집ㅁㄴㅇㅁㄴㅇㅁㄴㅇㅁㄴㅇㄴㅇ"
-                android:textColor="@color/textbrown"
-                android:textSize="15dp" />
+                    <TextView
+                        android:id="@+id/tagText2"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/hashdraw"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="5dp"
+                        android:singleLine="false"
+                        android:text="쉬"
+                        android:textColor="@color/hashtagbrown"
+                        android:textSize="18dp" />
 
+                    <TextView
+                        android:id="@+id/tagText3"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/hashdraw"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="5dp"
+                        android:singleLine="false"
+                        android:text="태"
+                        android:textColor="@color/hashtagbrown"
+                        android:textSize="18dp" />
+
+                    <TextView
+                        android:id="@+id/tagText4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/hashdraw"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="5dp"
+                        android:singleLine="false"
+                        android:text="그"
+                        android:textColor="@color/hashtagbrown"
+                        android:textSize="18dp" />
+
+                    <TextView
+                        android:id="@+id/tagText5"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="10dp"
+                        android:background="@drawable/hashdraw"
+                        android:gravity="center"
+                        android:paddingBottom="5dp"
+                        android:paddingLeft="12dp"
+                        android:paddingRight="12dp"
+                        android:paddingTop="5dp"
+                        android:singleLine="false"
+                        android:text="맛집"
+                        android:textColor="@color/hashtagbrown"
+                        android:textSize="18dp" />
+
+                </LinearLayout>
+
+            </HorizontalScrollView>
         </LinearLayout>
-
-    </HorizontalScrollView>
-    </LinearLayout>
-
+    </RelativeLayout>
 </RelativeLayout>

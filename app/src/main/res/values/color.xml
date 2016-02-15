@@ -15,4 +15,9 @@
     <color name="textbrown">#5d474a</color>
     <color name="hotpink">#e7447d</color>
 
+    <color name="hashtagbrown">#6a3907</color>
+    <color name="hashtagorange">#f5c541</color>
+
+    <color name="backgroundyellow">#f1efd3</color>
+
 </resources>
