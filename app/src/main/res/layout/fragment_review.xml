@@ -64,57 +64,60 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         android:orientation="vertical"
         android:layout_below="@+id/search_layout_review">
 
         <LinearLayout
-            android:id="@+id/btnlayout_review"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="2"
-            android:orientation="horizontal">
+            android:layout_weight="7"
+            android:orientation="vertical">
+
+            <ListView
+                android:id="@+id/searchList_review"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:listSelector="@color/mainOrange">
+            </ListView>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btnlayout_review"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:layout_width="match_parent"
+
+            android:orientation="vertical">
+
+            <Button
+                android:id="@+id/registerBtn_review"
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:background="@drawable/review_enroll_btn_before"
+                android:text="리뷰작성"
+                android:textSize="17dp"
+                />
 
             <Button
                 android:id="@+id/registerOwnBtn_review"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_weight="4"
                 android:background="@color/grey"
                 android:text="직접등록"
                 android:textSize="17dp"
                 />
 
             <Button
-                android:id="@+id/registerBtn_review"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="4"
-                android:background="@color/grey2"
-                android:text="등   록"
-                android:textSize="17dp"
-                />
-
-            <Button
                 android:id="@+id/mapviewBtn_review"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:layout_weight="4"
                 android:text="지도보기"
                 android:textSize="17dp"
                 android:background="@color/grey"
                 />
         </LinearLayout>
-
-
-        <ListView
-            android:id="@+id/searchList_review"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="8"
-            android:listSelector="@color/mainOrange">
-
-        </ListView>
 
     </LinearLayout>
 
