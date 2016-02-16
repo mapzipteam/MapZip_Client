@@ -200,8 +200,8 @@ public class friend_home  extends Activity implements View.OnClickListener {
 
         // map name
         spinner = (Spinner) findViewById(R.id.spinner);
-        adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, sppinerList);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapter = new ArrayAdapter(this,R.layout.spinner_centerhorizontal, sppinerList);
+        adapter.setDropDownViewResource(R.layout.spinner_centerhorizontal);
         spinner.setAdapter(adapter);
 
         // map select
@@ -214,7 +214,7 @@ public class friend_home  extends Activity implements View.OnClickListener {
                     imageview.setLayoutParams(imageLayout);
                     RelativeLayout.LayoutParams tagLayout = new RelativeLayout.LayoutParams(realWidth, realHeight / 18);// width, height
                     tagLayout.setMargins(10, (int) realHeight / 24 * 17, 10, 0);
-                    hashtaglayout.setLayoutParams(tagLayout);
+                    //hashtaglayout.setLayoutParams(tagLayout);
 
                     JSONObject mapmeta = null;
                     mapmeta = fuser.getMapmetaArray().getJSONObject(position);

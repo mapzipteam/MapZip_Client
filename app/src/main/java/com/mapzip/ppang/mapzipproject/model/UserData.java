@@ -103,158 +103,158 @@ public class UserData {
                 bitlock = false;
                 switch (index) {
                     case 1:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p6);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_dobong2);
                         break;
                     case 2:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p7);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_nowon2);
                         break;
                     case 3:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p5);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_gangbuk2);
                         break;
                     case 4:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p4);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_sungbuk2);
                         break;
                     case 5:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p8);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_zongrang2);
                         break;
                     case 6:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p1);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_eunphung2);
                         break;
                     case 7:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p3);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_zongro2);
                         break;
                     case 8:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p9);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_dongdaemon2);
                         break;
                     case 9:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p2);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_sudaemon2);
                         break;
                     case 10:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p19);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_zhong2);
                         break;
                     case 11:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p20);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_sungdong2);
                         break;
                     case 12:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p23);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_gangzin2);
                         break;
                     case 13:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p25);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_gangdong2);
                         break;
                     case 14:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p14);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_mapho2);
                         break;
                     case 15:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p18);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_yongsan2);
                         break;
                     case 16:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p10);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_gangsue2);
                         break;
                     case 17:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p11);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_yangchen2);
                         break;
                     case 18:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p12);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_guro2);
                         break;
                     case 19:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p15);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_yongdengpo2);
                         break;
                     case 20:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p17);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_dongjack2);
                         break;
                     case 21:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p13);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_gemchun2);
                         break;
                     case 22:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p16);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_ganak2);
                         break;
                     case 23:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p21);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_seocho2);
                         break;
                     case 24:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p22);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_gangnam2);
                         break;
                     case 25:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.p24);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_songpa2);
                         break;
                 }
             } else if (pingCount[mapnum][index] >= SystemMain.MAP_YELLOW_NUM) {
                 bitlock = false;
                 switch (index) {
                     case 1:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y6);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_dobong1);
                         break;
                     case 2:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y7);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_nowon1);
                         break;
                     case 3:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y5);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_gangbuk1);
                         break;
                     case 4:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y4);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_sungbuk1);
                         break;
                     case 5:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y8);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_zongrang1);
                         break;
                     case 6:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y1);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_eunphung1);
                         break;
                     case 7:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y3);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_zongro1);
                         break;
                     case 8:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y9);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_dongdaemon1);
                         break;
                     case 9:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y2);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_sudaemon1);
                         break;
                     case 10:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y19);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_zhong1);
                         break;
                     case 11:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y20);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_sungdong1);
                         break;
                     case 12:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y23);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_gangzin1);
                         break;
                     case 13:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y25);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_gangdong1);
                         break;
                     case 14:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y14);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_mapho1);
                         break;
                     case 15:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y18);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_yongsan1);
                         break;
                     case 16:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y10);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_gangsue1);
                         break;
                     case 17:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y11);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_yangchen1);
                         break;
                     case 18:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y12);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_guro1);
                         break;
                     case 19:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y15);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_yongdengpo1);
                         break;
                     case 20:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y17);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_dongjack1);
                         break;
                     case 21:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y13);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_gemchun1);
                         break;
                     case 22:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y16);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_ganak1);
                         break;
                     case 23:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y21);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_seocho1);
                         break;
                     case 24:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y22);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_gangnam1);
                         break;
                     case 25:
-                        bd = (BitmapDrawable) res.getDrawable(R.drawable.y24);
+                        bd = (BitmapDrawable) res.getDrawable(R.drawable.mymap_songpa1);
                         break;
                 }
             }

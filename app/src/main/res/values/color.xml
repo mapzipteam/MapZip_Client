@@ -20,4 +20,6 @@
 
     <color name="backgroundyellow">#f1efd3</color>
 
+    <color name="mymap_divider_gray">#66a3a3a3</color>
+
 </resources>

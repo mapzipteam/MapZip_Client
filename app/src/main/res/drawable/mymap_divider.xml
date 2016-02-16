@@ -2,6 +2,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="line">
     <stroke
-        android:color="#66a3a3a3"/>
+        android:color="@color/mymap_divider_gray"/>
 
 </shape>
