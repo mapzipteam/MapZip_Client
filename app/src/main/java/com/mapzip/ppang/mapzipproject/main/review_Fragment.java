@@ -336,6 +336,11 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         return v;
     }
 
+    private void reveiwBtnValid(){
+        review_regi.setBackgroundResource(R.drawable.review_enroll_btn_after);
+        review_regi.setTextColor(getResources().getColor(R.color.white));
+    }
+
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         // TODO Auto-generated method stub
@@ -485,6 +490,7 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         {
             mBtnLockr_mapview = false;
             selectNum = position;
+            reveiwBtnValid();
             Log.v("리스트뷰 셀렉트",String.valueOf(position));
 
         }
