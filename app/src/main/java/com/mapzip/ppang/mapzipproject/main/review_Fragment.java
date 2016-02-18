@@ -227,18 +227,22 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
                 startActivity(intent);
             }
         });
-        review_regi_self.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN)
-                    review_regi_self.setBackgroundResource(R.drawable.background_btn);
 
-                if(event.getAction() == MotionEvent.ACTION_UP)
-                    review_regi_self.setBackgroundResource(R.drawable.noclick);
-                return false;
-            }
-        });
+//        review_regi_self.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if(event.getAction() == MotionEvent.ACTION_DOWN)
+//                    review_regi_self.setBackgroundResource(R.drawable.background_btn);
+//
+//                if(event.getAction() == MotionEvent.ACTION_UP)
+//                    review_regi_self.setBackgroundResource(R.drawable.noclick);
+//                return false;
+//            }
+//        });
+
         review_regi_self.setClickable(true);
+
+
         map_viewBtn = (Button) v.findViewById(R.id.mapviewBtn_review);
         map_viewBtn.setOnClickListener(new View.OnClickListener() {
             @Override

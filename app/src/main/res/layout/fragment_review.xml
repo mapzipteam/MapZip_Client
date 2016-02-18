@@ -72,6 +72,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="7"
+            android:background="@drawable/reviewsearchbg"
             android:orientation="vertical">
 
             <ListView
@@ -88,7 +89,7 @@
             android:layout_height="0dp"
             android:layout_weight="3"
             android:layout_width="match_parent"
-
+            android:background="@color/white"
             android:orientation="vertical">
 
             <Button
@@ -100,13 +101,21 @@
                 android:textSize="17dp"
                 />
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:gravity="center"
+                android:text="찾으시는 가게가 없으신가요?"
+                android:textSize="10dp"/>
+
             <Button
                 android:id="@+id/registerOwnBtn_review"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:background="@color/grey"
-                android:text="직접등록"
-                android:textSize="17dp"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_gravity="center_horizontal"
+                android:background="@drawable/hyperlink_underline"
+                android:text="직접 등록 하러가기"
+                android:textSize="15dp"
                 />
 
             <Button
