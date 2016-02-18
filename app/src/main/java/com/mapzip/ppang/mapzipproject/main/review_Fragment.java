@@ -281,6 +281,7 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         });
         map_viewBtn.setClickable(true);
 
+        // 리뷰작성버튼 로직
         review_regi = (Button) v.findViewById(R.id.registerBtn_review);
         review_regi.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -317,18 +318,21 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
                 startActivity(intent);
             }
         });
-        review_regi.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN)
-                    review_regi.setBackgroundResource(R.drawable.background_btn);
 
-                if(event.getAction() == MotionEvent.ACTION_UP)
-                    review_regi.setBackgroundResource(R.drawable.noclick2);
-                return false;
-            }
-        });
+//        review_regi.setOnTouchListener(new View.OnTouchListener() {
+//            @Override
+//            public boolean onTouch(View v, MotionEvent event) {
+//                if(event.getAction() == MotionEvent.ACTION_DOWN)
+//                    review_regi.setBackgroundResource(R.drawable.background_btn);
+//
+//                if(event.getAction() == MotionEvent.ACTION_UP)
+//                    review_regi.setBackgroundResource(R.drawable.noclick2);
+//                return false;
+//            }
+//        });
+
         review_regi.setClickable(true);
+
         return v;
     }
 
