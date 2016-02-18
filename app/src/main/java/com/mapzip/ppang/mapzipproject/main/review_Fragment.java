@@ -3,8 +3,6 @@ package com.mapzip.ppang.mapzipproject.main;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Paint;
-import android.graphics.Typeface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
@@ -25,16 +23,18 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mapzip.ppang.mapzipproject.R;
-import com.mapzip.ppang.mapzipproject.model.UserData;
+import com.mapzip.ppang.mapzipproject.activity.review_register;
 import com.mapzip.ppang.mapzipproject.map.MapActivity;
 import com.mapzip.ppang.mapzipproject.map.RestaurantResult;
 import com.mapzip.ppang.mapzipproject.map.RestaurantSearcher;
 import com.mapzip.ppang.mapzipproject.map.SearchInLocationActivity;
-import com.mapzip.ppang.mapzipproject.activity.review_register;
+import com.mapzip.ppang.mapzipproject.model.UserData;
 
 import java.util.ArrayList;
 
 public class review_Fragment extends Fragment implements AbsListView.OnScrollListener {
+
+    private final String TAG = "review_Fragment";
 
     private UserData user;
 
@@ -127,6 +127,8 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         // 스크롤 리스너 등록
         mListView.setOnScrollListener(this);
 
+
+
         //2016.01.10송지원이 고침
         //searchedit = (EditText) v.findViewById(R.id.searchText_review);//검색창이 하나였던것을 가게와 지역으로 나누어 검색하게 함
         searchedName = (EditText) v.findViewById(R.id.searchNameText_review);
@@ -203,6 +205,8 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
                 mMyAdapte.notifyDataSetChanged();
 
                 mLockBtn = false;
+
+                reviewBtnChange(false);
             }
         });
 
@@ -336,9 +340,18 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         return v;
     }
 
-    private void reveiwBtnValid(){
-        review_regi.setBackgroundResource(R.drawable.review_enroll_btn_after);
-        review_regi.setTextColor(getResources().getColor(R.color.white));
+    /**
+     * 리뷰작성버튼이 활성화/비활성화 되도록 하는 함수입니다.
+     */
+    private void reviewBtnChange(boolean valid){
+        if(valid == true) {
+            review_regi.setBackgroundResource(R.drawable.review_enroll_btn_after);
+            review_regi.setTextColor(getResources().getColor(R.color.white));
+        }else{
+            review_regi.setBackgroundResource(R.drawable.review_enroll_btn_before);
+            review_regi.setTextColor(getResources().getColor(R.color.hotpink));
+        }
+
     }
 
     @Override
@@ -490,10 +503,14 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         {
             mBtnLockr_mapview = false;
             selectNum = position;
-            reveiwBtnValid();
-            Log.v("리스트뷰 셀렉트",String.valueOf(position));
+            // 리뷰버튼 활성화
+            reviewBtnChange(true);
+            Log.v("리스트뷰 셀렉트", String.valueOf(position));
 
         }
+
+
+
     }
 
 }
