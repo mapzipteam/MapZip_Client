@@ -421,20 +421,55 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             final int pos = position;
+
+            TextView nameText = null;
+            TextView addressText = null;
+            Button mapviewBtn = null;
+            StoreListHolder holder = null;
             if (convertView == null) {
                 convertView = lInflater.inflate(layout, parent, false);
+
+                nameText = (TextView) convertView.findViewById(R.id.nameText_search);
+                addressText = (TextView) convertView.findViewById(R.id.hashText_search);
+                mapviewBtn = (Button)convertView.findViewById(R.id.delete_mapmark);
+
+                holder = new StoreListHolder();
+                holder.m_storeName = nameText;
+                holder.m_storeLocation = addressText;
+                holder.m_mapviewBtn = mapviewBtn;
+
+
+
+                convertView.setTag(holder);
+
+            }else{
+                holder = (StoreListHolder)convertView.getTag();
+                nameText = holder.m_storeName;
+                addressText = holder.m_storeLocation;
+                mapviewBtn = holder.m_mapviewBtn;
             }
 
-            final String getCustId = alSrc.get(pos).sCustId;
-
-            TextView nameText = (TextView) convertView.findViewById(R.id.nameText_search);
             nameText.setText(getName(pos));
-            //nameText.setPaintFlags(nameText.getPaintFlags() | Paint.FAKE_BOLD_TEXT_FLAG);
-            //nameText.setTextSize(25);
-            TextView addressText = (TextView) convertView.findViewById(R.id.hashText_search);
             addressText.setText(getAddress(pos));
 
+            mapviewBtn.setFocusable(false);
+            mapviewBtn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Toast.makeText(context,"id: "+pos,Toast.LENGTH_SHORT).show();
+                }
+            });
+
+
+
+
             return convertView;
+        }
+
+        private class StoreListHolder{
+            public TextView m_storeName;
+            public TextView m_storeLocation;
+            public Button m_mapviewBtn;
         }
     }
 
@@ -503,13 +538,11 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
             mBtnLockr_mapview = false;
-            selectNum = position;
+                    selectNum = position;
 
-
-            // 리뷰버튼 활성화
-            reviewBtnChange(true);
-            Log.v("리스트뷰 셀렉트", String.valueOf(position));
-
+                    // 리뷰버튼 활성화
+                    reviewBtnChange(true);
+                    Log.v("리스트뷰 셀렉트", String.valueOf(selectNum));
         }
 
 

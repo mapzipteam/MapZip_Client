@@ -81,6 +81,7 @@
                 android:layout_height="wrap_content"
                 android:choiceMode="singleChoice"
                 android:clickable="true"
+                android:listSelector="@color/transparent"
                 >
             </ListView>
 
