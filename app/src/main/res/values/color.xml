@@ -22,4 +22,7 @@
 
     <color name="mymap_divider_gray">#66a3a3a3</color>
 
+    <color name="store_list_background_selected">#f7f6eb</color>
+
+
 </resources>

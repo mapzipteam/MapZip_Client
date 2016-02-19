@@ -426,6 +426,7 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
             TextView addressText = null;
             Button mapviewBtn = null;
             StoreListHolder holder = null;
+
             if (convertView == null) {
                 convertView = lInflater.inflate(layout, parent, false);
 
@@ -437,8 +438,6 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
                 holder.m_storeName = nameText;
                 holder.m_storeLocation = addressText;
                 holder.m_mapviewBtn = mapviewBtn;
-
-
 
                 convertView.setTag(holder);
 
