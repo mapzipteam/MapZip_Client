@@ -79,7 +79,9 @@
                 android:id="@+id/searchList_review"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:listSelector="@color/mainOrange">
+                android:choiceMode="singleChoice"
+                android:clickable="true"
+                >
             </ListView>
 
         </LinearLayout>

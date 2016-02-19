@@ -18,6 +18,7 @@ import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -111,6 +112,10 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
 
         mListView = (ListView) v.findViewById(R.id.searchList_review);
         mListView.setOnItemClickListener(new ListViewItemClickListener());
+        //mListView.setSelector(R.drawable.review_list_bg);
+
+        // 스크롤 리스너 등록
+        mListView.setOnScrollListener(this);
 
         marItem = new ArrayList<MyItem>();
 
@@ -123,10 +128,6 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         // 푸터를 등록. setAdapter 이전에 해야함.
         mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         footer = mInflater.inflate(R.layout.listview_footer, null);
-
-        // 스크롤 리스너 등록
-        mListView.setOnScrollListener(this);
-
 
 
         //2016.01.10송지원이 고침
@@ -503,6 +504,8 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         {
             mBtnLockr_mapview = false;
             selectNum = position;
+
+
             // 리뷰버튼 활성화
             reviewBtnChange(true);
             Log.v("리스트뷰 셀렉트", String.valueOf(position));
