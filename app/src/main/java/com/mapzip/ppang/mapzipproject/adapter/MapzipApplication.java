@@ -13,9 +13,9 @@ import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 import java.lang.reflect.Field;
 
-public class FontApplication extends Application {
+public class MapzipApplication extends Application {
 
-    private boolean mDebuggMode;
+    private boolean mDebugMode;
 
     @Override
     public void onCreate() {
@@ -37,7 +37,7 @@ public class FontApplication extends Application {
      * @param debugmode
      */
     private void initMapzip(boolean debugmode){
-        this.mDebuggMode = debugmode;
+        this.mDebugMode = debugmode;
 
     }
 
@@ -49,7 +49,7 @@ public class FontApplication extends Application {
     private void initFabric() {
         final Fabric fabric = new Fabric.Builder(this)
                 .kits(new Crashlytics())
-                .debuggable(mDebuggMode) // Play Store 배포시에는 이것을 false로 변경하여야합니다.
+                .debuggable(mDebugMode) // Play Store 배포시에는 이것을 false로 변경하여야합니다.
                 .build();
         try{
             Fabric.with(fabric);
@@ -65,7 +65,7 @@ public class FontApplication extends Application {
      * @param string
      */
     public void doLogging(String TAG, String string){
-        if(mDebuggMode == true){
+        if(mDebugMode == true){
             Log.d(TAG,string);
         }
     }
