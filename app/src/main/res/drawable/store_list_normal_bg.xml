@@ -6,11 +6,11 @@
         android:width="1dp"
         android:color="@color/hashtagorange"/>
 
-    <corners android:radius="30dp"/>
+    <corners android:radius="10dp"/>
 
     <gradient
         android:startColor="@color/white"
-        android:endColor="@color/store_list_background_selected"
+        android:endColor="@color/store_list_background_normal"
         android:angle="90"/>
 
 

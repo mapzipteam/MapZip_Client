@@ -112,7 +112,7 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
 
         mListView = (ListView) v.findViewById(R.id.searchList_review);
         mListView.setOnItemClickListener(new ListViewItemClickListener());
-        //mListView.setSelector(R.drawable.review_list_bg);
+        //mListView.setSelector(R.drawable.store_list_bg_selector);
 
         // 스크롤 리스너 등록
         mListView.setOnScrollListener(this);

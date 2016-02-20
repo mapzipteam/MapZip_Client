@@ -10,7 +10,7 @@
         android:layout_margin="5dp"
         android:layout_marginBottom="7dp"
         android:layout_marginTop="7dp"
-        android:background="@drawable/review_list_bg">
+        android:background="@drawable/store_list_bg_selector">
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -24,6 +24,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="username"
+                android:textStyle="bold"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
@@ -41,7 +42,7 @@
             android:layout_height="50dp"
             android:layout_alignParentRight="true"
             android:layout_marginTop="20dp"
-            android:background="@drawable/btn_minus"
+            android:background="@drawable/store_list_mapbtn_before"
             android:visibility="visible" />
     </RelativeLayout>
 
