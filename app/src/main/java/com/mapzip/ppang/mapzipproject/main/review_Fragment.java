@@ -394,6 +394,7 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
                 nameText = (TextView) convertView.findViewById(R.id.nameText_search);
                 addressText = (TextView) convertView.findViewById(R.id.hashText_search);
                 mapviewBtn = (Button)convertView.findViewById(R.id.delete_mapmark);
+                mapviewBtn.setVisibility(View.VISIBLE);
 
                 holder = new StoreListHolder();
                 holder.m_storeName = nameText;
@@ -426,9 +427,6 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
                     startActivity(intent);
                 }
             });
-
-
-
 
             return convertView;
         }
@@ -505,11 +503,11 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
             mBtnLockr_mapview = false;
-                    selectNum = position;
+            selectNum = position;
 
-                    // 리뷰버튼 활성화
-                    reviewBtnChange(true);
-                    Log.v("리스트뷰 셀렉트", String.valueOf(selectNum));
+            // 리뷰버튼 활성화
+            reviewBtnChange(true);
+            Log.v("리스트뷰 셀렉트", String.valueOf(selectNum));
         }
 
 

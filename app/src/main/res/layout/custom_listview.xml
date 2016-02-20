@@ -25,7 +25,8 @@
                 android:padding="10dp"
                 android:text="username"
                 android:textStyle="bold"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                 />
 
             <TextView
                 android:id="@+id/hashText_search"
@@ -33,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:padding="10dp"
                 android:text="hash"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
+                 />
         </LinearLayout>
 
         <Button
@@ -43,7 +44,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginTop="20dp"
             android:background="@drawable/store_list_mapbtn_before"
-            android:visibility="visible" />
+            android:visibility="gone" />
     </RelativeLayout>
 
 

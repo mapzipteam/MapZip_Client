@@ -8,7 +8,10 @@
 
     <corners android:radius="30dp"/>
 
-    <solid android:color="@color/hotpink"/>
+    <gradient
+        android:startColor="@color/hotpink"
+        android:endColor="@color/white"
+        android:angle="90" />
 
     <padding
         android:bottom="10dp"
