@@ -161,8 +161,4 @@ public class SplashActivity extends Activity {
         return true;
     }
 
-
-
-
-
 }

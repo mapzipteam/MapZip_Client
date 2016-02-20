@@ -57,9 +57,6 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
     private String storeLocation;
 
 
-
-
-
     private RestaurantResult restaurants;
     private Context context;
     private String query;
@@ -426,6 +423,7 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
                     intent.putExtra("store_y", restaurants.get(pos).getLatY());
                     startActivity(intent);
                 }
+
             });
 
             return convertView;
@@ -509,9 +507,6 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
             reviewBtnChange(true);
             Log.v("리스트뷰 셀렉트", String.valueOf(selectNum));
         }
-
-
-
     }
 
 }
