@@ -123,14 +123,7 @@
                 android:textSize="15dp"
                 />
 
-            <Button
-                android:id="@+id/mapviewBtn_review"
-                android:layout_width="match_parent"
-                android:layout_height="50dp"
-                android:text="지도보기"
-                android:textSize="17dp"
-                android:background="@color/grey"
-                />
+
         </LinearLayout>
 
     </LinearLayout>

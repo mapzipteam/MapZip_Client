@@ -45,7 +45,6 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
 
     private Button review_regi;
     private Button review_search;
-    private Button map_viewBtn;
     private Button review_regi_self;
 
     //2016.01.10송지원이 고침
@@ -248,44 +247,6 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         review_regi_self.setClickable(true);
 
 
-        map_viewBtn = (Button) v.findViewById(R.id.mapviewBtn_review);
-        map_viewBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mBtnLockr_mapview == true) {
-                    // toast
-                    text_toast.setText("위치를 확인할 가게를 선택해주세요.");
-                    Toast toast = new Toast(getActivity());
-                    toast.setDuration(Toast.LENGTH_SHORT);
-                    toast.setView(layout_toast);
-                    toast.show();
-                    return;
-                }
-                Intent intent = new Intent(getActivity(), MapActivity.class);
-                intent.putExtra("LNG", restaurants.get(selectNum).getLngX());
-                intent.putExtra("LAT", restaurants.get(selectNum).getLatY());
-                intent.putExtra("fragment_id", "review");
-                intent.putExtra("store_name", restaurants.get(selectNum).getTitle());
-                intent.putExtra("store_x", restaurants.get(selectNum).getLngX());
-                intent.putExtra("store_y", restaurants.get(selectNum).getLatY());
-                startActivity(intent);
-
-            }
-        });
-
-        map_viewBtn.setOnTouchListener(new View.OnTouchListener() {
-            @Override
-            public boolean onTouch(View v, MotionEvent event) {
-                if(event.getAction() == MotionEvent.ACTION_DOWN)
-                    map_viewBtn.setBackgroundResource(R.drawable.background_btn);
-
-                if(event.getAction() == MotionEvent.ACTION_UP)
-                    map_viewBtn.setBackgroundResource(R.drawable.noclick);
-                return false;
-            }
-        });
-        map_viewBtn.setClickable(true);
-
         // 리뷰작성버튼 로직
         review_regi = (Button) v.findViewById(R.id.registerBtn_review);
         review_regi.setOnClickListener(new View.OnClickListener() {
@@ -455,7 +416,14 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
             mapviewBtn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    Toast.makeText(context,"id: "+pos,Toast.LENGTH_SHORT).show();
+                    Intent intent = new Intent(getActivity(), MapActivity.class);
+                    intent.putExtra("LNG", restaurants.get(pos).getLngX());
+                    intent.putExtra("LAT", restaurants.get(pos).getLatY());
+                    intent.putExtra("fragment_id", "review");
+                    intent.putExtra("store_name", restaurants.get(pos).getTitle());
+                    intent.putExtra("store_x", restaurants.get(pos).getLngX());
+                    intent.putExtra("store_y", restaurants.get(pos).getLatY());
+                    startActivity(intent);
                 }
             });
 
