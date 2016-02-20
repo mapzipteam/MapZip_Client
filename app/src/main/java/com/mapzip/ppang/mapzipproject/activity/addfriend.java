@@ -31,58 +31,33 @@ import org.json.JSONObject;
  * Created by ppangg on 2015-08-30.
  */
 public class addfriend extends Activity {
+    private UserData user;
+
     // toast
     private View layout_toast;
     private TextView text_toast;
 
     private EditText searchText;
-    private Button searchBtn;
-
     private TextView friendinfo;
     private Button friendadd;
-
-    private UserData user;
-
     private String friendID;
+
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        ActionBar actionBar = getActionBar();
-        actionBar.hide();
+        getActionBar().hide();
         setContentView(R.layout.activity_addfriend);
         user = UserData.getInstance();
 
         LayoutInflater inflater = this.getLayoutInflater();
         layout_toast = inflater.inflate(R.layout.my_custom_toast, (ViewGroup) findViewById(R.id.custom_toast_layout));
         text_toast = (TextView) layout_toast.findViewById(R.id.textToShow);
-        searchBtn = (Button) findViewById(R.id.searchBtn_addfriend);
         searchText = (EditText) findViewById(R.id.searchText_addfriend);
         friendinfo = (TextView) findViewById(R.id.addfriendText);
         friendadd = (Button) findViewById(R.id.addfriendBtn);
-
-        searchBtn.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
-                addFriend_search(v);
-
-            }
-        });
-        friendadd.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                user.setfriendlock(false);
-                InputMethodManager imm2 = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
-                imm2.hideSoftInputFromWindow(friendinfo.getWindowToken(), 0);
-                addFriend_enroll(v);
-
-
-            }
-        });
     }
 
-
     public void addFriend_search(View v) {
+
         if(user.getUserID().equals(searchText.getText().toString())){
             // toast
             text_toast.setText("자기자신은 검색할 수 없습니다.");
@@ -102,6 +77,12 @@ public class addfriend extends Activity {
 
             return;
         }
+
+
+        // keyboard hide
+        InputMethodManager imm = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(searchText.getWindowToken(), 0);
+
 
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
 
@@ -125,6 +106,12 @@ public class addfriend extends Activity {
     }
 
     public void addFriend_enroll(View v) {
+        user.setfriendlock(false);
+
+        // keyboard hide
+        InputMethodManager imm2 = (InputMethodManager)getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm2.hideSoftInputFromWindow(friendinfo.getWindowToken(), 0);
+
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
 
         JSONObject obj = new JSONObject();

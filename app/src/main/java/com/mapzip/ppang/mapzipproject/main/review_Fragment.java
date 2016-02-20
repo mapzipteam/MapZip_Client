@@ -509,9 +509,6 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
             reviewBtnChange(true);
             Log.v("리스트뷰 셀렉트", String.valueOf(selectNum));
         }
-
-
-
     }
 
 }
