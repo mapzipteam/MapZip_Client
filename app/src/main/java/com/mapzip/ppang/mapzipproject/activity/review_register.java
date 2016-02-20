@@ -701,7 +701,7 @@ public class review_register extends Activity {
                 Log.v("review_regi 받기", response.toString());
 
                 try {
-                    if (response.get("state").toString().equals("601")) {
+                    if (response.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_ENROLL_SUCCESS) { // 601
                         // 1번째 통신 성공
                         Log.v("리뷰저장", "OK");
                         mapData.setStore_id(response.getString("store_id"));
@@ -711,14 +711,14 @@ public class review_register extends Activity {
                             serverchoice = 1; // no image
                             loading.execute();
                         }
-                    } else if (response.get("state").toString().equals("602") || response.get("state").toString().equals("621")) {
+                    } else if ((response.getInt("state") == SystemMain.CLIENT_REVIEW_IMAGE_MKDIR_SUCCESS) || (response.getInt("state") == SystemMain.CLIENT_REVIEW_IMAGE_MKDIR_EXIST)) { // 602 || 621
                         // 2번째통신 성공
                         Log.v("리뷰저장2", "OK");
                         serverchoice = 2;
                         loading.execute();
                         // 3번째통신 이미지갯수만큼 반복
                     }
-                    if (response.get("state").toString().equals("612")) {
+                    if (response.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_ENROLL_EXIST) { // 612
                         //1번째 통신에서 중복가게 걸러내기
                         // toast
                         text_toast.setText("이미 등록 된 가게입니다.");

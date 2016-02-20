@@ -57,9 +57,6 @@ public class map_setting extends Activity {
     private View layout_toast;
     private TextView text_toast;
 
-    private Button saveBtn;
-    private Button cancelBtn;
-
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
