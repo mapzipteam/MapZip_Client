@@ -123,10 +123,7 @@ public class serarch_Fragment extends Fragment implements AbsListView.OnScrollLi
 
         // 스크롤 리스너 등록
         mListView.setOnScrollListener(this);
-/*
-        mMyAdapte = new MyListAdapter(getActivity(), R.layout.custom_listview, marItem);
-        mListView.setAdapter(mMyAdapte);
-*/
+
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +133,7 @@ public class serarch_Fragment extends Fragment implements AbsListView.OnScrollLi
                     return;
 
                 marItem.clear();
-                mMyAdapte = new MyListAdapter(getActivity(), R.layout.custom_listview, marItem);
+                mMyAdapte = new MyListAdapter(getActivity(),R.layout.v_list_f_search, marItem);
                 mListView.addFooterView(footer);
                 mListView.setAdapter(mMyAdapte);
                 mMyAdapte.notifyDataSetChanged();
@@ -234,12 +231,12 @@ public class serarch_Fragment extends Fragment implements AbsListView.OnScrollLi
 
             final String getCustId = alSrc.get(pos).sCustId;
 
-            TextView nameText_search = (TextView) convertView.findViewById(R.id.nameText_search);
+            TextView nameText_search = (TextView) convertView.findViewById(R.id.tv_name_f_search);
             if (Integer.parseInt(getCategory(pos)) == SystemMain.SEOUL_MAP_NUM)
                 nameText_search.setText(getName(pos) + " (서울)");
             else
                 nameText_search.setText(getName(pos));
-            TextView hashText_search = (TextView) convertView.findViewById(R.id.hashText_search);
+            TextView hashText_search = (TextView) convertView.findViewById(R.id.tv_finfo_f_search);
             hashText_search.setText(getHash(pos));
 
             return convertView;

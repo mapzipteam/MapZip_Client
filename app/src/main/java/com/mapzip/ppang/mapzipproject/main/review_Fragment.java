@@ -196,7 +196,7 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
                 marItem.clear();
                 arrsize = 0;
                 selectNum = -1;
-                mMyAdapte = new MyListAdapter(getActivity(), R.layout.custom_listview, marItem);
+                mMyAdapte = new MyListAdapter(getActivity(),R.layout.v_list_f_review, marItem);
                 mListView.addFooterView(footer);
                 mListView.setAdapter(mMyAdapte);
                 mMyAdapte.notifyDataSetChanged();
@@ -388,9 +388,9 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
             if (convertView == null) {
                 convertView = lInflater.inflate(layout, parent, false);
 
-                nameText = (TextView) convertView.findViewById(R.id.nameText_search);
-                addressText = (TextView) convertView.findViewById(R.id.hashText_search);
-                mapviewBtn = (Button)convertView.findViewById(R.id.delete_mapmark);
+                nameText = (TextView) convertView.findViewById(R.id.tv_name_f_review);
+                addressText = (TextView) convertView.findViewById(R.id.tv_finfo_f_review);
+                mapviewBtn = (Button)convertView.findViewById(R.id.btn_mapview_f_review);
                 mapviewBtn.setVisibility(View.VISIBLE);
 
                 holder = new StoreListHolder();

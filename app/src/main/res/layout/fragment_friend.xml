@@ -40,7 +40,10 @@
         android:id="@+id/friendList_friend"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/addBtn_friend"></ListView>
+        android:layout_below="@+id/addBtn_friend"
+        android:choiceMode="singleChoice"
+        android:clickable="true"
+        android:listSelector="@color/transparent"></ListView>
 
 
 </RelativeLayout>

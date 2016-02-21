@@ -130,9 +130,6 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
 
                 Log.v("delflag", String.valueOf(delfriend_flag));
 
-               // mMyAdapte = new MyListAdapter(getActivity(), R.layout.custom_listview, marItem);
-                //mListView.addFooterView(footer);
-                //mListView.setAdapter(mMyAdapte);
                 mMyAdapte.notifyDataSetChanged();
             }
         });
@@ -155,7 +152,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
         mListView.setOnScrollListener(this);
 
         marItem.clear();
-        mMyAdapte = new MyListAdapter(getActivity(), R.layout.custom_listview, marItem);
+        mMyAdapte = new MyListAdapter(getActivity(),R.layout.v_list_f_friend , marItem);
         mListView.addFooterView(footer);
         mListView.setAdapter(mMyAdapte);
         mMyAdapte.notifyDataSetChanged();
@@ -232,7 +229,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
                 convertView = lInflater.inflate(layout, parent, false);
             }
 
-            delmapmark = (Button) convertView.findViewById(R.id.delete_mapmark);
+            delmapmark = (Button) convertView.findViewById(R.id.btn_delete_mapmark_f_friend);
             if(delfriend_flag)
                 delmapmark.setVisibility(View.VISIBLE);
             else
@@ -282,13 +279,13 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
 
             final String getCustId = alSrc.get(pos).sCustId;
 
-            TextView nameText_search = (TextView) convertView.findViewById(R.id.nameText_search);
+            TextView nameText_search = (TextView) convertView.findViewById(R.id.tv_name_f_friend);
             nameText_search.setText(getName(pos));
             nameText_search.append(" (");
             nameText_search.append(getID(pos));
             nameText_search.append(")");
 
-            TextView hashText_search = (TextView) convertView.findViewById(R.id.hashText_search);
+            TextView hashText_search = (TextView) convertView.findViewById(R.id.tv_finfo_f_friend);
             hashText_search.setText("리뷰수: ");
             hashText_search.append(getReviewCount(pos));
 
@@ -590,7 +587,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
 
         if(user.getfriendlock() == false) {
             marItem.clear();
-            mMyAdapte = new MyListAdapter(getActivity(), R.layout.custom_listview, marItem);
+            mMyAdapte = new MyListAdapter(getActivity(), R.layout.v_list_f_friend, marItem);
             mListView.addFooterView(footer);
             mListView.setAdapter(mMyAdapte);
             mMyAdapte.notifyDataSetChanged();
