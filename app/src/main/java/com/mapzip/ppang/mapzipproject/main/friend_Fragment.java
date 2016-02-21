@@ -394,13 +394,13 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
 
                 try {
                     int state = response.getInt("state");
-                    if (state == 901) {
+                    if (state == SystemMain.FRIEND_ITEM_SHOW_SUCCESS) { // 901
                         getArray = response.getJSONArray("friend_list");
                         seq++;
 
                         addItems(6);
 
-                    } else if (state == 902) {
+                    } else if (state == SystemMain.FRIEND_ITEM_SHOW_EMPTY) { // 902, 친구 없을 때
                         mLockBtn = true;
                         mListView.removeFooterView(footer);
 
@@ -486,7 +486,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
 
                 Log.v("friendlist_friend 받기", response.toString());
                 try {
-                    if (response.get("state").toString().equals("801")) {
+                    if (response.getInt("state") == SystemMain.FRIEND_HOME_SUCCESS) { // 801
 
                         int mapcount = response.getJSONArray("mapmeta_info").length();
                         map = mapcount;
@@ -535,6 +535,13 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
                         }
 
                         Loading.execute();
+                    } else{
+                        // toast
+                        text_toast.setText("다시 시도해주세요.");
+                        Toast toast = new Toast(getActivity());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
                     }
                 } catch (JSONException e) {
                     Log.v("에러", "제이손");

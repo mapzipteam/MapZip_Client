@@ -81,8 +81,7 @@ public class ReviewActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
-        ActionBar actionBar = getActionBar();
-        actionBar.hide();
+        getActionBar().hide();
 
         // toast
         LayoutInflater inflater = this.getLayoutInflater();
@@ -219,7 +218,7 @@ public class ReviewActivity extends Activity {
                 Log.v("ReviewActivity 받기", response.toString());
 
                 try {
-                    if(response.get("state").toString().equals("604")){
+                    if(response.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_DELETE_SUCCESS){ // 604
                         // toast
                         text_toast.setText("리뷰가 삭제되었습니다.");
                         Toast toast = new Toast(getApplicationContext());

@@ -929,7 +929,7 @@ public class home_Fragment extends Fragment implements View.OnClickListener {
 
                 Log.v("홈 가게", response.toString());
                 try {
-                    if (response.get("state").toString().equals("701")) {
+                    if (response.getInt("state") == SystemMain.CLIENT_REVIEW_META_DOWN_SUCCESS) { // 701
                         user.setMapforpinNum(Integer.parseInt(mapid), 1);
                         user.setMapforpinArray(response.getJSONArray("map_meta"), Integer.parseInt(response.getJSONArray("map_meta").getJSONObject(0).get("map_id").toString()));
                         Log.v("홈에서 맵 어레이", user.getMapforpinArray(Integer.parseInt(mapid)).toString());
@@ -941,10 +941,17 @@ public class home_Fragment extends Fragment implements View.OnClickListener {
                         intent.putExtra("LAT", loc_LAT);
                         intent.putExtra("mapid", mapid);
                         startActivity(intent);
-                    } else if (response.get("state").toString().equals("711")) {
+                    } else if (response.getInt("state") == SystemMain.CLIENT_REVIEW_META_DOWN_EMPTY) { // 711
                         user.setMapforpinNum(Integer.parseInt(mapid), 2);
                         // toast
                         text_toast.setText("등록 된 리뷰가 없습니다.");
+                        Toast toast = new Toast(getActivity());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
+                    } else{
+                        // toast
+                        text_toast.setText("다시 시도해주세요.");
                         Toast toast = new Toast(getActivity());
                         toast.setDuration(Toast.LENGTH_LONG);
                         toast.setView(layout_toast);
