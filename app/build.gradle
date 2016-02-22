@@ -22,7 +22,7 @@ android {
 
     defaultConfig {
         applicationId "com.mapzip.ppang.mapzipproject"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 5
         versionName "1.5"
