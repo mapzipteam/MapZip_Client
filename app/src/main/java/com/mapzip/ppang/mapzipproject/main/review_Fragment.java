@@ -9,16 +9,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -113,6 +113,8 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         // 스크롤 리스너 등록
         mListView.setOnScrollListener(this);
 
+
+
         marItem = new ArrayList<MyItem>();
 
         user.setReviewListlock(false);
@@ -200,6 +202,7 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
                 mListView.addFooterView(footer);
                 mListView.setAdapter(mMyAdapte);
                 mMyAdapte.notifyDataSetChanged();
+
 
                 mLockBtn = false;
 
@@ -346,12 +349,16 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
         LayoutInflater lInflater;
         ArrayList<MyItem> alSrc;
         int layout;
+        Animation animation;
+        private int lastPosition;
 
         public MyListAdapter(Context _context, int _layout, ArrayList<MyItem> _arrayList) {
             cContext = _context;
             lInflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             alSrc = _arrayList;
             layout = _layout;
+
+            lastPosition = -1;
         }
 
         @Override
@@ -400,11 +407,13 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
 
                 convertView.setTag(holder);
 
+
             }else{
                 holder = (StoreListHolder)convertView.getTag();
                 nameText = holder.m_storeName;
                 addressText = holder.m_storeLocation;
                 mapviewBtn = holder.m_mapviewBtn;
+
             }
 
             nameText.setText(getName(pos));
@@ -423,8 +432,11 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
                     intent.putExtra("store_y", restaurants.get(pos).getLatY());
                     startActivity(intent);
                 }
-
             });
+            animation = AnimationUtils.loadAnimation(getActivity(), (position >= this.lastPosition)? R.anim.store_list_anim_new : R.anim.store_list_anim_nomove);
+            convertView.startAnimation(animation);
+            this.lastPosition = position;
+
 
             return convertView;
         }

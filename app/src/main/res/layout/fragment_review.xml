@@ -73,7 +73,8 @@
             android:layout_height="0dp"
             android:layout_weight="8"
             android:background="@drawable/reviewsearchbg"
-            android:orientation="vertical">
+            android:orientation="vertical"
+            android:animateLayoutChanges="true">
 
             <ListView
                 android:id="@+id/searchList_review"
@@ -82,6 +83,7 @@
                 android:choiceMode="singleChoice"
                 android:clickable="true"
                 android:listSelector="@color/transparent"
+
                 >
             </ListView>
 
