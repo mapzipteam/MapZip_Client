@@ -1,5 +1,6 @@
 package com.mapzip.ppang.mapzipproject.ui.mapinfos;
 
+import android.app.FragmentManager;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatCallback;
@@ -23,12 +24,13 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
     private static final String TAG = "MapInfosActivity";
 
     private AppCompatDelegate mDelegate;
+    private FragmentManager mFragmentManager;
+
     private NMapView mMapView;
     private NMapController mMapController;
-    private NGeoPoint current_point = SEOUL;
 
     private static final boolean DEBUG = false;
-
+    private NGeoPoint current_point = SEOUL;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +40,17 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
         mDelegate.onCreate(savedInstanceState);
         mDelegate.setContentView(R.layout.activity_map_infos);
 
+        mFragmentManager = getFragmentManager();
+
         initToolbar();
         initNaverMap();
+        initReviewsFragment();
+    }
+
+    private void initReviewsFragment() {
+        mFragmentManager.beginTransaction()
+                .add(R.id.map_infos_container, ReviewsListFragment.newInstance())
+                .commit();
     }
 
     private void initToolbar() {

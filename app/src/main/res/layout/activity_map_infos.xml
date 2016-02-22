@@ -18,7 +18,15 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_below="@id/map_infos_toolbar"
-        app:layout_heightPercent="40%"
+        app:layout_heightPercent="30%"
         app:layout_widthPercent="100%"/>
+
+    <FrameLayout
+        android:id="@+id/map_infos_container"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_below="@id/map_infos_nmap"
+        app:layout_heightPercent="70%"
+        app:layout_widthPercent="100%" />
 
 </android.support.percent.PercentRelativeLayout>
