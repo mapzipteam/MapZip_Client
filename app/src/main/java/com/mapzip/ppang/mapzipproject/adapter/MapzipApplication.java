@@ -4,16 +4,16 @@ package com.mapzip.ppang.mapzipproject.adapter;
  * Created by Minjeong on 2015-08-23.
  */
 
-import android.app.Application;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.support.multidex.MultiDexApplication;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import io.fabric.sdk.android.Fabric;
 import java.lang.reflect.Field;
 
-public class MapzipApplication extends Application {
+public class MapzipApplication extends MultiDexApplication {
 
     private boolean mDebugMode;
 

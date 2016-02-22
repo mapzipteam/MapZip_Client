@@ -2,11 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mapzip.ppang.mapzipproject">
 
-    <uses-permission android:name="android.permission.INTERNET"></uses-permission>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"></uses-permission>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE"/>
-    <uses-permission android:name="android.permission.WAKE_LOCK"></uses-permission>
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="com.google.android.c2dm.permission.RECEIVE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
         android:name=".adapter.MapzipApplication"
@@ -18,25 +18,35 @@
         <activity
             android:name=".main.MainActivity"
             android:label="@string/app_name"
-            android:theme="@style/AppTheme">
-        </activity>
+            android:theme="@style/AppTheme" />
         <activity android:name=".main.SlidingTapActivity" />
-        <activity android:name="com.mapzip.ppang.mapzipproject.map.MapActivity" />
+        <activity android:name=".map.MapActivity" />
         <activity android:name=".activity.ReviewActivity" />
-        <activity android:name=".activity.MapSettingActivity" />
+        <activity
+            android:name=".activity.MapSettingActivity"
+            android:theme="@style/MapzipAppTheme" />
         <activity android:name=".activity.ReviewRegisterActivity" />
         <activity android:name=".activity.AddFriendsActivity" />
-        <activity android:name=".activity.FriendsHomeActivity"/>
-        <activity android:name="com.mapzip.ppang.mapzipproject.map.SearchInLocationActivity"/>
-        <activity android:name=".activity.SuggestActivity"/>
+        <activity android:name=".activity.FriendsHomeActivity" />
+        <activity android:name=".map.SearchInLocationActivity" />
+        <activity android:name=".activity.SuggestActivity" />
         <activity
             android:name=".main.SplashActivity"
-            android:theme="@android:style/Theme.NoTitleBar"
-            android:hardwareAccelerated="true">
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
+            android:hardwareAccelerated="true"
+            android:theme="@android:style/Theme.NoTitleBar">
+        </activity>
+
+        <activity
+            android:name=".ui.addmap.AddMapActivity"
+            android:theme="@style/MapzipAppTheme" />
+        <activity
+            android:name=".ui.mapinfos.MapInfosActivity"
+            android:theme="@style/MapzipAppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <!-- [START gcm_receiver] -->
         <receiver
@@ -45,6 +55,7 @@
             android:permission="com.google.android.c2dm.permission.SEND">
             <intent-filter>
                 <action android:name="com.google.android.c2dm.intent.RECEIVE" />
+
                 <category android:name="com.mapzip.ppang.mapzipproject" />
             </intent-filter>
         </receiver>
@@ -70,9 +81,7 @@
         <!-- [START gcm_registration_service] -->
         <service
             android:name=".gcm.RegistrationIntentService"
-            android:exported="false">
-
-        </service>
+            android:exported="false" />
         <!-- [END gcm_registration_service] -->
 
         <meta-data

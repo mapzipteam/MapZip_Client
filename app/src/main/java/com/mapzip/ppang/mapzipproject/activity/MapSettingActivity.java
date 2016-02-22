@@ -1,24 +1,20 @@
 package com.mapzip.ppang.mapzipproject.activity;
 
 import android.app.ActionBar;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -41,7 +37,7 @@ import org.json.JSONObject;
 /**
  * Created by ppangg on 2015-08-13.
  */
-public class MapSettingActivity extends Activity {
+public class MapSettingActivity extends AppCompatActivity {
     private UserData user;
     private EditText mapname;
     private String mapid;
@@ -63,9 +59,9 @@ public class MapSettingActivity extends Activity {
         setContentView(R.layout.activity_mapsetting);
         user = UserData.getInstance();
 
-        ActionBar actionBar =getActionBar();
-        actionBar.setTitle("    지도 설정");
-        actionBar.setDisplayShowHomeEnabled(false);
+        ActionBar actionBar = getActionBar();
+        //actionBar.setTitle("    지도 설정");
+        //actionBar.setDisplayShowHomeEnabled(false);
 
         LayoutInflater inflater = this.getLayoutInflater();
         layout_toast = inflater.inflate(R.layout.my_custom_toast, (ViewGroup) findViewById(R.id.custom_toast_layout));
