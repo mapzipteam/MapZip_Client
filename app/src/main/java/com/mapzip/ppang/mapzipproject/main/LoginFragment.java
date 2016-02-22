@@ -5,7 +5,6 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.media.Image;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -40,7 +39,7 @@ import org.json.JSONObject;
 /**
  * Created by ppangg on 2015-07-31.
  */
-public class loginFragment extends Fragment {
+public class LoginFragment extends Fragment {
 
     private boolean lockBtn;
     private LoadingTask Loading;
@@ -67,9 +66,9 @@ public class loginFragment extends Fragment {
     private CheckBox check_auto;
 
 
-    public static loginFragment create(int pageNumber,int isAuto,String auto_id, String auto_pw) {
+    public static LoginFragment create(int pageNumber,int isAuto,String auto_id, String auto_pw) {
 
-        loginFragment fragment = new loginFragment();
+        LoginFragment fragment = new LoginFragment();
         Bundle args = new Bundle();
         args.putInt("page", pageNumber);
         args.putInt("isAuto",isAuto);
@@ -316,10 +315,10 @@ public class loginFragment extends Fragment {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("loginFragment", error.getMessage());
+                    Log.e("LoginFragment", error.getMessage());
                 } catch (NullPointerException ex) {
                     // toast
-                    Log.e("loginFragment", "nullpointexception");
+                    Log.e("LoginFragment", "nullpointexception");
                 }
 
                 lockBtn =false;
@@ -353,7 +352,7 @@ public class loginFragment extends Fragment {
 
             if (asyncDialog != null) {
                 asyncDialog.dismiss();
-                Intent intent = new Intent(getActivity(), slidingTap.class);
+                Intent intent = new Intent(getActivity(), SlidingTapActivity.class);
                 startActivity(intent);
                 getActivity().finish();
             }

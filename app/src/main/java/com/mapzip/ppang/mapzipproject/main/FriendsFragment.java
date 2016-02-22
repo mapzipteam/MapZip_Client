@@ -27,12 +27,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.mapzip.ppang.mapzipproject.activity.FriendsHomeActivity;
 import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
-import com.mapzip.ppang.mapzipproject.activity.friend_home;
-import com.mapzip.ppang.mapzipproject.activity.addfriend;
+import com.mapzip.ppang.mapzipproject.activity.AddFriendsActivity;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
 
 import org.json.JSONArray;
@@ -41,7 +41,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class friend_Fragment extends Fragment implements AbsListView.OnScrollListener {
+public class FriendsFragment extends Fragment implements AbsListView.OnScrollListener {
 
     private boolean selectlock;
 
@@ -84,7 +84,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
     public ProgressDialog  asyncDialog;
     private LoadingTask Loading;
 
-    public friend_Fragment() {
+    public FriendsFragment() {
         seq = 0;
     }
 
@@ -138,7 +138,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
         addfriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), addfriend.class);
+                Intent intent = new Intent(getActivity(), AddFriendsActivity.class);
                 startActivity(intent);
             }
         });
@@ -580,7 +580,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
             if (asyncDialog != null) {
                 asyncDialog.dismiss();
 
-                Intent intent = new Intent(getActivity(),friend_home.class);
+                Intent intent = new Intent(getActivity(),FriendsHomeActivity.class);
                 startActivity(intent);
             }
 

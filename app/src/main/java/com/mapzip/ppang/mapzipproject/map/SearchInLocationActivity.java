@@ -16,7 +16,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mapzip.ppang.mapzipproject.R;
-import com.mapzip.ppang.mapzipproject.activity.review_register;
+import com.mapzip.ppang.mapzipproject.activity.ReviewRegisterActivity;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapProjection;
@@ -213,7 +213,7 @@ public class SearchInLocationActivity extends NMapActivity implements OnMapState
             } else {
                 switch (v.getId()) {
                     case R.id.search_in_location_make_review_button:
-                        Intent intent = new Intent(SearchInLocationActivity.this, review_register.class);
+                        Intent intent = new Intent(SearchInLocationActivity.this, ReviewRegisterActivity.class);
                         intent.putExtra("store_name", storename.getText().toString());
                         intent.putExtra("store_address", storeaddress.getText().toString());
                         intent.putExtra("store_contact", storecontact.getText().toString());

@@ -44,7 +44,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-public class friend_home  extends Activity implements View.OnClickListener {
+public class FriendsHomeActivity extends Activity implements View.OnClickListener {
 
     private FriendData fuser;
     private UserData user;

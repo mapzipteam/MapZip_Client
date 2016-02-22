@@ -98,9 +98,9 @@ public class MainActivity extends FragmentActivity {
         public Fragment getItem(int position) {
             // �ش��ϴ� page�� Fragment�� �����մϴ�.
             if(position == 0)
-                return joinFragment.create(position);
+                return JoinFragment.create(position);
             else
-                return loginFragment.create(position,isAuto,auto_id,auto_pw);
+                return LoginFragment.create(position, isAuto, auto_id, auto_pw);
 
         }
 

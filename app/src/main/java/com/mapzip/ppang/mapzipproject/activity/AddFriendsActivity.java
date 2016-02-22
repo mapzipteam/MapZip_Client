@@ -30,7 +30,7 @@ import org.json.JSONObject;
 /**
  * Created by ppangg on 2015-08-30.
  */
-public class addfriend extends Activity {
+public class AddFriendsActivity extends Activity {
     private UserData user;
 
     // toast
@@ -211,10 +211,10 @@ public class addfriend extends Activity {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("addfriend", error.getMessage());
+                    Log.e("AddFriendsActivity", error.getMessage());
                 }catch (NullPointerException ex){
                     // toast
-                    Log.e("addfriend", "nullpointexception");
+                    Log.e("AddFriendsActivity", "nullpointexception");
                 }
             }
         };
