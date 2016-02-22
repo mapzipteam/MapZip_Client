@@ -19,7 +19,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.R;
-import com.mapzip.ppang.mapzipproject.activity.suggestActivity;
+import com.mapzip.ppang.mapzipproject.activity.SuggestActivity;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
@@ -30,7 +30,7 @@ import org.json.JSONObject;
 /**
  * Created by ppangg on 2015-12-29.
  */
-public class setting_Fragment extends Fragment {
+public class SettingsFragment extends Fragment {
 
     private View v;
 
@@ -69,7 +69,7 @@ public class setting_Fragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
-                Intent intent = new Intent(getActivity(), suggestActivity.class);
+                Intent intent = new Intent(getActivity(), SuggestActivity.class);
                 startActivity(intent);
             }
         });

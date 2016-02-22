@@ -34,7 +34,7 @@ import java.util.ArrayList;
 /**
  * Created by ppangg on 2015-12-29.
  */
-public class suggestActivity extends Activity {
+public class SuggestActivity extends Activity {
 
     // userData
     public UserData user;
@@ -189,9 +189,9 @@ public class suggestActivity extends Activity {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("suggestActivity", error.getMessage());
+                    Log.e("SuggestActivity", error.getMessage());
                 } catch (NullPointerException ex) {
-                    Log.e("suggestActivity", "nullpointexception");
+                    Log.e("SuggestActivity", "nullpointexception");
                 }
             }
         };
