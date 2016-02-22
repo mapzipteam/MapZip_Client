@@ -34,7 +34,7 @@ import java.util.ArrayList;
 /**
  * Created by ppangg on 2015-12-29.
  */
-public class suggestActivity extends Activity {
+public class SuggestActivity extends Activity {
 
     // userData
     public UserData user;
@@ -153,7 +153,7 @@ public class suggestActivity extends Activity {
                 Log.v("제이손", response.toString());
 
                 try {
-                    if (response.get("state").toString().equals("1001")) {
+                    if (response.getInt("state") == SystemMain.USER_SOUND_INSERT_SUCCESS) { // 1001
                         // toast
                         text_toast.setText(user.getUserName() + "님의 소중한 의견 감사합니다.");
                         Toast toast = new Toast(getApplicationContext());
@@ -162,6 +162,13 @@ public class suggestActivity extends Activity {
                         toast.show();
 
                         finish();
+                    } else if(response.getInt("state") == SystemMain.USER_SOUND_INSERT_FAIL){ // 1002
+                        // toast
+                        text_toast.setText("전송실패. 다시 시도해주세요.");
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
                     }
                 }catch (JSONException e){
                     Log.e("제이손","에러");
@@ -182,9 +189,9 @@ public class suggestActivity extends Activity {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("suggestActivity", error.getMessage());
+                    Log.e("SuggestActivity", error.getMessage());
                 } catch (NullPointerException ex) {
-                    Log.e("suggestActivity", "nullpointexception");
+                    Log.e("SuggestActivity", "nullpointexception");
                 }
             }
         };

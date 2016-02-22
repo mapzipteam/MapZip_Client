@@ -24,7 +24,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mapzip.ppang.mapzipproject.R;
-import com.mapzip.ppang.mapzipproject.activity.review_register;
+import com.mapzip.ppang.mapzipproject.activity.ReviewRegisterActivity;
 import com.mapzip.ppang.mapzipproject.map.MapActivity;
 import com.mapzip.ppang.mapzipproject.map.RestaurantResult;
 import com.mapzip.ppang.mapzipproject.map.RestaurantSearcher;
@@ -33,9 +33,9 @@ import com.mapzip.ppang.mapzipproject.model.UserData;
 
 import java.util.ArrayList;
 
-public class review_Fragment extends Fragment implements AbsListView.OnScrollListener {
+public class ReviewFragment extends Fragment implements AbsListView.OnScrollListener {
 
-    private final String TAG = "review_Fragment";
+    private final String TAG = "ReviewFragment";
 
     private UserData user;
 
@@ -83,7 +83,7 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
     // 선택 이벤트
     private int selectNum;
 
-    public review_Fragment(){}
+    public ReviewFragment(){}
 	
 
 
@@ -198,7 +198,7 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
                 marItem.clear();
                 arrsize = 0;
                 selectNum = -1;
-                mMyAdapte = new MyListAdapter(getActivity(), R.layout.custom_listview, marItem);
+                mMyAdapte = new MyListAdapter(getActivity(),R.layout.v_list_f_review, marItem);
                 mListView.addFooterView(footer);
                 mListView.setAdapter(mMyAdapte);
                 mMyAdapte.notifyDataSetChanged();
@@ -272,7 +272,7 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
                     return;
                 }
 
-                Intent intent = new Intent(getActivity(), review_register.class);
+                Intent intent = new Intent(getActivity(), ReviewRegisterActivity.class);
                 intent.putExtra("store_name", restaurants.get(selectNum).getTitle());
                 intent.putExtra("store_address", restaurants.get(selectNum).getAdress());
                 intent.putExtra("store_contact", restaurants.get(selectNum).getTelephone());
@@ -395,9 +395,9 @@ public class review_Fragment extends Fragment implements AbsListView.OnScrollLis
             if (convertView == null) {
                 convertView = lInflater.inflate(layout, parent, false);
 
-                nameText = (TextView) convertView.findViewById(R.id.nameText_search);
-                addressText = (TextView) convertView.findViewById(R.id.hashText_search);
-                mapviewBtn = (Button)convertView.findViewById(R.id.delete_mapmark);
+                nameText = (TextView) convertView.findViewById(R.id.tv_name_f_review);
+                addressText = (TextView) convertView.findViewById(R.id.tv_finfo_f_review);
+                mapviewBtn = (Button)convertView.findViewById(R.id.btn_mapview_f_review);
                 mapviewBtn.setVisibility(View.VISIBLE);
 
                 holder = new StoreListHolder();

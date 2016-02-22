@@ -27,12 +27,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.mapzip.ppang.mapzipproject.activity.FriendsHomeActivity;
 import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
-import com.mapzip.ppang.mapzipproject.activity.friend_home;
-import com.mapzip.ppang.mapzipproject.activity.addfriend;
+import com.mapzip.ppang.mapzipproject.activity.AddFriendsActivity;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
 
 import org.json.JSONArray;
@@ -41,7 +41,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class friend_Fragment extends Fragment implements AbsListView.OnScrollListener {
+public class FriendsFragment extends Fragment implements AbsListView.OnScrollListener {
 
     private boolean selectlock;
 
@@ -84,7 +84,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
     public ProgressDialog  asyncDialog;
     private LoadingTask Loading;
 
-    public friend_Fragment() {
+    public FriendsFragment() {
         seq = 0;
     }
 
@@ -130,9 +130,6 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
 
                 Log.v("delflag", String.valueOf(delfriend_flag));
 
-               // mMyAdapte = new MyListAdapter(getActivity(), R.layout.custom_listview, marItem);
-                //mListView.addFooterView(footer);
-                //mListView.setAdapter(mMyAdapte);
                 mMyAdapte.notifyDataSetChanged();
             }
         });
@@ -141,7 +138,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
         addfriend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), addfriend.class);
+                Intent intent = new Intent(getActivity(), AddFriendsActivity.class);
                 startActivity(intent);
             }
         });
@@ -155,7 +152,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
         mListView.setOnScrollListener(this);
 
         marItem.clear();
-        mMyAdapte = new MyListAdapter(getActivity(), R.layout.custom_listview, marItem);
+        mMyAdapte = new MyListAdapter(getActivity(),R.layout.v_list_f_friend , marItem);
         mListView.addFooterView(footer);
         mListView.setAdapter(mMyAdapte);
         mMyAdapte.notifyDataSetChanged();
@@ -232,7 +229,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
                 convertView = lInflater.inflate(layout, parent, false);
             }
 
-            delmapmark = (Button) convertView.findViewById(R.id.delete_mapmark);
+            delmapmark = (Button) convertView.findViewById(R.id.btn_delete_mapmark_f_friend);
             if(delfriend_flag)
                 delmapmark.setVisibility(View.VISIBLE);
             else
@@ -282,13 +279,13 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
 
             final String getCustId = alSrc.get(pos).sCustId;
 
-            TextView nameText_search = (TextView) convertView.findViewById(R.id.nameText_search);
+            TextView nameText_search = (TextView) convertView.findViewById(R.id.tv_name_f_friend);
             nameText_search.setText(getName(pos));
             nameText_search.append(" (");
             nameText_search.append(getID(pos));
             nameText_search.append(")");
 
-            TextView hashText_search = (TextView) convertView.findViewById(R.id.hashText_search);
+            TextView hashText_search = (TextView) convertView.findViewById(R.id.tv_finfo_f_friend);
             hashText_search.setText("리뷰수: ");
             hashText_search.append(getReviewCount(pos));
 
@@ -397,13 +394,13 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
 
                 try {
                     int state = response.getInt("state");
-                    if (state == 901) {
+                    if (state == SystemMain.FRIEND_ITEM_SHOW_SUCCESS) { // 901
                         getArray = response.getJSONArray("friend_list");
                         seq++;
 
                         addItems(6);
 
-                    } else if (state == 902) {
+                    } else if (state == SystemMain.FRIEND_ITEM_SHOW_EMPTY) { // 902, 친구 없을 때
                         mLockBtn = true;
                         mListView.removeFooterView(footer);
 
@@ -489,7 +486,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
 
                 Log.v("friendlist_friend 받기", response.toString());
                 try {
-                    if (response.get("state").toString().equals("801")) {
+                    if (response.getInt("state") == SystemMain.FRIEND_HOME_SUCCESS) { // 801
 
                         int mapcount = response.getJSONArray("mapmeta_info").length();
                         map = mapcount;
@@ -538,6 +535,13 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
                         }
 
                         Loading.execute();
+                    } else{
+                        // toast
+                        text_toast.setText("다시 시도해주세요.");
+                        Toast toast = new Toast(getActivity());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
                     }
                 } catch (JSONException e) {
                     Log.v("에러", "제이손");
@@ -576,7 +580,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
             if (asyncDialog != null) {
                 asyncDialog.dismiss();
 
-                Intent intent = new Intent(getActivity(),friend_home.class);
+                Intent intent = new Intent(getActivity(),FriendsHomeActivity.class);
                 startActivity(intent);
             }
 
@@ -590,7 +594,7 @@ public class friend_Fragment extends Fragment implements AbsListView.OnScrollLis
 
         if(user.getfriendlock() == false) {
             marItem.clear();
-            mMyAdapte = new MyListAdapter(getActivity(), R.layout.custom_listview, marItem);
+            mMyAdapte = new MyListAdapter(getActivity(), R.layout.v_list_f_friend, marItem);
             mListView.addFooterView(footer);
             mListView.setAdapter(mMyAdapte);
             mMyAdapte.notifyDataSetChanged();

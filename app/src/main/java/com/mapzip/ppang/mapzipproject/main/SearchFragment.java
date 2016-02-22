@@ -27,10 +27,10 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.mapzip.ppang.mapzipproject.activity.FriendsHomeActivity;
 import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
-import com.mapzip.ppang.mapzipproject.activity.friend_home;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
 
@@ -40,7 +40,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 
-public class serarch_Fragment extends Fragment implements AbsListView.OnScrollListener {
+public class SearchFragment extends Fragment implements AbsListView.OnScrollListener {
 
     private boolean selectlock;
 
@@ -80,7 +80,7 @@ public class serarch_Fragment extends Fragment implements AbsListView.OnScrollLi
     public ProgressDialog  asyncDialog;
     private LoadingTask Loading;
 
-    public serarch_Fragment() {
+    public SearchFragment() {
         seq = 0;
     }
 
@@ -123,10 +123,7 @@ public class serarch_Fragment extends Fragment implements AbsListView.OnScrollLi
 
         // 스크롤 리스너 등록
         mListView.setOnScrollListener(this);
-/*
-        mMyAdapte = new MyListAdapter(getActivity(), R.layout.custom_listview, marItem);
-        mListView.setAdapter(mMyAdapte);
-*/
+
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -136,7 +133,7 @@ public class serarch_Fragment extends Fragment implements AbsListView.OnScrollLi
                     return;
 
                 marItem.clear();
-                mMyAdapte = new MyListAdapter(getActivity(), R.layout.custom_listview, marItem);
+                mMyAdapte = new MyListAdapter(getActivity(),R.layout.v_list_f_search, marItem);
                 mListView.addFooterView(footer);
                 mListView.setAdapter(mMyAdapte);
                 mMyAdapte.notifyDataSetChanged();
@@ -234,12 +231,12 @@ public class serarch_Fragment extends Fragment implements AbsListView.OnScrollLi
 
             final String getCustId = alSrc.get(pos).sCustId;
 
-            TextView nameText_search = (TextView) convertView.findViewById(R.id.nameText_search);
+            TextView nameText_search = (TextView) convertView.findViewById(R.id.tv_name_f_search);
             if (Integer.parseInt(getCategory(pos)) == SystemMain.SEOUL_MAP_NUM)
                 nameText_search.setText(getName(pos) + " (서울)");
             else
                 nameText_search.setText(getName(pos));
-            TextView hashText_search = (TextView) convertView.findViewById(R.id.hashText_search);
+            TextView hashText_search = (TextView) convertView.findViewById(R.id.tv_finfo_f_search);
             hashText_search.setText(getHash(pos));
 
             return convertView;
@@ -510,7 +507,7 @@ public class serarch_Fragment extends Fragment implements AbsListView.OnScrollLi
 
             if (asyncDialog != null) {
                 asyncDialog.dismiss();
-                Intent intent = new Intent(getActivity(),friend_home.class);
+                Intent intent = new Intent(getActivity(),FriendsHomeActivity.class);
                 startActivity(intent);
             }
 

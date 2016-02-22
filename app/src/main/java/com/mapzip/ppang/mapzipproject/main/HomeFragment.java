@@ -3,7 +3,6 @@ package com.mapzip.ppang.mapzipproject.main;
 
 import android.app.Fragment;
 import android.content.Intent;
-import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -19,11 +18,9 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
-import android.widget.ScrollView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -34,7 +31,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.ScalableLayout.ScalableLayout;
-import com.mapzip.ppang.mapzipproject.activity.map_setting;
+import com.mapzip.ppang.mapzipproject.activity.MapSettingActivity;
 import com.mapzip.ppang.mapzipproject.map.MapActivity;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
@@ -48,7 +45,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-public class home_Fragment extends Fragment implements View.OnClickListener {
+public class HomeFragment extends Fragment implements View.OnClickListener {
 
     private View v;
     private UserData user;
@@ -116,7 +113,7 @@ public class home_Fragment extends Fragment implements View.OnClickListener {
     private ScalableLayout scalableLayout;
 
 
-    public home_Fragment() {
+    public HomeFragment() {
     }
 
     @Override
@@ -299,7 +296,7 @@ public class home_Fragment extends Fragment implements View.OnClickListener {
         mapsetting.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(getActivity(), map_setting.class);
+                Intent intent = new Intent(getActivity(), MapSettingActivity.class);
                 intent.putExtra("mapcurname", mapcurname);
                 intent.putExtra("hashtag", hashString);
                 intent.putExtra("mapkindnum", mapkindnum);
@@ -929,7 +926,7 @@ public class home_Fragment extends Fragment implements View.OnClickListener {
 
                 Log.v("홈 가게", response.toString());
                 try {
-                    if (response.get("state").toString().equals("701")) {
+                    if (response.getInt("state") == SystemMain.CLIENT_REVIEW_META_DOWN_SUCCESS) { // 701
                         user.setMapforpinNum(Integer.parseInt(mapid), 1);
                         user.setMapforpinArray(response.getJSONArray("map_meta"), Integer.parseInt(response.getJSONArray("map_meta").getJSONObject(0).get("map_id").toString()));
                         Log.v("홈에서 맵 어레이", user.getMapforpinArray(Integer.parseInt(mapid)).toString());
@@ -941,10 +938,17 @@ public class home_Fragment extends Fragment implements View.OnClickListener {
                         intent.putExtra("LAT", loc_LAT);
                         intent.putExtra("mapid", mapid);
                         startActivity(intent);
-                    } else if (response.get("state").toString().equals("711")) {
+                    } else if (response.getInt("state") == SystemMain.CLIENT_REVIEW_META_DOWN_EMPTY) { // 711
                         user.setMapforpinNum(Integer.parseInt(mapid), 2);
                         // toast
                         text_toast.setText("등록 된 리뷰가 없습니다.");
+                        Toast toast = new Toast(getActivity());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
+                    } else{
+                        // toast
+                        text_toast.setText("다시 시도해주세요.");
                         Toast toast = new Toast(getActivity());
                         toast.setDuration(Toast.LENGTH_LONG);
                         toast.setView(layout_toast);

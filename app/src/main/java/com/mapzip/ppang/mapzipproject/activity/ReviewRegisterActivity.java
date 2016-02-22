@@ -3,7 +3,6 @@ package com.mapzip.ppang.mapzipproject.activity;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.ProgressDialog;
-import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -13,7 +12,6 @@ import android.graphics.Canvas;
 import android.graphics.Matrix;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -22,10 +20,8 @@ import android.support.v4.view.ViewPager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Surface;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -36,20 +32,16 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import com.android.volley.toolbox.Volley;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.adapter.ImageAdapter;
 import com.mapzip.ppang.mapzipproject.model.MapData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
-import com.mapzip.ppang.mapzipproject.network.MultipartRequest;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
 
 import org.json.JSONArray;
@@ -58,20 +50,14 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Hashtable;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by ppangg on 2015-08-22.
  */
-public class review_register extends Activity {
+public class ReviewRegisterActivity extends Activity {
     // state
     private int state = 0; // 0: default review enroll, 1: modify review
     private String primap_id;
@@ -701,7 +687,7 @@ public class review_register extends Activity {
                 Log.v("review_regi 받기", response.toString());
 
                 try {
-                    if (response.get("state").toString().equals("601")) {
+                    if (response.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_ENROLL_SUCCESS) { // 601
                         // 1번째 통신 성공
                         Log.v("리뷰저장", "OK");
                         mapData.setStore_id(response.getString("store_id"));
@@ -711,14 +697,14 @@ public class review_register extends Activity {
                             serverchoice = 1; // no image
                             loading.execute();
                         }
-                    } else if (response.get("state").toString().equals("602") || response.get("state").toString().equals("621")) {
+                    } else if ((response.getInt("state") == SystemMain.CLIENT_REVIEW_IMAGE_MKDIR_SUCCESS) || (response.getInt("state") == SystemMain.CLIENT_REVIEW_IMAGE_MKDIR_EXIST)) { // 602 || 621
                         // 2번째통신 성공
                         Log.v("리뷰저장2", "OK");
                         serverchoice = 2;
                         loading.execute();
                         // 3번째통신 이미지갯수만큼 반복
                     }
-                    if (response.get("state").toString().equals("612")) {
+                    if (response.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_ENROLL_EXIST) { // 612
                         //1번째 통신에서 중복가게 걸러내기
                         // toast
                         text_toast.setText("이미 등록 된 가게입니다.");
@@ -1132,7 +1118,7 @@ public class review_register extends Activity {
     protected class LoadingTask extends AsyncTask<Void, Void, Void> {
         @Override
         protected void onPreExecute() {
-            asyncDialog = new ProgressDialog(review_register.this);
+            asyncDialog = new ProgressDialog(ReviewRegisterActivity.this);
             asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
             asyncDialog.setMessage("로딩중입니다..");
             asyncDialog.setCanceledOnTouchOutside(false);

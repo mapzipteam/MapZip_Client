@@ -1,16 +1,10 @@
 package com.mapzip.ppang.mapzipproject.activity;
 
-import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.util.Log;
@@ -26,11 +20,9 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.adapter.ImageAdapter;
-import com.mapzip.ppang.mapzipproject.map.SearchInLocationActivity;
 import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.model.MapData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
@@ -40,9 +32,6 @@ import com.mapzip.ppang.mapzipproject.network.MyVolley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 /**
@@ -81,8 +70,7 @@ public class ReviewActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_review);
-        ActionBar actionBar = getActionBar();
-        actionBar.hide();
+        getActionBar().hide();
 
         // toast
         LayoutInflater inflater = this.getLayoutInflater();
@@ -156,7 +144,7 @@ public class ReviewActivity extends Activity {
 
     // modify Btn
     public void modifyOnclick(View v) {
-        Intent intent = new Intent(this, review_register.class);
+        Intent intent = new Intent(this, ReviewRegisterActivity.class);
         intent.putExtra("store_name", mapData.getStore_name());
         intent.putExtra("store_address", mapData.getStore_address());
         intent.putExtra("store_contact", mapData.getStore_contact());
@@ -219,7 +207,7 @@ public class ReviewActivity extends Activity {
                 Log.v("ReviewActivity 받기", response.toString());
 
                 try {
-                    if(response.get("state").toString().equals("604")){
+                    if(response.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_DELETE_SUCCESS){ // 604
                         // toast
                         text_toast.setText("리뷰가 삭제되었습니다.");
                         Toast toast = new Toast(getApplicationContext());

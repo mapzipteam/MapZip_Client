@@ -25,7 +25,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
-public class slidingTap extends FragmentActivity{
+public class SlidingTapActivity extends FragmentActivity{
     private DrawerLayout mDrawerLayout;
     private ListView mDrawerList;
     private ActionBarDrawerToggle mDrawerToggle;
@@ -194,19 +194,19 @@ public class slidingTap extends FragmentActivity{
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new home_Fragment();
+                fragment = new HomeFragment();
                 break;
             case 1:
-                fragment = new review_Fragment();
+                fragment = new ReviewFragment();
                 break;
             case 2:
-                fragment = new serarch_Fragment();
+                fragment = new SearchFragment();
                 break;
             case 3:
-                fragment = new friend_Fragment();
+                fragment = new FriendsFragment();
                 break;
             case 4:
-                fragment = new setting_Fragment();
+                fragment = new SettingsFragment();
                 break;
 
             default:

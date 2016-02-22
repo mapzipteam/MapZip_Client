@@ -3,7 +3,6 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-
     <LinearLayout
         android:id="@+id/search_layout_addfriend"
         android:layout_width="match_parent"
@@ -33,7 +32,8 @@
             android:layout_marginBottom="10dp"
             android:layout_marginRight="10dp"
             android:layout_weight="2"
-            android:background="@drawable/searchbtn" />
+            android:background="@drawable/searchbtn"
+            android:onClick="addFriend_search"/>
 
     </LinearLayout>
 
@@ -59,7 +59,8 @@
         android:layout_height="30dp"
         android:layout_margin="10dp"
         android:visibility="gone"
-        android:background="@drawable/friend_add"/>
+        android:background="@drawable/friend_add"
+        android:onClick="addFriend_enroll"/>
     </LinearLayout>
 
 

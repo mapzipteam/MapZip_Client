@@ -20,15 +20,15 @@
             android:label="@string/app_name"
             android:theme="@style/AppTheme">
         </activity>
-        <activity android:name="com.mapzip.ppang.mapzipproject.main.slidingTap" />
+        <activity android:name=".main.SlidingTapActivity" />
         <activity android:name="com.mapzip.ppang.mapzipproject.map.MapActivity" />
         <activity android:name=".activity.ReviewActivity" />
-        <activity android:name=".activity.map_setting" />
-        <activity android:name=".activity.review_register" />
-        <activity android:name=".activity.addfriend" />
-        <activity android:name=".activity.friend_home"/>
+        <activity android:name=".activity.MapSettingActivity" />
+        <activity android:name=".activity.ReviewRegisterActivity" />
+        <activity android:name=".activity.AddFriendsActivity" />
+        <activity android:name=".activity.FriendsHomeActivity"/>
         <activity android:name="com.mapzip.ppang.mapzipproject.map.SearchInLocationActivity"/>
-        <activity android:name=".activity.suggestActivity"/>
+        <activity android:name=".activity.SuggestActivity"/>
         <activity
             android:name=".main.SplashActivity"
             android:theme="@android:style/Theme.NoTitleBar"

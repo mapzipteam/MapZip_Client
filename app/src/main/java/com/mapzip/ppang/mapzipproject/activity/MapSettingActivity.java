@@ -41,7 +41,7 @@ import org.json.JSONObject;
 /**
  * Created by ppangg on 2015-08-13.
  */
-public class map_setting extends Activity {
+public class MapSettingActivity extends Activity {
     private UserData user;
     private EditText mapname;
     private String mapid;
@@ -56,9 +56,6 @@ public class map_setting extends Activity {
     // toast
     private View layout_toast;
     private TextView text_toast;
-
-    private Button saveBtn;
-    private Button cancelBtn;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -332,7 +329,7 @@ public class map_setting extends Activity {
 
                 }
 
-                //home_Fragment hf = (home_Fragment) getFragmentManager().findFragmentByTag("home_fragment");
+                //HomeFragment hf = (HomeFragment) getFragmentManager().findFragmentByTag("home_fragment");
                 //hf.refresh();
 
                 user.setMapmetaNum(1);

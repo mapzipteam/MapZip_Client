@@ -44,7 +44,7 @@ import org.json.JSONObject;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
 
-public class friend_home  extends Activity implements View.OnClickListener {
+public class FriendsHomeActivity extends Activity implements View.OnClickListener {
 
     private FriendData fuser;
     private UserData user;
@@ -876,7 +876,7 @@ public class friend_home  extends Activity implements View.OnClickListener {
 
                 Log.v("홈 가게", response.toString());
                 try {
-                    if (response.get("state").toString().equals("701")) {
+                    if (response.getInt("state") == SystemMain.CLIENT_REVIEW_META_DOWN_SUCCESS) { // 701
                         fuser.setMapforpinNum(Integer.parseInt(mapid), 1);
                         fuser.setMapforpinArray(response.getJSONArray("map_meta"), Integer.parseInt(response.getJSONArray("map_meta").getJSONObject(0).get("map_id").toString()));
                         Log.v("홈에서 맵 어레이", fuser.getMapforpinArray(Integer.parseInt(mapid)).toString());
@@ -888,7 +888,7 @@ public class friend_home  extends Activity implements View.OnClickListener {
                         intent.putExtra("LAT", loc_LAT);
                         intent.putExtra("mapid", mapid);
                         startActivity(intent);
-                    } else if (response.get("state").toString().equals("711")) {
+                    } else if (response.getInt("state") == SystemMain.CLIENT_REVIEW_META_DOWN_EMPTY) { // 711
                         fuser.setMapforpinNum(Integer.parseInt(mapid), 2);
                         // toast
                         text_toast.setText("등록 된 리뷰가 없습니다.");
