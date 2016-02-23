@@ -44,22 +44,22 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
 
         initToolbar();
         initNaverMap();
-        initReviewsFragment();
+        initInfosFragment();
     }
 
-    private void initReviewsFragment() {
+    private void initInfosFragment() {
         mFragmentManager.beginTransaction()
-                .add(R.id.map_infos_container, ReviewsListFragment.newInstance())
+                .add(R.id.map_infos_container, InfosListFragment.newInstance())
                 .commit();
     }
 
     private void initToolbar() {
-        Toolbar toolbar = (Toolbar)findViewById(R.id.map_infos_toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.map_infos_toolbar);
         mDelegate.setSupportActionBar(toolbar);
     }
 
     private void initNaverMap() {
-        mMapView = (NMapView)findViewById(R.id.map_infos_nmap);
+        mMapView = (NMapView) findViewById(R.id.map_infos_nmap);
         mMapView.setApiKey(getString(R.string.naver_map_api_key));
         mMapView.setEnabled(true);
         mMapView.setClickable(true);
@@ -80,7 +80,7 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
                 mMapController.setMapCenter(current_point, 9);
                 //poiDataOverlay.showAllPOIdata(0);//위에 코드와 달리 처음 지도를 불렀을때 모든 poi 플래그들리 보이도록 자동으로 축적이랑 중심을 변경 시켜주는 코드
             } else {
-                if(DEBUG) {
+                if (DEBUG) {
                     Log.e("NMAP", "onMapInitHandler : error=" + nMapError.toString());
                 }
             }
@@ -99,7 +99,7 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
         @Override
         public void onZoomLevelChange(NMapView nMapView, int i) {
 
-            if(DEBUG) {
+            if (DEBUG) {
                 Log.e(TAG, "zoom level : " + i);
             }
         }

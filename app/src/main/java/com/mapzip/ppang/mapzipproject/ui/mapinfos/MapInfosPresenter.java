@@ -7,4 +7,5 @@ package com.mapzip.ppang.mapzipproject.ui.mapinfos;
  * https://codelabs.developers.google.com/codelabs/android-testing/index.html?index=..%2F..%2Findex#0
  */
 public class MapInfosPresenter implements MapInfosContract.UserActionListener {
+
 }
