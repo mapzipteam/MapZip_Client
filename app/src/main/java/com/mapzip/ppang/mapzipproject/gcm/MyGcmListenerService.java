@@ -40,14 +40,19 @@ public class MyGcmListenerService extends GcmListenerService {
             Log.d(TAG, "Title: " + title);
             Log.d(TAG, "Message: " + message);
             Log.d(TAG, "extra : "+json_extra.toString());
-            Log.d(TAG,"extra : "+json_extra.getString("customkey1"));
+            Log.d(TAG, "extra : notification_type : " + json_extra.getBoolean("notification_type"));
+            if(json_extra.getBoolean("notification_type")){
+                sendNotification(title, message);
+            }else{
+                // no not notification
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
 
 
         // GCM으로 받은 메세지를 디바이스에 알려주는 sendNotification()을 호출한다.
-        sendNotification(title, message);
+
     }
 
 
