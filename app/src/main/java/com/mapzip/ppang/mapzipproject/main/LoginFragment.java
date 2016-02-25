@@ -27,6 +27,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.LoginEvent;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
@@ -276,6 +277,8 @@ public class LoginFragment extends Fragment {
                         toast.setDuration(Toast.LENGTH_SHORT);
                         toast.setView(layout_toast);
                         toast.show();
+
+                        // fabric-Login
                         sendLoginSuccessToAnswers();
                     } else if(response.get("state").toString().equals("201")) {
                         // toast
@@ -295,12 +298,15 @@ public class LoginFragment extends Fragment {
     }
 
     private void sendLoginSuccessToAnswers() {
-        Answers.getInstance().logContentView(new ContentViewEvent()
-                .putContentName("Login Action")
-                .putContentType("Login")
-                .putContentId("1")
-                .putCustomAttribute("Login Example1", 2)
-                .putCustomAttribute("Login Example2", "2"));
+//        Answers.getInstance().logContentView(new ContentViewEvent()
+//                .putContentName("Login Action")
+//                .putContentType("Login")
+//                .putContentId("1")
+//                .putCustomAttribute("Login Example1", 2)
+//                .putCustomAttribute("Login Example2", "2"));
+        Answers.getInstance().logLogin(new LoginEvent()
+        .putSuccess(true)
+        .putCustomAttribute("LoginCustomAttr","attr1"));
     }
 
     private Response.ErrorListener createMyReqErrorListener() {

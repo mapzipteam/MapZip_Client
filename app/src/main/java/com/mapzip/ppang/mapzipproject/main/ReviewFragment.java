@@ -349,7 +349,8 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
         LayoutInflater lInflater;
         ArrayList<MyItem> alSrc;
         int layout;
-        Animation animation;
+        private Animation animation_none;
+        private Animation animation_active;
         private int lastPosition;
 
         public MyListAdapter(Context _context, int _layout, ArrayList<MyItem> _arrayList) {
@@ -357,6 +358,9 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
             lInflater = (LayoutInflater) _context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             alSrc = _arrayList;
             layout = _layout;
+
+            animation_none = AnimationUtils.loadAnimation(getActivity(),R.anim.store_list_anim_nomove);
+            animation_active = AnimationUtils.loadAnimation(getActivity(),R.anim.store_list_anim_new);
 
             lastPosition = -1;
         }
@@ -433,9 +437,13 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
                     startActivity(intent);
                 }
             });
-            animation = AnimationUtils.loadAnimation(getActivity(), (position >= this.lastPosition)? R.anim.store_list_anim_new : R.anim.store_list_anim_nomove);
-            convertView.startAnimation(animation);
-            this.lastPosition = position;
+            if(position >= this.lastPosition){
+                convertView.startAnimation(animation_active);
+                this.lastPosition  = position;
+            }else{
+                convertView.startAnimation(animation_none);
+            }
+
 
 
             return convertView;

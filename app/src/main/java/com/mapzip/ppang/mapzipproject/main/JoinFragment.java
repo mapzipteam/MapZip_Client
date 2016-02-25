@@ -23,7 +23,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
+import com.crashlytics.android.answers.SignUpEvent;
 import com.mapzip.ppang.mapzipproject.R;
+import com.mapzip.ppang.mapzipproject.fabric.FabricPreferences;
+import com.mapzip.ppang.mapzipproject.fabric.JoinFabric;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
 
@@ -31,6 +34,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.regex.Pattern;
+
+import static com.mapzip.ppang.mapzipproject.fabric.FabricPreferences.*;
 
 /**
  * Created by ppangg on 2015-07-31.
@@ -60,6 +65,9 @@ public class JoinFragment extends Fragment {
     private View layout_toast;
     private TextView text_toast;
 
+    // Join Fabric Preferences
+    private JoinFabric joinFabric;
+
     public static JoinFragment create(int pageNumber) {
         JoinFragment fragment = new JoinFragment();
         Bundle args = new Bundle();
@@ -72,6 +80,7 @@ public class JoinFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mPageNumber = getArguments().getInt("page");
+        joinFabric = new JoinFabric();
     }
 
     @Override
@@ -168,23 +177,58 @@ public class JoinFragment extends Fragment {
                 imm3.hideSoftInputFromWindow(inputName.getWindowToken(), 0);
                 DoJoin(v);
 
-                sendUserActionToAnswers();
+
             }
         });
 
         return rootView;
     }
 
-    private void sendUserActionToAnswers() {
-        Answers.getInstance().logContentView(new ContentViewEvent()
-        .putContentName("Join Action")
-        .putContentType("Account")
-        .putContentId("0")
-        .putCustomAttribute("Example1", 1)
-        .putCustomAttribute("Example2", "1"));
+    private void sendJoinActionToAnswers(int flag, int detail) {
+//        Answers.getInstance().logContentView(new ContentViewEvent()
+//        .putContentName("Join Action")
+//        .putContentType("Account")
+//        .putContentId("0")
+//        .putCustomAttribute("Example1", 1)
+//        .putCustomAttribute("Example2", "1"));
+        SignUpEvent signUpEvent = new SignUpEvent();
+
+        if(flag == joinFabric.FABRIC_JOIN_ERROR_ID){
+            signUpEvent.putSuccess(false)
+                    .putCustomAttribute(joinFabric.KEY_JOIN_FAIL_CATEGORY,
+                            joinFabric.VALUE_FAIL_CATEGORY_ID);
+            if(detail == joinFabric.FABRIC_JOIN_ERROR_ID_SHORT) {
+                // when id length too short
+                signUpEvent.putCustomAttribute(joinFabric.KEY_JOIN_FAIL_REASON,
+                        joinFabric.VALUE_FAIL_ID_LENGTH_SHORT);
+            }else if(detail == joinFabric.FABRIC_JOIN_ERROR_ID_PATTERN){
+                // when id pattern miss match
+                signUpEvent.putCustomAttribute(joinFabric.KEY_JOIN_FAIL_REASON,
+                        joinFabric.VALUE_FAIL_ID_PATTERN_MISS);
+            }else if(detail == joinFabric.FABRIC_JOIN_ERROR_DUPID){
+                // when id duplicate in server
+                signUpEvent.putCustomAttribute(joinFabric.KEY_JOIN_FAIL_REASON,
+                        joinFabric.VALUE_FAIL_ID_DUP);
+            }
+        }else if(flag == joinFabric.FABRIC_JOIN_ERROR_PW){
+            signUpEvent.putSuccess(false)
+                    .putCustomAttribute(joinFabric.KEY_JOIN_FAIL_CATEGORY,
+                            joinFabric.VALUE_FAIL_CATEGORY_PW);
+            if(detail == joinFabric.FABRIC_JOIN_ERROR_PW_SHORT){
+                signUpEvent.putCustomAttribute(joinFabric.KEY_JOIN_FAIL_REASON,
+                        joinFabric.VALUE_FAIL_PW_LENGTH_SHORT);
+            }else if(detail == joinFabric.FABRIC_JOIN_ERROR_PW_CONFIRM){
+                signUpEvent.putCustomAttribute(joinFabric.KEY_JOIN_FAIL_REASON,
+                        joinFabric.VALUE_FAIL_PW_CONFIRM);
+            }
+        }else if(flag == joinFabric.FABRIC_JOIN_SUCCESS){
+            signUpEvent.putSuccess(true);
+        }
+
+        Answers.getInstance().logSignUp(signUpEvent);
     }
 
-    public void joinCheck(){
+    private void joinCheck(){
         boolean idok = false;
         boolean nameok = false;
         boolean pwok = false;
@@ -226,6 +270,8 @@ public class JoinFragment extends Fragment {
             Pattern ps = Pattern.compile("^[a-zA-Z0-9]+$");//영문, 숫자, 한글만 허용
             if(!ps.matcher(userid).matches()){
                 // toast
+                sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_ERROR_ID, joinFabric.FABRIC_JOIN_ERROR_ID_PATTERN);
+
                 text_toast.setText("아이디는 영문과 숫자의 조합으로 생성해주세요.");
                 Toast toast = new Toast(getActivity());
                 toast.setDuration(Toast.LENGTH_LONG);
@@ -238,6 +284,8 @@ public class JoinFragment extends Fragment {
 
         if(userpw.length() < 8){
             // toast
+            sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_ERROR_PW, joinFabric.FABRIC_JOIN_ERROR_PW_SHORT);
+
             text_toast.setText("ID는 5자, Password는 8자이상 입니다.");
             Toast toast = new Toast(getActivity());
             toast.setDuration(Toast.LENGTH_LONG);
@@ -249,6 +297,8 @@ public class JoinFragment extends Fragment {
 
         if(userpw.equals(inputPW2.getText().toString()) == false){
             // toast
+            sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_ERROR_PW, joinFabric.FABRIC_JOIN_ERROR_PW_CONFIRM);
+
             text_toast.setText("비밀번호확인을 틀리셨습니다.");
             Toast toast = new Toast(getActivity());
             toast.setDuration(Toast.LENGTH_LONG);
@@ -304,6 +354,8 @@ public class JoinFragment extends Fragment {
                         toast.setView(layout_toast);
                         toast.show();
 
+                        sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_SUCCESS,0);
+
                         //state.setText("회원가입에 성공하였습니다.");
                         Log.v("회원가입", "성공");
                     } else {
@@ -313,6 +365,8 @@ public class JoinFragment extends Fragment {
                         toast.setDuration(Toast.LENGTH_LONG);
                         toast.setView(layout_toast);
                         toast.show();
+
+                        sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_ERROR_ID, joinFabric.FABRIC_JOIN_ERROR_DUPID);
 
                         //state.setText("이미 존재하는 계정입니다.");
                         Log.v("회원가입", "실패");
