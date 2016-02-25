@@ -25,4 +25,12 @@
     <color name="store_list_background_normal">#f7f6eb</color>
 
 
+
+
+    <color name="image_active">#FAFAD2</color>
+    <color name="image_unactive">#DCDCDC</color>
+    <color name="image_adapter_background">#455445</color>
+
+
+
 </resources>

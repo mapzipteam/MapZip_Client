@@ -37,6 +37,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.mapzip.ppang.mapzipproject.Gallery.CustomPhotoGalleryActivity;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.adapter.ImageAdapter;
 import com.mapzip.ppang.mapzipproject.model.MapData;
@@ -85,7 +86,7 @@ public class ReviewRegisterActivity extends Activity {
     private Bitmap[] backupbitarr;
 
     // Image Select
-    final int REQ_CODE_SELECT_IMAGE = 100;
+//    final int REQ_CODE_SELECT_IMAGE = 100;
     private boolean oncreatelock = false; // image array clear -> false: oPerlishArray.clear() , true: x
 
     // Image Send
@@ -120,6 +121,9 @@ public class ReviewRegisterActivity extends Activity {
 
     // set Map Image
     private Resources res;
+
+    //2016.02.10 multipleImagePick Part
+    private final int PICK_IMAGE_MULTIPE = 1;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -378,38 +382,105 @@ public class ReviewRegisterActivity extends Activity {
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         Log.v("resultCode", String.valueOf(resultCode));
 
-        if (requestCode == REQ_CODE_SELECT_IMAGE) {
+//        if (requestCode == REQ_CODE_SELECT_IMAGE) {
+//            if (resultCode == Activity.RESULT_OK) {
+//                try {
+//                    //Uri에서 이미지 이름을 얻어온다.
+//                    //String name_Str = getImageNameToUri(data.getData());
+//
+//                    //이미지 데이터를 리사이징된 비트맵으로 받아온다.
+//                    Uri image_uri = data.getData();
+//
+//                    if (oncreatelock == false || state == 1) { // 사진 여러장 일 때 or modify
+//                        oPerlishArray.clear();
+//                        oncreatelock = true;
+//                    }
+//
+//                    //2016.01.11송지원이 바꿈
+//                    int maxWidth = viewPager.getWidth();
+//                    int maxHeight = viewPager.getHeight();
+//
+//                    Bitmap resized_image_bitmap = resizeBitmapImage(image_uri, maxWidth, maxHeight);
+//
+//                    //2016.01.26 송지원이 추가. 이미지 자동회전 오류 잡는 코드.
+//                    String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
+//                    Cursor cursor = managedQuery(image_uri, orientationColumn, null, null, null);
+//                    int orientationDegree = -1;
+//
+//                    if(cursor != null && cursor.moveToFirst()){
+//                        orientationDegree = cursor.getInt(cursor.getColumnIndex(orientationColumn[0]));
+//                    }
+//
+//                    Bitmap rotated_resized_image_bitmap = rotateBitmapImage(resized_image_bitmap,  orientationDegree);
+//
+//                    oPerlishArray.add(rotated_resized_image_bitmap);
+//                    bitarr = new Bitmap[oPerlishArray.size()];
+//                    oPerlishArray.toArray(bitarr);
+//
+//                    // save Image in user Data
+//                    if (state == 1) // in modify
+//                    {
+//                        Log.v("image modify", "ok");
+//                        Log.v("image_length1",String.valueOf(user.getGalImages().length));
+//                        if((mapData.getImage_num()+afterimagenum) == 0)
+//                            user.inputGalImages(bitarr);
+//                        else
+//                            user.addGalImages(bitarr);
+//
+//                        modifyedcheck = true;
+//                        Log.v("image_length2",String.valueOf(user.getGalImages().length));
+//                    }
+//                    else{
+//                        user.inputGalImages(bitarr);
+//                    }
+//
+//
+//                    afterimagenum++;
+//                    serverchoice = 2;
+//                    imageadapter = new ImageAdapter(this,SystemMain.justuser);
+//                    viewPager.setAdapter(imageadapter);
+//                    imageadapter.notifyDataSetChanged();
+////                } catch (FileNotFoundException e) {
+////                    // TODO Auto-generated catch block
+////                    e.printStackTrace();
+////                } catch (IOException e) {
+////                    // TODO Auto-generated catch block
+////                    e.printStackTrace();
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        }
+
+
+
+        if (requestCode == PICK_IMAGE_MULTIPE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
-                    //Uri에서 이미지 이름을 얻어온다.
-                    //String name_Str = getImageNameToUri(data.getData());
-
-                    //이미지 데이터를 리사이징된 비트맵으로 받아온다.
-                    Uri image_uri = data.getData();
 
                     if (oncreatelock == false || state == 1) { // 사진 여러장 일 때 or modify
                         oPerlishArray.clear();
                         oncreatelock = true;
                     }
 
-                    //2016.01.11송지원이 바꿈
                     int maxWidth = viewPager.getWidth();
                     int maxHeight = viewPager.getHeight();
 
-                    Bitmap resized_image_bitmap = resizeBitmapImage(image_uri, maxWidth, maxHeight);
+                    ArrayList<String> imagesPathList = new ArrayList<String>();
+                    String[] imagesPath = data.getStringExtra("path").split("\\|");
+                    String[] imagesOrientation = data.getStringExtra("orientation").split("\\|");
+                    Uri[] imagesUri = new Uri[imagesPath.length];
 
-                    //2016.01.26 송지원이 추가. 이미지 자동회전 오류 잡는 코드.
-                    String[] orientationColumn = {MediaStore.Images.Media.ORIENTATION};
-                    Cursor cursor = managedQuery(image_uri, orientationColumn, null, null, null);
-                    int orientationDegree = -1;
 
-                    if(cursor != null && cursor.moveToFirst()){
-                        orientationDegree = cursor.getInt(cursor.getColumnIndex(orientationColumn[0]));
+                    for(int i=0; i<imagesPath.length; i++) {
+
+                        imagesPathList.add(imagesPath[i]);
+                        imagesUri[i] = Uri.fromFile(new File(imagesPath[i]));
+
+                        Bitmap handledBitmapImages = handleBitmapImages(imagesPath[i], Integer.parseInt(imagesOrientation[i]), maxWidth, maxHeight);
+
+                        oPerlishArray.add(handledBitmapImages);
                     }
-
-                    Bitmap rotated_resized_image_bitmap = rotateBitmapImage(resized_image_bitmap,  orientationDegree);
-
-                    oPerlishArray.add(rotated_resized_image_bitmap);
                     bitarr = new Bitmap[oPerlishArray.size()];
                     oPerlishArray.toArray(bitarr);
 
@@ -447,6 +518,9 @@ public class ReviewRegisterActivity extends Activity {
                 }
             }
         }
+
+
+
     }
 
     // in enroll Btn
@@ -925,10 +999,27 @@ public class ReviewRegisterActivity extends Activity {
         return copy;
     }
 
-    // resized bitmap
-    public Bitmap resizeBitmapImage(Uri image_uri, int maxWidth, int maxHeight){
 
-        String imagePath = getPathFromUri(image_uri);
+
+    public Bitmap handleBitmapImages(String image_path, int image_orientation, int maxWidth, int maxHeight){
+
+        Bitmap bitmap = resizeBitmapImage(image_path, maxWidth, maxHeight);
+        //int degree = getOrientation(getApplicationContext(), Uri.fromFile(new File(image_path)) );
+
+        bitmap = rotateBitmapImage(bitmap, image_orientation);
+
+        return bitmap;
+    }
+
+    // resized bitmap
+    public Bitmap resizeBitmapImage(/*Uri image_uri,*/ String path, int maxWidth, int maxHeight){
+
+//        String imagePath = getPathFromUri(image_uri);
+//        String imagePath = image_uri.getPath();
+
+
+/*
+        String imagePath = path;
 
         BitmapFactory.Options options = new BitmapFactory.Options();
 
@@ -936,22 +1027,41 @@ public class ReviewRegisterActivity extends Activity {
         options.outWidth = maxWidth;
         options.outHeight = maxHeight;
 
-
         Bitmap bitmap_resized = BitmapFactory.decodeFile(imagePath, options);
 
+        Log.d("여기", "resizeBitmapImage 정상완료");
+        return bitmap_resized;
+*/
+
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(path, options);
+
+        int imageWidth = options.outWidth;
+        int imageHeight = options.outHeight;
+        int scaleFactor1 = Math.min(imageWidth / maxWidth, imageHeight / maxHeight);
+        int scaleFactor2 = Math.max(imageWidth / maxWidth, imageHeight / maxHeight);
+        Log.e("HAHA", "imageWidth/maxWidth : " + imageWidth/maxWidth +  "// imageHeight/maxHeight :" + imageHeight/maxHeight + "// scaleFactor1 : "+scaleFactor1+"//scaleFactor2 :"+scaleFactor2);
+
+        options.inJustDecodeBounds = false;
+        options.inSampleSize = scaleFactor1+1;
+
+        Bitmap bitmap_resized = BitmapFactory.decodeFile(path, options);
 
         return bitmap_resized;
 
     }
 
-    public String getPathFromUri(Uri uri) {
-        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
-        cursor.moveToNext();
-        String path = cursor.getString(cursor.getColumnIndex("_data"));
-        cursor.close();
 
-        return path;
-    }
+
+//    public String getPathFromUri(Uri uri) {
+//        Cursor cursor = getContentResolver().query(uri, null, null, null, null);
+//        cursor.moveToNext();
+//        String path = cursor.getString(cursor.getColumnIndex("_data"));
+//        cursor.close();
+//
+//        return path;
+//    }
 
     //이미지 degree만큼 회전 해서 return하는 함수
     public Bitmap rotateBitmapImage(Bitmap srcBmp, int degree){
@@ -1201,10 +1311,14 @@ public class ReviewRegisterActivity extends Activity {
             return;
         }
 
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-        intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
+        //2015.02.10 송지원이 바꿈(사진 한번에 여러개 가져오기)
+//        Intent intent = new Intent(Intent.ACTION_PICK);
+//        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+//        intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//        startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
+
+        Intent intent = new Intent(ReviewRegisterActivity.this, CustomPhotoGalleryActivity.class);
+        startActivityForResult(intent, PICK_IMAGE_MULTIPE);
     }
 
     // 사진제거 버튼

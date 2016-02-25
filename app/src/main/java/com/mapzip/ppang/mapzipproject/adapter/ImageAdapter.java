@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
+import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
@@ -51,8 +52,15 @@ public class ImageAdapter extends PagerAdapter {
 //        int padding = context.getResources().getDimensionPixelSize(R.dimen.padding_medium);
 
 //        imageView.setPadding(padding, padding, padding, padding);
-        //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+//        imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+//        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
+//        2016.02.22송지원이 수정
+//        이미지가 모두 가로세로 늘리는게 싫어서 원본 지율 맞춰서 줄어들게 만들었어요
+//        R.color.image_adapter_background도 일부러 거지같이 만들었으니깐 이쁜 색으로 골라주세용ㅎㅎ^^
+        imageView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        imageView.setBackgroundColor(context.getResources().getColor(R.color.image_adapter_background));
+
+
         Log.v("이미지 어댑터 포지션",String.valueOf(position));
         if(nowwho == SystemMain.justuser)
             imageView.setImageBitmap(user.getGalImages()[position]);
