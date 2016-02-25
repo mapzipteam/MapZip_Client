@@ -1,6 +1,7 @@
 package com.mapzip.ppang.mapzipproject.ui.mapinfos;
 
 import android.app.FragmentManager;
+import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatCallback;
@@ -25,6 +26,7 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
 
     private AppCompatDelegate mDelegate;
     private FragmentManager mFragmentManager;
+    private FragmentTransaction mFragmentTransaction;
 
     private NMapView mMapView;
     private NMapController mMapController;
@@ -48,8 +50,8 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
     }
 
     private void initInfosFragment() {
-        mFragmentManager.beginTransaction()
-                .add(R.id.map_infos_container, InfosListFragment.newInstance())
+        mFragmentTransaction = mFragmentManager.beginTransaction();
+        mFragmentTransaction.add(R.id.map_infos_container, InfosListFragment.newInstance())
                 .commit();
     }
 
