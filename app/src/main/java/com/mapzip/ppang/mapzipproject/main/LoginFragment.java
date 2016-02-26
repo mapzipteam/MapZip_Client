@@ -280,6 +280,7 @@ public class LoginFragment extends Fragment {
 
                         // fabric-Login
                         sendLoginSuccessToAnswers();
+
                     } else if(response.get("state").toString().equals("201")) {
                         // toast
                         text_toast.setText("존재하지 않는 계정정보입니다.");

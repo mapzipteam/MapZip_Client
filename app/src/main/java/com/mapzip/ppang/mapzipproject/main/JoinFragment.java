@@ -222,7 +222,13 @@ public class JoinFragment extends Fragment {
                         joinFabric.VALUE_FAIL_PW_CONFIRM);
             }
         }else if(flag == joinFabric.FABRIC_JOIN_SUCCESS){
+            // join success
             signUpEvent.putSuccess(true);
+        }else if(flag == FabricPreferences.FAIL_BY_INTERNET){
+            // no interent
+            signUpEvent.putSuccess(false)
+                    .putCustomAttribute(joinFabric.KEY_JOIN_FAIL_CATEGORY,
+                            FabricPreferences.VALUE_NO_INTERNET);
         }
 
         Answers.getInstance().logSignUp(signUpEvent);
@@ -261,7 +267,7 @@ public class JoinFragment extends Fragment {
 
     public void DoJoin(View v) {
         RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
-        String url = SystemMain.SERVER_JOIN_URL;
+
         final String userid = inputID.getText().toString();
         final String userpw = inputPW.getText().toString();
         final String username = inputName.getText().toString();
@@ -389,6 +395,8 @@ public class JoinFragment extends Fragment {
                     toast.setDuration(Toast.LENGTH_LONG);
                     toast.setView(layout_toast);
                     toast.show();
+
+                    sendJoinActionToAnswers(FabricPreferences.FAIL_BY_INTERNET, 0);
 
                     Log.e("searchmap", error.getMessage());
                 }catch (NullPointerException ex){

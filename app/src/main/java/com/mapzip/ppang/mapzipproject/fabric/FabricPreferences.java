@@ -5,5 +5,9 @@ package com.mapzip.ppang.mapzipproject.fabric;
  */
 public class FabricPreferences {
 
+    public static final int FAIL_BY_INTERNET = -2;
+
+    public static final String VALUE_NO_INTERNET = "Internet Problem";
+
 
 }
