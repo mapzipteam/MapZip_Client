@@ -4,6 +4,9 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,19 +15,31 @@ import android.widget.TextView;
 
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.LocationInfo;
+import com.mapzip.ppang.mapzipproject.ui.ext.DividerItemDecoration;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
 /**
  * Created by acekim on 16. 2. 22.
  */
-public class InfosListFragment extends Fragment {
+public class InfosListFragment extends Fragment implements MapInfosContract.View {
 
-    private RecyclerView mRecyclerView;
+    private InfosAdapter mInfosAdapter;
+    private MapInfosContract.UserActionListener mActionsListener;
+
+    InfoItemListener mItemListener = new InfoItemListener() {
+        @Override
+        public void onInfoClick(LocationInfo clickedInfo) {
+            mActionsListener.openLocationDetails(clickedInfo);
+        }
+    };
 
     public InfosListFragment() {
+        // Requires empty public constructor
     }
 
     public static InfosListFragment newInstance() {
@@ -34,49 +49,81 @@ public class InfosListFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mInfosAdapter = new InfosAdapter(new ArrayList<LocationInfo>(0), mItemListener);
     }
 
     @Override
     public void onResume() {
         super.onResume();
+        mActionsListener.loadLocationInfos(false);
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        setRetainInstance(true);
+        mActionsListener = new MapInfosPresenter(this);
     }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_infos_list, container, false);
+        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.infos_list_recyclerview);
+        recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(getActivity(), android.R.drawable.divider_horizontal_bright)));
+        recyclerView.setAdapter(mInfosAdapter);
 
-        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.infos_list_recyclerview);
-        mRecyclerView.setAdapter(new InfosAdapter(getActivity()));
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         return rootView;
     }
 
-    private static class InfosAdapter extends RecyclerView.Adapter {
+    @Override
+    public void showLocationInfos(List<LocationInfo> infos) {
+        mInfosAdapter.replaceData(infos);
+    }
+
+    @Override
+    public void showLocationDetailUI(LocationInfo locationInfo) {
+        // Todo : 클릭된 장소 정보를 ReviewsListFragment를 통해서 보여준다.
+    }
+
+    private static class InfosAdapter extends RecyclerView.Adapter<InfosAdapter.ViewHolder> {
 
         private List<LocationInfo> mInfos;
-        private final static int LOCATION_ITEM_TYPE = 0;
+        private InfoItemListener mItemListener;
 
-        public InfosAdapter(Context mContext) {
+        public InfosAdapter(List<LocationInfo> infos, InfoItemListener itemListener) {
+            setList(infos);
+            mItemListener = itemListener;
         }
 
         @Override
-        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-            return null;
+        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            Context context = parent.getContext();
+            LayoutInflater inflater = LayoutInflater.from(context);
+            View infoView = inflater.inflate(R.layout.item_infos_list, parent, false);
+
+            return new ViewHolder(infoView, mItemListener);
         }
 
         @Override
-        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, int position) {
+            LocationInfo info = mInfos.get(position);
 
+            holder.nameText.setText(info.getLocationName());
+            holder.addressText.setText(info.getLocationAddress());
+            holder.reviewCountsText.setText(String.format(Locale.KOREAN, "%d개의 리뷰 >", info.getReviewCount()));
         }
 
-        private void setList(List<LocationInfo> notes) {
-            mInfos = checkNotNull(notes);
+        public void replaceData(List<LocationInfo> infos) {
+            setList(infos);
+            notifyDataSetChanged();
+        }
+
+        private void setList(List<LocationInfo> infos) {
+            mInfos = checkNotNull(infos);
         }
 
         @Override

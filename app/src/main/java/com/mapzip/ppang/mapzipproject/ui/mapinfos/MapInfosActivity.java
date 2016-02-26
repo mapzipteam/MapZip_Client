@@ -20,7 +20,7 @@ import com.nhn.android.maps.nmapmodel.NMapError;
 
 import static com.mapzip.ppang.mapzipproject.map.Location.SEOUL;
 
-public class MapInfosActivity extends NMapActivity implements AppCompatCallback, MapInfosContract.View {
+public class MapInfosActivity extends NMapActivity implements AppCompatCallback{
 
     private static final String TAG = "MapInfosActivity";
 

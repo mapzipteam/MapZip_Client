@@ -33,13 +33,7 @@
         <activity
             android:name=".main.SplashActivity"
             android:hardwareAccelerated="true"
-            android:theme="@android:style/Theme.NoTitleBar">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
+            android:theme="@android:style/Theme.NoTitleBar"></activity>
 
         <activity
             android:name=".ui.addmap.AddMapActivity"
@@ -47,6 +41,11 @@
         <activity
             android:name=".ui.mapinfos.MapInfosActivity"
             android:theme="@style/MapzipAppTheme.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
         <!-- [START gcm_receiver] -->
         <receiver
