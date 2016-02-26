@@ -14,11 +14,12 @@ public class JoinFabric{
     public final int FABRIC_JOIN_ERROR_ID_PATTERN = 12;
     public final int FABRIC_JOIN_ERROR_ID_SHORT = 13;
     public final int FABRIC_JOIN_ERROR_DUPID = 14;
+    public final int FABRIC_JOIN_ERROR_ID_LONG = 15;
 
-    public final int FABRIC_JOIN_ERROR_PW = 15;
-    public final int FABRIC_JOIN_ERROR_PW_SHORT = 16;
-    public final int FABRIC_JOIN_ERROR_PW_CONFIRM = 17;
-    public final int FABRIC_JOIN_SUCCESS = 18;
+    public final int FABRIC_JOIN_ERROR_PW = 16;
+    public final int FABRIC_JOIN_ERROR_PW_SHORT = 17;
+    public final int FABRIC_JOIN_ERROR_PW_CONFIRM = 18;
+    public final int FABRIC_JOIN_SUCCESS = 19;
 
     /**
      * Join Fail Category part

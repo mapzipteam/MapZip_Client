@@ -68,6 +68,13 @@ public class JoinFragment extends Fragment {
     // Join Fabric Preferences
     private JoinFabric joinFabric;
 
+    // joinCheck boolean
+    private boolean idok = false;
+    private boolean nameok = false;
+    private boolean pwok = false;
+    private boolean pw2ok = false;
+    private boolean join_total_ok = false;
+
     public static JoinFragment create(int pageNumber) {
         JoinFragment fragment = new JoinFragment();
         Bundle args = new Bundle();
@@ -209,6 +216,10 @@ public class JoinFragment extends Fragment {
                 // when id duplicate in server
                 signUpEvent.putCustomAttribute(joinFabric.KEY_JOIN_FAIL_REASON,
                         joinFabric.VALUE_FAIL_ID_DUP);
+            }else if(detail == joinFabric.FABRIC_JOIN_ERROR_ID_LONG){
+                // when id length over standard..
+                signUpEvent.putCustomAttribute(joinFabric.KEY_JOIN_FAIL_REASON,
+                        joinFabric.VALUE_FAIL_ID_LENGTH_LONG);
             }
         }else if(flag == joinFabric.FABRIC_JOIN_ERROR_PW){
             signUpEvent.putSuccess(false)
@@ -235,101 +246,82 @@ public class JoinFragment extends Fragment {
     }
 
     private void joinCheck(){
-        boolean idok = false;
-        boolean nameok = false;
-        boolean pwok = false;
-        boolean pw2ok = false;
 
-        if(inputID.getText().toString().length() >= 5){
+        if(inputID.getText().toString().length() >= 5 && inputID.getText().toString().length() <=15){
             idok = true;
+        }else{
+            idok = false;
         }
 
         if(inputName.getText().toString().length() >= 1){
             nameok = true;
+        }else{
+            nameok = false;
         }
 
-        if (inputPW.getText().toString().length() >= 8){
+        if (inputPW.getText().toString().length() >= 8 && inputPW.getText().toString().length() <= 15){
             pwok = true;
+        }else{
+            pwok = false;
         }
 
-        if(inputPW2.getText().toString().length() >= 8){
+        if(pwok && inputPW.getText().toString().equals(inputPW2.getText().toString())){
             pw2ok = true;
+        }else{
+            pw2ok = false;
         }
 
         if(idok && nameok && pwok && pw2ok){
-            JoinBtn.setEnabled(true);
+            join_total_ok = true;
             JoinBtn.setBackgroundResource(R.drawable.joinbtn2);
         }else{
-            JoinBtn.setEnabled(false);
+            join_total_ok = false;
             JoinBtn.setBackgroundResource(R.drawable.joinbtn);
         }
     }
 
     public void DoJoin(View v) {
-        RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
+        if(!join_total_ok){
+            joinFailResponse();
+        }else{
 
-        final String userid = inputID.getText().toString();
-        final String userpw = inputPW.getText().toString();
-        final String username = inputName.getText().toString();
+            RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
+            final String userid = inputID.getText().toString();
+            final String userpw = inputPW.getText().toString();
+            final String username = inputName.getText().toString();
 
-        if( userid.length() > 5 ){
-            Pattern ps = Pattern.compile("^[a-zA-Z0-9]+$");//영문, 숫자, 한글만 허용
-            if(!ps.matcher(userid).matches()){
-                // toast
-                sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_ERROR_ID, joinFabric.FABRIC_JOIN_ERROR_ID_PATTERN);
+            if(idok){
+                Pattern ps = Pattern.compile("^[a-zA-Z0-9]+$");//영문, 숫자, 한글만 허용
+                if(!ps.matcher(userid).matches()){
+                    // toast
+                    sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_ERROR_ID, joinFabric.FABRIC_JOIN_ERROR_ID_PATTERN);
 
-                text_toast.setText("아이디는 영문과 숫자의 조합으로 생성해주세요.");
-                Toast toast = new Toast(getActivity());
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setView(layout_toast);
-                toast.show();
+                    text_toast.setText("아이디는 영문과 숫자의 조합으로 생성해주세요.");
+                    Toast toast = new Toast(getActivity());
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.setView(layout_toast);
+                    toast.show();
 
-                return;
-            }
-        }
-
-        if(userpw.length() < 8){
-            // toast
-            sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_ERROR_PW, joinFabric.FABRIC_JOIN_ERROR_PW_SHORT);
-
-            text_toast.setText("ID는 5자, Password는 8자이상 입니다.");
-            Toast toast = new Toast(getActivity());
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(layout_toast);
-            toast.show();
-
-            return;
-        }
-
-        if(userpw.equals(inputPW2.getText().toString()) == false){
-            // toast
-            sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_ERROR_PW, joinFabric.FABRIC_JOIN_ERROR_PW_CONFIRM);
-
-            text_toast.setText("비밀번호확인을 틀리셨습니다.");
-            Toast toast = new Toast(getActivity());
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(layout_toast);
-            toast.show();
-
-            return;
-        }
-
-        if (userid != null && !userid.equals("") && userpw != null && !userpw.equals("") && username != null && !username.equals("")) {
-            JSONObject obj = new JSONObject();
-            try {
-                obj.put("userid", userid);
-                obj.put("userpw", userpw);
-                obj.put("username",username);
-                Log.v("제이손 보내기",obj.toString());
-            } catch (JSONException e) {
-                Log.v("제이손", "에러");
+                    return;
+                }
             }
 
-            JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
-                    SystemMain.SERVER_JOIN_URL,
-                    obj,
-                    createMyReqSuccessListener(),
-                    createMyReqErrorListener()) {
+            if (userid != null && !userid.equals("") && userpw != null && !userpw.equals("") && username != null && !username.equals("")) {
+                JSONObject obj = new JSONObject();
+                try {
+                    obj.put("userid", userid);
+                    obj.put("userpw", userpw);
+                    obj.put("username",username);
+                    Log.v("제이손 보내기",obj.toString());
+                } catch (JSONException e) {
+                    Log.v("제이손", "에러");
+                }
+
+                JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
+                        SystemMain.SERVER_JOIN_URL,
+                        obj,
+                        createMyReqSuccessListener(),
+                        createMyReqErrorListener()) {
                 /*
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
@@ -339,9 +331,11 @@ public class JoinFragment extends Fragment {
                     params.put("username", username);
                     return params;
                 }*/
-            };
-            queue.add(myReq);
+                };
+                queue.add(myReq);
+            }
         }
+
     }
 
     private Response.Listener<JSONObject> createMyReqSuccessListener() {
@@ -405,5 +399,44 @@ public class JoinFragment extends Fragment {
                 }
             }
         };
+    }
+
+    private void joinFailResponse(){
+        if(!idok){
+            if(inputID.getText().toString().length()<5){
+                sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_ERROR_ID, joinFabric.FABRIC_JOIN_ERROR_PW_SHORT);
+            }else if(inputID.getText().toString().length() >15){
+                sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_ERROR_ID, joinFabric.FABRIC_JOIN_ERROR_ID_LONG);
+            }
+
+            text_toast.setText("ID는 5자이상, 15자 이하로 작성해주세요");
+            Toast toast = new Toast(getActivity());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout_toast);
+            toast.show();
+            return;
+        }
+        if(!pwok){
+            sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_ERROR_PW, joinFabric.FABRIC_JOIN_ERROR_PW_SHORT);
+
+            text_toast.setText("Password는 8자이상, 15자 이하로 작성해주세요");
+            Toast toast = new Toast(getActivity());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout_toast);
+            toast.show();
+
+            return;
+        }
+        if(!pw2ok) {
+            sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_ERROR_PW, joinFabric.FABRIC_JOIN_ERROR_PW_CONFIRM);
+
+            text_toast.setText("비밀번호확인을 틀리셨습니다.");
+            Toast toast = new Toast(getActivity());
+            toast.setDuration(Toast.LENGTH_LONG);
+            toast.setView(layout_toast);
+            toast.show();
+
+            return;
+        }
     }
 }
