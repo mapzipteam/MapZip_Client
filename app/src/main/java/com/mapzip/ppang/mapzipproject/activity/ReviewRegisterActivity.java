@@ -1041,11 +1041,13 @@ public class ReviewRegisterActivity extends Activity {
         int imageHeight = options.outHeight;
         int scaleFactor1 = Math.min(imageWidth / maxWidth, imageHeight / maxHeight);
         int scaleFactor2 = Math.max(imageWidth / maxWidth, imageHeight / maxHeight);
-        Log.e("HAHA", "imageWidth/maxWidth : " + imageWidth/maxWidth +  "// imageHeight/maxHeight :" + imageHeight/maxHeight + "// scaleFactor1 : "+scaleFactor1+"//scaleFactor2 :"+scaleFactor2);
+        Log.e("HAHA", "imageWidth/maxWidth : " + imageWidth/maxWidth +  "   // imageHeight/maxHeight : " + imageHeight/maxHeight + "   // scaleFactor1 : "+scaleFactor1+"   //scaleFactor2 : "+scaleFactor2);
 
         options.inJustDecodeBounds = false;
         options.inSampleSize = scaleFactor1+1;
 
+
+        Log.d("ReviewRegisterActivity", "options.inSampleSize : " + options.inSampleSize);
         Bitmap bitmap_resized = BitmapFactory.decodeFile(path, options);
 
         return bitmap_resized;
