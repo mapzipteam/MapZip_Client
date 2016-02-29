@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,6 +52,8 @@ public class ReviewActivity extends Activity {
     private MapData mapData;
     private ImageView review_emotion;
     private TextView store_name;
+    private TextView good_text;
+    private TextView bad_text;
     private TextView review_text;
     private TextView store_address;
     private TextView store_contact;
@@ -100,6 +103,8 @@ public class ReviewActivity extends Activity {
         review_emotion = (ImageView) findViewById(R.id.emotion_review);
         store_name = (TextView) findViewById(R.id.name_review);
         review_text = (TextView) findViewById(R.id.text_review);
+        good_text = (TextView) findViewById(R.id.goodtext_review);
+        bad_text = (TextView) findViewById(R.id.badtext_review);
         store_address = (TextView) findViewById(R.id.address_text_review);
         store_contact = (TextView) findViewById(R.id.contact_text_review);
 
@@ -114,6 +119,9 @@ public class ReviewActivity extends Activity {
         review_text.setText(mapData.getReview_text());
         store_address.setText(mapData.getStore_address());
         store_contact.setText(mapData.getStore_contact());
+
+        good_text.setSelected(true);
+        bad_text.setSelected(true);
 
         // set Emotion Image
         if (mapData.getReview_emotion() < 20)
