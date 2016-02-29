@@ -25,9 +25,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.games.GamesMetadata;
-import com.google.android.gms.location.internal.LocationRequestUpdateData;
-import com.mapzip.ppang.mapzipproject.adapter.ImageAdapter;
 import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.activity.ReviewActivity;
@@ -43,9 +40,7 @@ import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.maps.overlay.NMapPOIdata;
 import com.nhn.android.maps.overlay.NMapPOIitem;
-import com.nhn.android.mapviewer.overlay.NMapCalloutOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
-import com.nhn.android.mapviewer.overlay.NMapOverlayManager.OnCalloutOverlayListener;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
 import org.json.JSONArray;
@@ -85,7 +80,7 @@ public class MapActivity extends NMapActivity {
     private Bitmap[] bitarr;
     private Bitmap[] bitarrfornone;
     private ImageLoader imageLoader;
-    private int image_num=0;
+    private int image_num = 0;
 
     // user data
     private UserData user;
@@ -114,15 +109,6 @@ public class MapActivity extends NMapActivity {
     /*여러개의 오버레이 아이템을 포함할수있는 오버레이 클래스. 그룹 오버레이 아이템을 효과적으로 처리할수있는 기능 제공*/
 
 
-
-
-
-
-
-
-
-
-
     //Listener customizing
     /*NMapView 객체에서 발생하는 상태변화에 대한 콜백 인터페이스*/
     private final NMapView.OnMapStateChangeListener onMapStateChangeListener = new NMapView.OnMapStateChangeListener() {
@@ -133,7 +119,7 @@ public class MapActivity extends NMapActivity {
                 poiDataOverlay.showAllPOIdata(0);//위에 코드와 달리 처음 지도를 불렀을때 모든 poi 플래그들리 보이도록 자동으로 축적이랑 중심을 변경 시켜주는 코드
                 //mMapController.set
             } else {
-                if(DEBUG) {
+                if (DEBUG) {
                     Log.e("NMAP", "onMapInitHandler : error=" + nMapError.toString());
                 }
             }
@@ -152,7 +138,7 @@ public class MapActivity extends NMapActivity {
         @Override
         public void onZoomLevelChange(NMapView nMapView, int i) {
 
-            if(DEBUG) {
+            if (DEBUG) {
                 Log.e(LOG_TAG, "zoom level : " + i);
             }
         }
@@ -201,16 +187,16 @@ public class MapActivity extends NMapActivity {
         @Override
         public void onFocusChanged(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
 
-            if(DEBUG) {
+            if (DEBUG) {
                 Log.e("dSJW :" + LOG_TAG, "NMapPOIdataOVerlay.OnstateChangListener onFocusChanged");
             }
 
             if (nMapPOIitem != null) {
-                if(DEBUG){
+                if (DEBUG) {
                     Log.i("dSJW :" + LOG_TAG, "onFocusChanged: " + nMapPOIitem.toString());
                 }
             } else {
-                if(DEBUG){
+                if (DEBUG) {
                     Log.i("dSJW :" + LOG_TAG, "onFocusChanged: ");
                 }
             }
@@ -219,9 +205,9 @@ public class MapActivity extends NMapActivity {
         @Override
         public void onCalloutClick(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
 
-            if(DEBUG){
-                Log.e("dSJW :"+ LOG_TAG, "NMapPOIdataOVerlay.OnstateChangListener onCalloutClick");
-                Log.e("dSJW :"+ LOG_TAG, "NMapPOIdataOVerlay.OnstateChangListener onCalloutClick"+"\t\t+ getIntent()..getStringExtra(\"fragment_id\")toString() == "+getIntent().getStringExtra("fragment_id").toString());
+            if (DEBUG) {
+                Log.e("dSJW :" + LOG_TAG, "NMapPOIdataOVerlay.OnstateChangListener onCalloutClick");
+                Log.e("dSJW :" + LOG_TAG, "NMapPOIdataOVerlay.OnstateChangListener onCalloutClick" + "\t\t+ getIntent()..getStringExtra(\"fragment_id\")toString() == " + getIntent().getStringExtra("fragment_id").toString());
             }
             if ((getIntent().getStringExtra("fragment_id").equals("home")) || (getIntent().getStringExtra("fragment_id").equals("friend_home"))) {
 
@@ -234,8 +220,8 @@ public class MapActivity extends NMapActivity {
     private final NMapOverlayManager.OnCalloutOverlayViewListener onCalloutOverlayViewListener = new NMapOverlayManager.OnCalloutOverlayViewListener() {
         @Override
         public View onCreateCalloutOverlayView(NMapOverlay itemOverlay, NMapOverlayItem overlayItem, Rect itemBounds) {
-            if(DEBUG){
-                Log.e("dSJW :"+ LOG_TAG, "NMApOverlayManager.OnCalloutOverlayViewListener onCreateCalloutOverlayView");
+            if (DEBUG) {
+                Log.e("dSJW :" + LOG_TAG, "NMApOverlayManager.OnCalloutOverlayViewListener onCreateCalloutOverlayView");
             }
 
             if (overlayItem != null) {
@@ -251,11 +237,7 @@ public class MapActivity extends NMapActivity {
     };
 
 
-
-
     NGeoPoint current_point = SEOUL;
-
-
 
 
     @Override
@@ -278,8 +260,7 @@ public class MapActivity extends NMapActivity {
         current_point = new NGeoPoint(getIntent().getExtras().getDouble("LNG"), getIntent().getExtras().getDouble("LAT"));
 
 
-
-        mMapView = (com.nhn.android.maps.NMapView)findViewById(R.id.map);
+        mMapView = (com.nhn.android.maps.NMapView) findViewById(R.id.map);
 
         mMapView.setApiKey(API_KEY);
 
@@ -292,11 +273,9 @@ public class MapActivity extends NMapActivity {
         mMapView.setBuiltInZoomControls(true, null);
 
 
-
         mMapController = mMapView.getMapController();
 
         //mMapController.setZoomLevelConstraint();
-
 
 
         mMapViewerResourceProvider = new NMapViewerResourceProvider(this);
@@ -304,15 +283,11 @@ public class MapActivity extends NMapActivity {
         mOverlayManager = new NMapOverlayManager(this, mMapView, mMapViewerResourceProvider);
 
 
-
-
         int markerId = NMapPOIflagType.PIN;
 
         poiData = new NMapPOIdata(5, mMapViewerResourceProvider);
 
         poiData = getRightPOIdata(poiData, markerId);
-
-
 
 
         poiDataOverlay = /**/mOverlayManager.createPOIdataOverlay(poiData, null);
@@ -323,13 +298,12 @@ public class MapActivity extends NMapActivity {
         poiDataOverlay.setOnStateChangeListener(onPOIdataStateChangeListener);
 
 
-
         mOverlayManager.setOnCalloutOverlayViewListener(onCalloutOverlayViewListener);
 
 
     }
 
-    public NMapPOIdata getRightPOIdata(NMapPOIdata poiData, int markerId){
+    public NMapPOIdata getRightPOIdata(NMapPOIdata poiData, int markerId) {
 
         String fragment_id = getIntent().getStringExtra("fragment_id");
         String mapid = getIntent().getStringExtra("mapid");//review_Fragement에서 날라오는거는 mapid 값 안써서 이부분이 에러 날수도있을것같다 확인해보자
@@ -340,8 +314,8 @@ public class MapActivity extends NMapActivity {
                 //String mapid = getIntent().getStringExtra("mapid");
                 JSONArray jarr = new JSONArray();
                 jarr = user.getMapforpinArray(Integer.parseInt(mapid));
-                if(DEBUG) {
-                    Log.v(LOG_TAG+"맵 어레이", String.valueOf(user.getMapforpinArray(Integer.parseInt(mapid))));
+                if (DEBUG) {
+                    Log.v(LOG_TAG + "맵 어레이", String.valueOf(user.getMapforpinArray(Integer.parseInt(mapid))));
                 }
                 int arrnum = 0;
 
@@ -362,8 +336,8 @@ public class MapActivity extends NMapActivity {
                 }
                 poiData.endPOIdata();
             } catch (JSONException ex) {
-                if(DEBUG) {
-                    Log.v(LOG_TAG+"맵액티비티", "JSONEX");
+                if (DEBUG) {
+                    Log.v(LOG_TAG + "맵액티비티", "JSONEX");
                 }
 
             }
@@ -373,8 +347,8 @@ public class MapActivity extends NMapActivity {
                 //String mapid = getIntent().getStringExtra("mapid");
                 JSONArray jarr = new JSONArray();
                 jarr = fuser.getMapforpinArray(Integer.parseInt(mapid));
-                if(DEBUG) {
-                    Log.v(LOG_TAG+"맵 어레이", String.valueOf(fuser.getMapforpinArray(Integer.parseInt(mapid))));
+                if (DEBUG) {
+                    Log.v(LOG_TAG + "맵 어레이", String.valueOf(fuser.getMapforpinArray(Integer.parseInt(mapid))));
                 }
                 int arrnum = 0;
                 for (arrnum = 0; arrnum < jarr.length(); arrnum++) {
@@ -394,8 +368,8 @@ public class MapActivity extends NMapActivity {
                 }
                 poiData.endPOIdata();
             } catch (JSONException ex) {
-                if(DEBUG) {
-                    Log.v(LOG_TAG+"맵액티비티", "JSONEX");
+                if (DEBUG) {
+                    Log.v(LOG_TAG + "맵액티비티", "JSONEX");
                 }
             }
         } else if (fragment_id.equals("review")) {
@@ -446,13 +420,12 @@ public class MapActivity extends NMapActivity {
     protected void onResume() {
         super.onResume();
 
-        if(DEBUG){
-            Log.v("맵 온리쥼","스타트");
+        if (DEBUG) {
+            Log.v("맵 온리쥼", "스타트");
         }
 
-        if(user.isMapRefreshLock() == true)
+        if (user.isMapRefreshLock() == true)
             return;
-
 
 
         mOverlayManager.removeOverlay(poiDataOverlay);
@@ -466,7 +439,6 @@ public class MapActivity extends NMapActivity {
         poiData = getRightPOIdata(poiData, markerId);
 
 
-
         poiDataOverlay = /**/mOverlayManager.createPOIdataOverlay(poiData, null);
 
         //poiDataOverlay.showAllPOIdata(0);
@@ -476,11 +448,10 @@ public class MapActivity extends NMapActivity {
 
         user.setMapRefreshLock(true);
 
-        if(DEBUG) {
+        if (DEBUG) {
             Log.v("맵 온리쥼", "엔드");
         }
     }
-
 
 
     public void GetMapDetail(int poiid) {
@@ -495,12 +466,12 @@ public class MapActivity extends NMapActivity {
                 obj.put("userid", fuser.getUserID());
             obj.put("store_id", poiid);
 
-            if(DEBUG) {
-                Log.v(LOG_TAG+"Map제이손보내기", obj.toString());
+            if (DEBUG) {
+                Log.v(LOG_TAG + "Map제이손보내기", obj.toString());
             }
         } catch (JSONException e) {
-            if(DEBUG) {
-                Log.v(LOG_TAG+"제이손", "에러");
+            if (DEBUG) {
+                Log.v(LOG_TAG + "제이손", "에러");
             }
         }
 
@@ -525,13 +496,10 @@ public class MapActivity extends NMapActivity {
                         JSONArray jarr = response.getJSONArray("map_detail");
                         JSONObject obj = jarr.getJSONObject(0);
 
-                        if ((getIntent().getStringExtra("fragment_id").equals("home")))
-                        {
+                        if ((getIntent().getStringExtra("fragment_id").equals("home"))) {
                             user.initMapData();
-                            user.setMapData(obj.getString("store_id"), obj.getString("map_id"), obj.getString("store_contact"), obj.getString("review_text"), obj.getString("review_emotion"), obj.getString("store_address"), obj.getString("store_name"), obj.getString("gu_num"),obj.getString("image_num"));
-                        }
-                        else if ((getIntent().getStringExtra("fragment_id").equals("friend_home")))
-                        {
+                            user.setMapData(obj.getString("store_id"), obj.getString("map_id"), obj.getString("store_contact"), obj.getString("review_text"), obj.getString("review_emotion"), obj.getString("store_address"), obj.getString("store_name"), obj.getString("gu_num"), obj.getString("image_num"));
+                        } else if ((getIntent().getStringExtra("fragment_id").equals("friend_home"))) {
                             fuser.initMapData();
                             fuser.setMapData(obj.getString("store_id"), obj.getString("map_id"), obj.getString("store_contact"), obj.getString("review_text"), obj.getString("review_emotion"), obj.getString("store_address"), obj.getString("store_name"));
                         }
@@ -560,8 +528,8 @@ public class MapActivity extends NMapActivity {
                             imageLoader = MyVolley.getInstance(getApplicationContext()).getImageLoader();
 
                             for (int i = 0; i < image_num; i++) {
-                                if(DEBUG) {
-                                    Log.v(LOG_TAG+"imagenum", String.valueOf(i));
+                                if (DEBUG) {
+                                    Log.v(LOG_TAG + "imagenum", String.valueOf(i));
                                 }
 
                                 // if first, clear array. (remove noimage)
@@ -572,13 +540,13 @@ public class MapActivity extends NMapActivity {
 
                                 if (getIntent().getStringExtra("fragment_id").equals("friend_home")) {
 
-                                    imageLoad(i, SystemMain.SERVER_ROOT_URL + "/client_data/client_" + fuser.getUserID() + "/store_" +fuser.getMapData().getStore_id() + "/image" + String.valueOf(i) + ".jpg");
+                                    imageLoad(i, SystemMain.SERVER_ROOT_URL + "/client_data/client_" + fuser.getUserID() + "/store_" + fuser.getMapData().getStore_id() + "/image" + String.valueOf(i) + ".jpg");
 
                                 } else {
 
                                     String url = SystemMain.SERVER_ROOT_URL + "/client_data/client_" + user.getUserID() + "/store_" + user.getMapData().getStore_id() + "/image" + String.valueOf(i) + ".jpg";
 
-                                    if(user.isAfterModify()) {
+                                    if (user.isAfterModify()) {
 
                                         MyVolley.getInstance(getApplicationContext()).clearCache();
                                     }
@@ -587,7 +555,7 @@ public class MapActivity extends NMapActivity {
                                     imageLoad(i, url);
                                 }
                             }
-                        }else {
+                        } else {
                             Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
                             intent.putExtra("fragment_id", getIntent().getStringExtra("fragment_id"));
                             startActivity(intent);
@@ -596,7 +564,9 @@ public class MapActivity extends NMapActivity {
                         }
                     }
                 } catch (JSONException e) {
-                    if(DEBUG){ Log.v(LOG_TAG+"에러", "제이손");}
+                    if (DEBUG) {
+                        Log.v(LOG_TAG + "에러", "제이손");
+                    }
                 }
             }
         };
@@ -614,10 +584,14 @@ public class MapActivity extends NMapActivity {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    if(DEBUG){ Log.e(LOG_TAG+"MapActivity", error.getMessage());}
+                    if (DEBUG) {
+                        Log.e(LOG_TAG + "MapActivity", error.getMessage());
+                    }
                 } catch (NullPointerException ex) {
                     // toast
-                    if(DEBUG){ Log.e(LOG_TAG+"MapActivity", "nullpointexception");}
+                    if (DEBUG) {
+                        Log.e(LOG_TAG + "MapActivity", "nullpointexception");
+                    }
                 }
             }
         };
@@ -625,7 +599,9 @@ public class MapActivity extends NMapActivity {
 
     // get review Image from server
     public void imageLoad(final int nownum, String imageURL) {
-        if(DEBUG){ Log.v(LOG_TAG+"imageLoader", "함수진입");}
+        if (DEBUG) {
+            Log.v(LOG_TAG + "imageLoader", "함수진입");
+        }
 
         imageLoader.get(imageURL, new ImageLoader.ImageListener() {
             @Override
@@ -634,13 +610,13 @@ public class MapActivity extends NMapActivity {
                 if (response != null && response.getBitmap() != null) {
 
                     if (DEBUG) {
-                        Log.v(LOG_TAG+"이미지이미지", response.getRequestUrl().toString());
+                        Log.v(LOG_TAG + "이미지이미지", response.getRequestUrl().toString());
                     }
 
                     // add image to array
                     oPerlishArray.add(response.getBitmap());
                     if (DEBUG) {
-                        Log.v(LOG_TAG+"리스폰스", response.getBitmap().toString());
+                        Log.v(LOG_TAG + "리스폰스", response.getBitmap().toString());
                     }
                     // set image to user Data, if receive completed.
                     if (image_num == oPerlishArray.size()) {
@@ -653,7 +629,7 @@ public class MapActivity extends NMapActivity {
                             user.inputGalImages(bitarr);
                             for (int i = 0; i < image_num; i++) {
                                 if (DEBUG) {
-                                    Log.v(LOG_TAG+"갤러리", user.getGalImages()[i].toString());
+                                    Log.v(LOG_TAG + "갤러리", user.getGalImages()[i].toString());
                                 }
                             }
                         } else {
@@ -661,7 +637,7 @@ public class MapActivity extends NMapActivity {
                             fuser.inputGalImages(bitarr);
                             for (int i = 0; i < image_num; i++) {
                                 if (DEBUG) {
-                                    Log.v(LOG_TAG+"갤러리", fuser.getGalImages()[i].toString());
+                                    Log.v(LOG_TAG + "갤러리", fuser.getGalImages()[i].toString());
                                 }
                             }
                         }
@@ -672,7 +648,7 @@ public class MapActivity extends NMapActivity {
                     }
 
                     if (DEBUG) {
-                        Log.v(LOG_TAG+"imageLoad c", String.valueOf(nownum));
+                        Log.v(LOG_TAG + "imageLoad c", String.valueOf(nownum));
                     }
                 }
             }
@@ -680,7 +656,7 @@ public class MapActivity extends NMapActivity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 if (DEBUG) {
-                    Log.v(LOG_TAG+"imageLoader", "에러");
+                    Log.v(LOG_TAG + "imageLoader", "에러");
                 }
             }
         });
@@ -700,7 +676,6 @@ public class MapActivity extends NMapActivity {
 
         return bitmap;
     }
-
 
 
 }
