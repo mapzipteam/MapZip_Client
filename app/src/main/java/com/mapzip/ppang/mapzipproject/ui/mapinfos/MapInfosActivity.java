@@ -20,7 +20,7 @@ import com.nhn.android.maps.nmapmodel.NMapError;
 
 import static com.mapzip.ppang.mapzipproject.map.Location.SEOUL;
 
-public class MapInfosActivity extends NMapActivity implements AppCompatCallback{
+public class MapInfosActivity extends NMapActivity implements AppCompatCallback {
 
     private static final String TAG = "MapInfosActivity";
 
@@ -62,7 +62,7 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback{
 
     private void initNaverMap() {
         mMapView = (NMapView) findViewById(R.id.map_infos_nmap);
-        mMapView.setApiKey(getString(R.string.naver_map_api_key));
+        mMapView.setClientId(getString(R.string.naver_map_client_key));
         mMapView.setEnabled(true);
         mMapView.setClickable(true);
         mMapView.setFocusable(true);

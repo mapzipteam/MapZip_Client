@@ -70,7 +70,7 @@ dependencies {
     compile "com.google.guava:guava:$rootProject.guavaVersion"
     compile "com.google.code.gson:gson:$rootProject.gsonVersion"
     compile "com.mcxiaoke.volley:library:$rootProject.volleyVersion"
-    compile 'com.naver.maps.open:naver-map-api:2.1.0@aar'
+    compile 'com.naver.maps.open:naver-map-api:2.1.1@aar'
     compile('org.apache.httpcomponents:httpmime:4.3.6')
     {
         exclude module: 'httpclient'
