@@ -1,8 +1,7 @@
 package com.mapzip.ppang.mapzipproject.ui.mapinfos;
 
-import android.app.Fragment;
-
 import com.mapzip.ppang.mapzipproject.model.LocationInfo;
+import com.mapzip.ppang.mapzipproject.model.ReviewData;
 
 import java.util.List;
 
@@ -17,22 +16,33 @@ public interface MapInfosContract {
     interface View {
         interface Activity {
             void showLocationMarker(List<LocationInfo> locationInfos);
+            void changeFragment();
         }
 
-        interface Fragment {
+        interface InfosList {
             void showLocationInfos(List<LocationInfo> locationInfos);
 
             void showLocationDetailUI(LocationInfo locationInfo);
         }
+
+        interface ReviewsList {
+            void showComments(List<ReviewData> reviews);
+        }
     }
 
     interface UserActionListener {
-        void setFragment(MapInfosContract.View.Fragment fragment);
+        void setInfosListFragment(MapInfosContract.View.InfosList fragment);
+
+        void setReviewsListFragment(MapInfosContract.View.ReviewsList fragment);
 
         void setUpLocationMarkers(List<LocationInfo> locationInfos);
 
         void loadLocationInfos(boolean forceUpdate);
 
         void openLocationDetails(LocationInfo clickedInfo);
+
+        void loadReviewsDatas(boolean forceUpdate);
+
+        void loadReviewFragment();
     }
 }

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -26,7 +25,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by acekim on 16. 2. 22.
  */
-public class InfosListFragment extends Fragment implements MapInfosContract.View.Fragment {
+public class InfosListFragment extends Fragment implements MapInfosContract.View.InfosList {
 
     private InfosAdapter mInfosAdapter;
     private MapInfosContract.UserActionListener mActionsListener;
@@ -63,7 +62,7 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
         mActionsListener = ((MapInfosActivity) getActivity()).getActionsListener();
-        mActionsListener.setFragment(this);
+        mActionsListener.setInfosListFragment(this);
     }
 
     @Nullable
@@ -88,7 +87,7 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
 
     @Override
     public void showLocationDetailUI(LocationInfo locationInfo) {
-        // Todo : 클릭된 장소 정보를 ReviewsListFragment를 통해서 보여준다.
+        mActionsListener.loadReviewFragment();
     }
 
     private static class InfosAdapter extends RecyclerView.Adapter<InfosAdapter.ViewHolder> {

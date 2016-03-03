@@ -1,9 +1,9 @@
 package com.mapzip.ppang.mapzipproject.ui.mapinfos;
 
-import android.app.Fragment;
 import android.support.annotation.NonNull;
 
 import com.mapzip.ppang.mapzipproject.model.LocationInfo;
+import com.mapzip.ppang.mapzipproject.model.ReviewData;
 import com.nhn.android.maps.maplib.NGeoPoint;
 
 import java.util.ArrayList;
@@ -20,15 +20,21 @@ import static com.google.common.base.Preconditions.checkNotNull;
 public class MapInfosPresenter implements MapInfosContract.UserActionListener {
 
     private MapInfosContract.View.Activity mInfosActivity;
-    private MapInfosContract.View.Fragment mInfosFragment;
+    private MapInfosContract.View.InfosList mInfosFragment;
+    private MapInfosContract.View.ReviewsList mReviewsFragment;
 
     public MapInfosPresenter(@NonNull MapInfosContract.View.Activity infosActivity) {
         mInfosActivity = checkNotNull(infosActivity, "InfosActivity cannot be null!!");
     }
 
     @Override
-    public void setFragment(@NonNull MapInfosContract.View.Fragment infosFragment) {
-        mInfosFragment = checkNotNull(infosFragment, "InfosFragment cannot be null!!");
+    public void setInfosListFragment(MapInfosContract.View.InfosList fragment) {
+        mInfosFragment = checkNotNull(fragment, "InfosFragment cannot be null!!");
+    }
+
+    @Override
+    public void setReviewsListFragment(MapInfosContract.View.ReviewsList fragment) {
+        mReviewsFragment = checkNotNull(fragment, "ReviewsFragment cannot be null!!");
     }
 
     @Override
@@ -54,5 +60,20 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
     public void openLocationDetails(@NonNull LocationInfo requestedInfo) {
         checkNotNull(requestedInfo, "requestedInfo cannot be null!");
         mInfosFragment.showLocationDetailUI(requestedInfo);
+    }
+
+    @Override
+    public void loadReviewsDatas(boolean forceUpdate) {
+        List<ReviewData> dummyDatas = new ArrayList<>(3);
+        dummyDatas.add(new ReviewData("Ace Kim", "맛있어요!", "2016-03-27"));
+        dummyDatas.add(new ReviewData("ppang", "맛없어요.", "2016-04-27"));
+        dummyDatas.add(new ReviewData("brain", "그저그래요.", "2016-05-27"));
+
+        mReviewsFragment.showComments(dummyDatas);
+    }
+
+    @Override
+    public void loadReviewFragment() {
+        mInfosActivity.changeFragment();
     }
 }
