@@ -13,11 +13,12 @@ public class LocationInfo {
     private String locationName;
     @Nullable
     private String locationAddress;
+    @Nullable
     private NGeoPoint locationLatLng;
     @Nullable
     private int reviewCount;
 
-    public LocationInfo(int locationID, String locationName, String locationAddress, NGeoPoint locationLatLng, int reviewCount) {
+    public LocationInfo(int locationID, @Nullable String locationName, @Nullable String locationAddress, @Nullable NGeoPoint locationLatLng, int reviewCount) {
         this.locationID = locationID;
         this.locationName = locationName;
         this.locationAddress = locationAddress;

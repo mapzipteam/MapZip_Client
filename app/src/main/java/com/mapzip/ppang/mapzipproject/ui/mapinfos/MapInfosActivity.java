@@ -86,9 +86,15 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback 
         mMapController = mMapView.getMapController();
         mMapViewerResourceProvider = new NMapViewerResourceProvider(this);
         mMapOverlayManager = new NMapOverlayManager(this, mMapView, mMapViewerResourceProvider);
-        Log.i("TAG", "endinitNaverMap");
     }
 
+    /**
+     * @since 2016. 3. 3
+     * @param locationInfos : 마커를 생성할 장소들에대한 데이터들
+     * @see InfosListFragment
+     * 장소들에 대한 데이터를 리스트형태로 가져와서 오버레이 아이템(마커)을 생성하고 출력합니다.
+     * 이 함수는 InfosListFragment 에서 호출됩니다.
+     */
     public void showLocationMarker(List<LocationInfo> locationInfos) {
         NMapPOIdata poiData = new NMapPOIdata(locationInfos.size(), mMapViewerResourceProvider);
 
@@ -100,14 +106,13 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback 
 
         mPoiDataOverlay = mMapOverlayManager.createPOIdataOverlay(poiData, null);
         mPoiDataOverlay.showAllPOIdata(0);
-        Log.i("TAG", "endShowMarker");
     }
 
     private final NMapView.OnMapStateChangeListener onMapStateChangeListener = new NMapView.OnMapStateChangeListener() {
         @Override
         public void onMapInitHandler(NMapView nMapView, NMapError nMapError) {
             if (nMapError == null) {
-                //poiDataOverlay.showAllPOIdata(0);//위에 코드와 달리 처음 지도를 불렀을때 모든 poi 플래그들리 보이도록 자동으로 축적이랑 중심을 변경 시켜주는 코드
+
             } else {
                 if (DEBUG) {
                     Log.e("NMAP", "onMapInitHandler : error=" + nMapError.toString());
