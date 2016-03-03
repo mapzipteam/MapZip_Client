@@ -3,10 +3,10 @@ package com.mapzip.ppang.mapzipproject.ui.mapinfos;
 import android.support.annotation.NonNull;
 
 import com.mapzip.ppang.mapzipproject.model.LocationInfo;
+import com.nhn.android.maps.maplib.NGeoPoint;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -18,7 +18,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class MapInfosPresenter implements MapInfosContract.UserActionListener {
 
-    private final MapInfosContract.View mInfosView;
+    private MapInfosContract.View mInfosView;
 
     public MapInfosPresenter(@NonNull MapInfosContract.View infosView) {
         mInfosView = checkNotNull(infosView, "infosView cannot be null!!");
@@ -31,9 +31,9 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
         //EspressoIdlingResource.increment(); // App is busy until further notice
 
         List<LocationInfo> dummyDatas = new ArrayList<>(3);
-        dummyDatas.add(new LocationInfo(0, "상도곱창", "서울특별시 동작구 상도동 127-7", 6));
-        dummyDatas.add(new LocationInfo(1, "현선이네", "서울특별시 동작구 상도동 128-7", 100));
-        dummyDatas.add(new LocationInfo(2, "피자헤븐", "서울특별시 동작구 상도동 125-7", 1000));
+        dummyDatas.add(new LocationInfo(0, "상도곱창", "서울특별시 동작구 상도동 127-7", new NGeoPoint(37.496815, 126.953565), 6));
+        dummyDatas.add(new LocationInfo(1, "현선이네", "서울특별시 동작구 상도동 128-7", new NGeoPoint(37.495183, 126.956716), 100));
+        dummyDatas.add(new LocationInfo(2, "피자헤븐", "서울특별시 동작구 상도동 125-7", new NGeoPoint(37.494955, 126.958133), 1000));
 
         mInfosView.showLocationInfos(dummyDatas);
     }

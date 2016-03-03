@@ -82,6 +82,7 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     @Override
     public void showLocationInfos(List<LocationInfo> infos) {
         mInfosAdapter.replaceData(infos);
+        ((MapInfosActivity) getActivity()).showLocationMarker(infos);
     }
 
     @Override

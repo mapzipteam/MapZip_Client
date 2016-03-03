@@ -2,6 +2,8 @@ package com.mapzip.ppang.mapzipproject.model;
 
 import android.support.annotation.Nullable;
 
+import com.nhn.android.maps.maplib.NGeoPoint;
+
 /**
  * Created by acekim on 16. 2. 25.
  */
@@ -11,12 +13,15 @@ public class LocationInfo {
     private String locationName;
     @Nullable
     private String locationAddress;
+    private NGeoPoint locationLatLng;
     @Nullable
     private int reviewCount;
 
-    public LocationInfo(int locationID, String locationName, String locationAddress, int reviewCount) {
+    public LocationInfo(int locationID, String locationName, String locationAddress, NGeoPoint locationLatLng, int reviewCount) {
+        this.locationID = locationID;
         this.locationName = locationName;
         this.locationAddress = locationAddress;
+        this.locationLatLng = locationLatLng;
         this.reviewCount = reviewCount;
     }
 
@@ -42,6 +47,14 @@ public class LocationInfo {
 
     public void setLocationAddress(String locationAddress) {
         this.locationAddress = locationAddress;
+    }
+
+    public NGeoPoint getLocationLatLng() {
+        return locationLatLng;
+    }
+
+    public void setLocationLatLng(NGeoPoint locationLatLng) {
+        this.locationLatLng = locationLatLng;
     }
 
     public int getReviewCount() {

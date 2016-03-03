@@ -12,11 +12,19 @@ import android.util.Log;
 import android.view.MotionEvent;
 
 import com.mapzip.ppang.mapzipproject.R;
+import com.mapzip.ppang.mapzipproject.map.NMapPOIflagType;
+import com.mapzip.ppang.mapzipproject.map.NMapViewerResourceProvider;
+import com.mapzip.ppang.mapzipproject.model.LocationInfo;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapView;
 import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.nmapmodel.NMapError;
+import com.nhn.android.maps.overlay.NMapPOIdata;
+import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
+import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
+
+import java.util.List;
 
 import static com.mapzip.ppang.mapzipproject.map.Location.SEOUL;
 
@@ -30,6 +38,9 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback 
 
     private NMapView mMapView;
     private NMapController mMapController;
+    private NMapViewerResourceProvider mMapViewerResourceProvider;
+    private NMapOverlayManager mMapOverlayManager;
+    private NMapPOIdataOverlay mPoiDataOverlay;
 
     private static final boolean DEBUG = false;
     private NGeoPoint current_point = SEOUL;
@@ -68,18 +79,34 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback 
         mMapView.setFocusable(true);
         mMapView.setFocusableInTouchMode(true);
         mMapView.requestFocus();
-
+        mMapView.setBuiltInZoomControls(true, null);
         mMapView.setOnMapViewTouchEventListener(onMapViewTouchEventListener);
         mMapView.setOnMapStateChangeListener(onMapStateChangeListener);
 
         mMapController = mMapView.getMapController();
+        mMapViewerResourceProvider = new NMapViewerResourceProvider(this);
+        mMapOverlayManager = new NMapOverlayManager(this, mMapView, mMapViewerResourceProvider);
+        Log.i("TAG", "endinitNaverMap");
+    }
+
+    public void showLocationMarker(List<LocationInfo> locationInfos) {
+        NMapPOIdata poiData = new NMapPOIdata(locationInfos.size(), mMapViewerResourceProvider);
+
+        poiData.beginPOIdata(locationInfos.size());
+        for (LocationInfo locationInfo : locationInfos) {
+            poiData.addPOIitem(locationInfo.getLocationLatLng().getLatitude(), locationInfo.getLocationLatLng().getLongitude(), locationInfo.getLocationName(), NMapPOIflagType.PIN, locationInfo.getLocationID());
+        }
+        poiData.endPOIdata();
+
+        mPoiDataOverlay = mMapOverlayManager.createPOIdataOverlay(poiData, null);
+        mPoiDataOverlay.showAllPOIdata(0);
+        Log.i("TAG", "endShowMarker");
     }
 
     private final NMapView.OnMapStateChangeListener onMapStateChangeListener = new NMapView.OnMapStateChangeListener() {
         @Override
         public void onMapInitHandler(NMapView nMapView, NMapError nMapError) {
             if (nMapError == null) {
-                mMapController.setMapCenter(current_point, 9);
                 //poiDataOverlay.showAllPOIdata(0);//위에 코드와 달리 처음 지도를 불렀을때 모든 poi 플래그들리 보이도록 자동으로 축적이랑 중심을 변경 시켜주는 코드
             } else {
                 if (DEBUG) {

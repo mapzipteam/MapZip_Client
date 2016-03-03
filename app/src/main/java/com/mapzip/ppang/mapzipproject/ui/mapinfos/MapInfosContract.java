@@ -12,14 +12,13 @@ import java.util.List;
  */
 public interface MapInfosContract {
 
-    interface View{
+    interface View {
+        void showLocationInfos(List<LocationInfo> locationInfos);
 
-        void showLocationInfos(List<LocationInfo> infos);
-
-        void showLocationDetailUI(LocationInfo requestedInfo);
+        void showLocationDetailUI(LocationInfo locationInfo);
     }
-    interface UserActionListener{
 
+    interface UserActionListener {
         void loadLocationInfos(boolean forceUpdate);
 
         void openLocationDetails(LocationInfo clickedInfo);
