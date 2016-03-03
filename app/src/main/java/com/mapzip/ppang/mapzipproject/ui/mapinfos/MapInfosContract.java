@@ -1,5 +1,7 @@
 package com.mapzip.ppang.mapzipproject.ui.mapinfos;
 
+import android.app.Fragment;
+
 import com.mapzip.ppang.mapzipproject.model.LocationInfo;
 
 import java.util.List;
@@ -13,12 +15,22 @@ import java.util.List;
 public interface MapInfosContract {
 
     interface View {
-        void showLocationInfos(List<LocationInfo> locationInfos);
+        interface Activity {
+            void showLocationMarker(List<LocationInfo> locationInfos);
+        }
 
-        void showLocationDetailUI(LocationInfo locationInfo);
+        interface Fragment {
+            void showLocationInfos(List<LocationInfo> locationInfos);
+
+            void showLocationDetailUI(LocationInfo locationInfo);
+        }
     }
 
     interface UserActionListener {
+        void setFragment(MapInfosContract.View.Fragment fragment);
+
+        void setUpLocationMarkers(List<LocationInfo> locationInfos);
+
         void loadLocationInfos(boolean forceUpdate);
 
         void openLocationDetails(LocationInfo clickedInfo);

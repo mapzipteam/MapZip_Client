@@ -26,7 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
 /**
  * Created by acekim on 16. 2. 22.
  */
-public class InfosListFragment extends Fragment implements MapInfosContract.View {
+public class InfosListFragment extends Fragment implements MapInfosContract.View.Fragment {
 
     private InfosAdapter mInfosAdapter;
     private MapInfosContract.UserActionListener mActionsListener;
@@ -62,7 +62,8 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         setRetainInstance(true);
-        mActionsListener = new MapInfosPresenter(this);
+        mActionsListener = ((MapInfosActivity) getActivity()).getActionsListener();
+        mActionsListener.setFragment(this);
     }
 
     @Nullable
@@ -82,7 +83,7 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     @Override
     public void showLocationInfos(List<LocationInfo> infos) {
         mInfosAdapter.replaceData(infos);
-        ((MapInfosActivity) getActivity()).showLocationMarker(infos);
+        mActionsListener.setUpLocationMarkers(infos);
     }
 
     @Override

@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatCallback;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.mapzip.ppang.mapzipproject.R;
@@ -26,9 +25,7 @@ import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
 import java.util.List;
 
-import static com.mapzip.ppang.mapzipproject.map.Location.SEOUL;
-
-public class MapInfosActivity extends NMapActivity implements AppCompatCallback {
+public class MapInfosActivity extends NMapActivity implements AppCompatCallback, MapInfosContract.View.Activity {
 
     private static final String TAG = "MapInfosActivity";
 
@@ -42,8 +39,7 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback 
     private NMapOverlayManager mMapOverlayManager;
     private NMapPOIdataOverlay mPoiDataOverlay;
 
-    private static final boolean DEBUG = false;
-    private NGeoPoint current_point = SEOUL;
+    private MapInfosContract.UserActionListener mActionsListener;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +48,8 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback 
         mDelegate = AppCompatDelegate.create(this, this);
         mDelegate.onCreate(savedInstanceState);
         mDelegate.setContentView(R.layout.activity_map_infos);
+
+        mActionsListener = new MapInfosPresenter(this);
 
         mFragmentManager = getFragmentManager();
 
@@ -89,12 +87,13 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback 
     }
 
     /**
-     * @since 2016. 3. 3
      * @param locationInfos : 마커를 생성할 장소들에대한 데이터들
      * @see InfosListFragment
      * 장소들에 대한 데이터를 리스트형태로 가져와서 오버레이 아이템(마커)을 생성하고 출력합니다.
      * 이 함수는 InfosListFragment 에서 호출됩니다.
+     * @since 2016. 3. 3
      */
+    @Override
     public void showLocationMarker(List<LocationInfo> locationInfos) {
         NMapPOIdata poiData = new NMapPOIdata(locationInfos.size(), mMapViewerResourceProvider);
 
@@ -108,39 +107,29 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback 
         mPoiDataOverlay.showAllPOIdata(0);
     }
 
+    public MapInfosContract.UserActionListener getActionsListener() {
+        return mActionsListener;
+    }
+
     private final NMapView.OnMapStateChangeListener onMapStateChangeListener = new NMapView.OnMapStateChangeListener() {
         @Override
         public void onMapInitHandler(NMapView nMapView, NMapError nMapError) {
-            if (nMapError == null) {
-
-            } else {
-                if (DEBUG) {
-                    Log.e("NMAP", "onMapInitHandler : error=" + nMapError.toString());
-                }
-            }
         }
 
         @Override
         public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
-
         }
 
         @Override
         public void onMapCenterChangeFine(NMapView nMapView) {
-
         }
 
         @Override
         public void onZoomLevelChange(NMapView nMapView, int i) {
-
-            if (DEBUG) {
-                Log.e(TAG, "zoom level : " + i);
-            }
         }
 
         @Override
         public void onAnimationStateChange(NMapView nMapView, int i, int i1) {
-
         }
     };
 
@@ -148,43 +137,35 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback 
     private final NMapView.OnMapViewTouchEventListener onMapViewTouchEventListener = new NMapView.OnMapViewTouchEventListener() {
         @Override
         public void onLongPress(NMapView nMapView, MotionEvent motionEvent) {
-
         }
 
         @Override
         public void onLongPressCanceled(NMapView nMapView) {
-
         }
 
         @Override
         public void onTouchDown(NMapView nMapView, MotionEvent motionEvent) {
-
         }
 
         @Override
         public void onTouchUp(NMapView nMapView, MotionEvent motionEvent) {
-
         }
 
         @Override
         public void onScroll(NMapView nMapView, MotionEvent motionEvent, MotionEvent motionEvent1) {
-
         }
 
         @Override
         public void onSingleTapUp(NMapView nMapView, MotionEvent motionEvent) {
-
         }
     };
 
     @Override
     public void onSupportActionModeStarted(ActionMode mode) {
-
     }
 
     @Override
     public void onSupportActionModeFinished(ActionMode mode) {
-
     }
 
     @Nullable
