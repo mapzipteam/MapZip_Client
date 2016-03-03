@@ -69,6 +69,7 @@ dependencies {
     compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
     compile "com.google.guava:guava:$rootProject.guavaVersion"
     compile "com.google.code.gson:gson:$rootProject.gsonVersion"
+    compile "com.google.code.geocoder-java:geocoder-java:0.16"
     compile "com.mcxiaoke.volley:library:$rootProject.volleyVersion"
     compile 'com.naver.maps.open:naver-map-api:2.1.1@aar'
     compile('org.apache.httpcomponents:httpmime:4.3.6')
