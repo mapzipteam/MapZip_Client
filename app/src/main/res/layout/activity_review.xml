@@ -93,7 +93,7 @@
                 android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
                 android:text="맛있어요. 호롤룰루루루루루루루루루루룰룰루잡아라룰루루루루"
-                android:textColor="@color/darkgrey"
+                android:textColor="@color/textbrown"
                 android:textSize="20dp" />
 
             <TextView
@@ -102,7 +102,7 @@
                 android:layout_alignBaseline="@+id/goodtext_review"
                 android:layout_marginLeft="25dp"
                 android:text=":)"
-                android:textColor="@color/darkgrey"
+                android:textColor="@color/textbrown"
                 android:textSize="20dp" />
 
             <TextView

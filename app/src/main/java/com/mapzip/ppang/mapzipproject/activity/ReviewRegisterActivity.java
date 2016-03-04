@@ -2,7 +2,10 @@ package com.mapzip.ppang.mapzipproject.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
@@ -25,6 +28,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.SeekBar;
@@ -47,6 +51,7 @@ import com.mapzip.ppang.mapzipproject.network.MyVolley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -58,6 +63,10 @@ import java.util.List;
  * Created by ppangg on 2015-08-22.
  */
 public class ReviewRegisterActivity extends Activity {
+
+    private static final int GOODTEXT = 1;
+    private static final int BADTEXT = 2;
+
     // state
     private int state = 0; // 0: default review enroll, 1: modify review
     private String primap_id;
@@ -103,8 +112,20 @@ public class ReviewRegisterActivity extends Activity {
     // review text
     private int reviewposition1; // first spinner select num
     private int reviewposition2; // second spinner select num
+    private TextView good_text;
+    private TextView bad_text;
+    private TextView direct_text_logo;
+    private EditText direct_text;
     private EditText directEdit;
     private TextView oneText; // '한줄평' textview
+
+    // review Dialog
+    private boolean mGoodTextD_Created = false;
+    private boolean mBadTextD_Created = false;
+    private Dialog mGoodTextDialog;
+    private Dialog mBadTextDialog;
+    private CheckBox[] mGoodCheckBoxs;
+    private CheckBox[] mBadCheckBoxs;
 
     // review emotion
     private SeekBar seekbar;
@@ -302,6 +323,12 @@ public class ReviewRegisterActivity extends Activity {
          */
         oneText = (TextView) findViewById(R.id.spinner_text_review_regi);
         directEdit = (EditText) findViewById(R.id.editeval_review_regi);
+        direct_text = (EditText) findViewById(R.id.text_review_regi);
+        direct_text_logo = (TextView) findViewById(R.id.textLogo_review_regi);
+        good_text = (TextView) findViewById(R.id.goodtext_review_regi);
+        good_text.setSelected(true);
+        bad_text = (TextView) findViewById(R.id.badtext_review_regi);
+        bad_text.setSelected(true);
 
         // first spinner
         final Spinner spinner = (Spinner) findViewById(R.id.spinner_review_regi);
@@ -1274,4 +1301,150 @@ public class ReviewRegisterActivity extends Activity {
         reviewtextset();
         DoModifyset(v);
     }
+
+    // 좋은말 리뷰 더하기 버튼
+    public void goodtextClick_review_regi(View v){
+        if(mGoodTextD_Created == false) {
+            mGoodTextDialog = createDialog(GOODTEXT);
+            mGoodTextD_Created = true;
+            mGoodTextDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(final DialogInterface dialog) {
+                    Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                    positiveButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                        String goodtext_complete = "";
+                        int checkedNum = 0;
+
+                        for (int i = 0; i < mGoodCheckBoxs.length; i++) {
+                            if (mGoodCheckBoxs[i].isChecked()) {
+                                checkedNum++;
+                                goodtext_complete += (" " + mGoodCheckBoxs[i].getText());
+                            }
+                        }
+
+                        if (checkedNum > 5) {
+                            // toast
+                            text_toast.setText("5개까지 선택할 수 있습니다.");
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setDuration(Toast.LENGTH_SHORT);
+                            toast.setView(layout_toast);
+                            toast.show();
+                            return;
+                        }
+
+                        good_text.setText(goodtext_complete);
+                        dialog.dismiss();
+                        }
+                    });
+                }
+            });
+        }
+
+        mGoodTextDialog.show();
+    }
+
+    // 나쁜말 리뷰 더하기 버튼
+    public void badtextClick_review_regi(View v){
+        if(mBadTextD_Created == false) {
+            mBadTextDialog = createDialog(BADTEXT);
+            mBadTextD_Created = true;
+            mBadTextDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+                @Override
+                public void onShow(final DialogInterface dialog) {
+                    Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                    positiveButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            String badtext_complete = "";
+                            int checkedNum = 0;
+
+                            for (int i = 0; i < mBadCheckBoxs.length; i++) {
+                                if (mBadCheckBoxs[i].isChecked()) {
+                                    checkedNum++;
+                                    badtext_complete += (" " + mBadCheckBoxs[i].getText());
+                                }
+                            }
+
+                            if (checkedNum > 5) {
+                                // toast
+                                text_toast.setText("5개까지 선택할 수 있습니다.");
+                                Toast toast = new Toast(getApplicationContext());
+                                toast.setDuration(Toast.LENGTH_SHORT);
+                                toast.setView(layout_toast);
+                                toast.show();
+                                return;
+                            }
+
+                            bad_text.setText(badtext_complete);
+                            dialog.dismiss();
+                        }
+                    });
+                }
+            });
+        }
+
+        mBadTextDialog.show();
+    }
+
+    // Dialog Create
+    private Dialog createDialog(int tag){
+        View innerView=null;
+        AlertDialog.Builder ab = new AlertDialog.Builder(this);
+        String[] reviewtxt=null;
+
+        if(tag == GOODTEXT){
+            innerView = getLayoutInflater().inflate(R.layout.v_goodcheckbox_a_reviewregi,null);
+            reviewtxt = getResources().getStringArray(R.array.goodtext_review_regi);
+            mGoodCheckBoxs = new CheckBox[]{(CheckBox)innerView.findViewById(R.id.checkbox1),(CheckBox)innerView.findViewById(R.id.checkbox2),(CheckBox)innerView.findViewById(R.id.checkbox3),(CheckBox)innerView.findViewById(R.id.checkbox4),(CheckBox)innerView.findViewById(R.id.checkbox5)
+                    ,(CheckBox)innerView.findViewById(R.id.checkbox6),(CheckBox)innerView.findViewById(R.id.checkbox7),(CheckBox)innerView.findViewById(R.id.checkbox8),(CheckBox)innerView.findViewById(R.id.checkbox9),(CheckBox)innerView.findViewById(R.id.checkbox10),
+                    (CheckBox)innerView.findViewById(R.id.checkbox11),(CheckBox)innerView.findViewById(R.id.checkbox12),(CheckBox)innerView.findViewById(R.id.checkbox13),(CheckBox)innerView.findViewById(R.id.checkbox14),(CheckBox)innerView.findViewById(R.id.checkbox15)};
+
+            // checkbox 내용 입력
+            for(int i=0; i< mGoodCheckBoxs.length; i++){
+                mGoodCheckBoxs[i].setText(reviewtxt[i]);
+            }
+
+            ab.setTitle("칭찬해주세요.");
+        }else if(tag == BADTEXT){
+            innerView = getLayoutInflater().inflate(R.layout.v_goodcheckbox_a_reviewregi,null);
+            reviewtxt = getResources().getStringArray(R.array.badtext_review_regi);
+            mBadCheckBoxs = new CheckBox[]{(CheckBox)innerView.findViewById(R.id.checkbox1),(CheckBox)innerView.findViewById(R.id.checkbox2),(CheckBox)innerView.findViewById(R.id.checkbox3),(CheckBox)innerView.findViewById(R.id.checkbox4),(CheckBox)innerView.findViewById(R.id.checkbox5)
+                    ,(CheckBox)innerView.findViewById(R.id.checkbox6),(CheckBox)innerView.findViewById(R.id.checkbox7),(CheckBox)innerView.findViewById(R.id.checkbox8),(CheckBox)innerView.findViewById(R.id.checkbox9),(CheckBox)innerView.findViewById(R.id.checkbox10),
+                    (CheckBox)innerView.findViewById(R.id.checkbox11),(CheckBox)innerView.findViewById(R.id.checkbox12),(CheckBox)innerView.findViewById(R.id.checkbox13),(CheckBox)innerView.findViewById(R.id.checkbox14),(CheckBox)innerView.findViewById(R.id.checkbox15)};
+
+            // checkbox 내용 입력
+            for(int i=0; i< mBadCheckBoxs.length; i++){
+                mBadCheckBoxs[i].setText(reviewtxt[i]);
+            }
+
+            ab.setTitle("비판해주세요.");
+        }
+
+        ab.setView(innerView);
+
+        ab.setNegativeButton("취소", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        });
+
+        ab.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+
+            }
+        });
+
+        return ab.create();
+    }
+
+    // 직접입력 더하기 버튼
+    public void textClick_review_regi(View v){
+        direct_text_logo.setVisibility(View.VISIBLE);
+        direct_text.setVisibility(View.VISIBLE);
+    }
+
 }

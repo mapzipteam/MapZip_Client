@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_margin="15dp"
+        android:text="가장 어울리는 칭찬의 말을 선택해주세요! (0~5개)"/>
+
+    <CheckBox
+        android:id="@+id/checkbox1"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox2"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox3"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox4"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox5"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox6"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox7"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox8"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox9"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox10"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox11"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox12"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox13"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox14"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox15"
+        style="@style/checkbox_style_review_regi"/>
+</LinearLayout>

@@ -57,6 +57,42 @@
         <item>직접입력</item>
     </string-array>
 
+    <string-array name="goodtext_review_regi">
+        <item>나만 알고 싶은 장소에요.</item>
+        <item>모든 것이 완벽해요.</item>
+        <item>서비스가 좋아요.</item>
+        <item>인테리어가 이뻐요.</item>
+        <item>가격이 저렴해요.</item>
+        <item>가성비가 좋아요.</item>
+        <item>천상의 맛이에요.</item>
+        <item>먹을만 하네요.</item>
+        <item>조용해서 좋아요.</item>
+        <item>시끌벅적 유쾌하네요.</item>
+        <item>데이트하기 좋아요.</item>
+        <item>회식장소로 딱이에요.</item>
+        <item>부모님이 좋아하세요.</item>
+        <item>친구들과 함께가세요.</item>
+        <item>혼자가기 좋아요.</item>
+    </string-array>
+
+    <string-array name="badtext_review_regi">
+        <item>나만 알고 싶은 ㄴㄴㄴ</item>
+        <item>모든 것이 완벽해요.</item>
+        <item>서비스가 좋아요.</item>
+        <item>인테리어가 이뻐요.</item>
+        <item>가격이 저렴해요.</item>
+        <item>가성비가 좋아요.</item>
+        <item>천상의 맛이에요.</item>
+        <item>먹을만 하네요.</item>
+        <item>조용해서 ㄴㄴㄴ</item>
+        <item>시끌벅적 유쾌하네요.</item>
+        <item>데이트하기 좋아요.</item>
+        <item>회식장소로 딱이에요.</item>
+        <item>부모님이 좋아하세요.</item>
+        <item>친구들과 ㄴㄴㄴ</item>
+        <item>혼자가기 좋아요.</item>
+    </string-array>
+
     <string-array name="spinner_suggest">
         <item>선택안함</item>
         <item>버그신고</item>

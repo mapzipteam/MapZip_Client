@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:layout_margin="15dp"
+        android:text="가장 어울리는 비판의 말을 선택해주세요! (0~5개)"/>
+
+    <CheckBox
+        android:id="@+id/checkbox1_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox2_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox3_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox4_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox5_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox6_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox7_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox8_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox9_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox10_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox11_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox12_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox13_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox14_b"
+        style="@style/checkbox_style_review_regi"/>
+
+    <CheckBox
+        android:id="@+id/checkbox15_b"
+        style="@style/checkbox_style_review_regi"/>
+</LinearLayout>
