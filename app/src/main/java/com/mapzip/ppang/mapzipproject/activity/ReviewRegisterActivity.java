@@ -43,7 +43,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.adapter.ImageAdapter;
-import com.mapzip.ppang.mapzipproject.model.MapData;
+import com.mapzip.ppang.mapzipproject.model.ReviewData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
@@ -51,7 +51,6 @@ import com.mapzip.ppang.mapzipproject.network.MyVolley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -64,8 +63,8 @@ import java.util.List;
  */
 public class ReviewRegisterActivity extends Activity {
 
-    private static final int GOODTEXT = 1;
-    private static final int BADTEXT = 2;
+    private final int GOODTEXT = 1;
+    private final int BADTEXT = 2;
 
     // state
     private int state = 0; // 0: default review enroll, 1: modify review
@@ -110,14 +109,11 @@ public class ReviewRegisterActivity extends Activity {
     public ProgressDialog asyncDialog;
 
     // review text
-    private int reviewposition1; // first spinner select num
-    private int reviewposition2; // second spinner select num
+    private Button textReviewBtn;
     private TextView good_text;
     private TextView bad_text;
     private TextView direct_text_logo;
     private EditText direct_text;
-    private EditText directEdit;
-    private TextView oneText; // '한줄평' textview
 
     // review Dialog
     private boolean mGoodTextD_Created = false;
@@ -137,7 +133,7 @@ public class ReviewRegisterActivity extends Activity {
     private ArrayAdapter mapadapter;
 
     // to send Review Data
-    private MapData mapData = new MapData();
+    private ReviewData reviewData = new ReviewData();
 
     // set Map Image
     private Resources res;
@@ -165,6 +161,7 @@ public class ReviewRegisterActivity extends Activity {
         serverchoice = 0;
         imagenum = 0;
 
+        textReviewBtn = (Button) findViewById(R.id.textBtn_review_regi);
         enrollBtn = (Button) findViewById(R.id.enrollBtn_review_regi);
         modifyBtn = (Button) findViewById(R.id.modifyBtn_review_regi);
 
@@ -172,15 +169,15 @@ public class ReviewRegisterActivity extends Activity {
         if(getIntent().getStringExtra("state").equals("modify") == true) {
             state = 1;
             try{
-            mapData = user.getMapData().clone();
+            reviewData = user.getReviewData().clone();
             }catch (Exception ex){
-                Log.v("mapData","clone ex");
+                Log.v("ReviewData","clone ex");
             }
 
             backupbitarr = user.getGalImages().clone();
 
-            primap_id = mapData.getMapid();
-            Log.v("mapid",mapData.getMapid());
+            primap_id = reviewData.getMapid();
+            Log.v("mapid", reviewData.getMapid());
         }
         else
             state=0;
@@ -195,21 +192,21 @@ public class ReviewRegisterActivity extends Activity {
         }
         Log.v("state", String.valueOf(state));
 
-        // setting mapData to send
-        mapData.setStore_x(getIntent().getDoubleExtra("store_x", 0));
-        mapData.setStore_y(getIntent().getDoubleExtra("store_y", 0));
-        mapData.setStore_name(getIntent().getStringExtra("store_name"));
-        mapData.setStore_address(getIntent().getStringExtra("store_address"));
-        mapData.setStore_contact(getIntent().getStringExtra("store_contact"));
-        mapData.setGu_num(getGunum());
+        // setting reviewData to send
+        reviewData.setStore_x(getIntent().getDoubleExtra("store_x", 0));
+        reviewData.setStore_y(getIntent().getDoubleExtra("store_y", 0));
+        reviewData.setStore_name(getIntent().getStringExtra("store_name"));
+        reviewData.setStore_address(getIntent().getStringExtra("store_address"));
+        reviewData.setStore_contact(getIntent().getStringExtra("store_contact"));
+        reviewData.setGu_num(getGunum());
 
         // setting View
         titleText = (TextView) findViewById(R.id.name_review_regi);
         addressText = (TextView) findViewById(R.id.address_txt_review_regi);
         contactText = (TextView) findViewById(R.id.contact_txt_review_regi);
-        titleText.setText(mapData.getStore_name());
-        addressText.setText(mapData.getStore_address());
-        contactText.setText(mapData.getStore_contact());
+        titleText.setText(reviewData.getStore_name());
+        addressText.setText(reviewData.getStore_address());
+        contactText.setText(reviewData.getStore_contact());
 
         /*
          *  setting for Image
@@ -252,7 +249,7 @@ public class ReviewRegisterActivity extends Activity {
         mapadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mapspinner.setAdapter(mapadapter);
         if(state == 1) // in modify
-                mapspinner.setSelection(Integer.parseInt(mapData.getMapid())-1);
+                mapspinner.setSelection(Integer.parseInt(reviewData.getMapid())-1);
 
         // map select
         mapspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
@@ -262,8 +259,8 @@ public class ReviewRegisterActivity extends Activity {
                     // get map id to send
                     JSONObject mapmeta = null;
                     mapmeta = user.getMapmetaArray().getJSONObject(position);
-                    mapData.setMapid(mapmeta.get("map_id").toString());
-                    Log.v("mappid", mapData.getMapid());
+                    reviewData.setMapid(mapmeta.get("map_id").toString());
+                    Log.v("mappid", reviewData.getMapid());
                 } catch (JSONException ex) {
                     Log.v("제이손 에러", "review_regi_mapspinner2");
                 }
@@ -281,7 +278,7 @@ public class ReviewRegisterActivity extends Activity {
         seekbar = (SeekBar) findViewById(R.id.emotionBar_review_regi);
         if(state == 1)  // in modify
         {
-            int pro = mapData.getReview_emotion();
+            int pro = reviewData.getReview_emotion();
             seekbar.setProgress(pro);
             if (pro < 20)
                 emotion.setImageResource(R.drawable.emotion1);
@@ -297,7 +294,7 @@ public class ReviewRegisterActivity extends Activity {
         seekbar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-                mapData.setReview_emotion(progress); // to send emotion
+                reviewData.setReview_emotion(progress); // to send emotion
 
                 if (progress < 20)
                     emotion.setImageResource(R.drawable.emotion1);
@@ -321,8 +318,6 @@ public class ReviewRegisterActivity extends Activity {
         /*
          *  review text
          */
-        oneText = (TextView) findViewById(R.id.spinner_text_review_regi);
-        directEdit = (EditText) findViewById(R.id.editeval_review_regi);
         direct_text = (EditText) findViewById(R.id.text_review_regi);
         direct_text_logo = (TextView) findViewById(R.id.textLogo_review_regi);
         good_text = (TextView) findViewById(R.id.goodtext_review_regi);
@@ -330,73 +325,14 @@ public class ReviewRegisterActivity extends Activity {
         bad_text = (TextView) findViewById(R.id.badtext_review_regi);
         bad_text.setSelected(true);
 
-        // first spinner
-        final Spinner spinner = (Spinner) findViewById(R.id.spinner_review_regi);
-        ArrayAdapter adapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.spinner_review_regi));
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(adapter);
-
-        // second spinner
-        final Spinner spinner2 = (Spinner) findViewById(R.id.spinner_review_regi2);
-        ArrayAdapter adapter2 = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, getResources().getStringArray(R.array.spinner_review_regi2));
-        adapter2.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner2.setAdapter(adapter2);
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 15) // 직접입력
-                {
-                    directEdit.setVisibility(View.VISIBLE);
-                    oneText.setVisibility(View.GONE);
-                    spinner2.setVisibility(View.GONE);
-                    reviewposition1 = position; // save selected position
-                } else {
-                    directEdit.setVisibility(View.GONE);
-                    oneText.setVisibility(View.VISIBLE);
-                    spinner2.setVisibility(View.VISIBLE);
-                    reviewposition1 = position;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
-        spinner2.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                if (position == 14) // 직접입력
-                {
-                    directEdit.setVisibility(View.VISIBLE);
-                    oneText.setVisibility(View.GONE);
-                    spinner.setVisibility(View.GONE);
-                    reviewposition2 = position; // save selected position
-                } else {
-                    directEdit.setVisibility(View.GONE);
-                    oneText.setVisibility(View.VISIBLE);
-                    spinner.setVisibility(View.VISIBLE);
-                    reviewposition2 = position;
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
-
         // in modify
         if(state == 1){
-            spinner.setSelection(15);
-            directEdit.setText(mapData.getReview_text());
+            // 리뷰: 좋은말, 나쁜말.
 
-            directEdit.setVisibility(View.VISIBLE);
-            oneText.setVisibility(View.GONE);
-            spinner2.setVisibility(View.GONE);
-            reviewposition1 = 15; // save selected position
+            // 직접입력 있을 때.
+            direct_text.setText(reviewData.getReview_text());
+            direct_text.setVisibility(View.VISIBLE);
+            direct_text_logo.setVisibility(View.VISIBLE);
         }
     }
 
@@ -445,7 +381,7 @@ public class ReviewRegisterActivity extends Activity {
                     {
                         Log.v("image modify", "ok");
                         Log.v("image_length1",String.valueOf(user.getGalImages().length));
-                        if((mapData.getImage_num()+afterimagenum) == 0)
+                        if((reviewData.getImage_num()+afterimagenum) == 0)
                             user.inputGalImages(bitarr);
                         else
                             user.addGalImages(bitarr);
@@ -482,23 +418,22 @@ public class ReviewRegisterActivity extends Activity {
 
         JSONObject obj = new JSONObject();
         try {
-            if (mapData.getReview_text().isEmpty())
-                mapData.setReview_text(directEdit.getText().toString());
+            reviewData.setReview_text(direct_text.getText().toString());
 
             if(serverchoice == 2)
-                mapData.setImage_num(user.getGalImages().length);
+                reviewData.setImage_num(user.getGalImages().length);
 
             obj.put("userid", user.getUserID());
-            obj.put("map_id", mapData.getMapid());
-            obj.put("store_x", mapData.getStore_x());
-            obj.put("store_y", mapData.getStore_y());
-            obj.put("store_name", mapData.getStore_name());
-            obj.put("store_address", mapData.getStore_address());
-            obj.put("store_contact", mapData.getStore_contact());
-            obj.put("review_emotion", mapData.getReview_emotion());
-            obj.put("review_text", mapData.getReview_text());
-            obj.put("image_num", mapData.getImage_num());
-            obj.put("gu_num", mapData.getGu_num());
+            obj.put("map_id", reviewData.getMapid());
+            obj.put("store_x", reviewData.getStore_x());
+            obj.put("store_y", reviewData.getStore_y());
+            obj.put("store_name", reviewData.getStore_name());
+            obj.put("store_address", reviewData.getStore_address());
+            obj.put("store_contact", reviewData.getStore_contact());
+            obj.put("review_emotion", reviewData.getReview_emotion());
+            obj.put("review_text", reviewData.getReview_text());
+            obj.put("image_num", reviewData.getImage_num());
+            obj.put("gu_num", reviewData.getGu_num());
             obj.put("user_name",user.getUserName());
 
             Log.v("review 등록 보내기", obj.toString());
@@ -522,8 +457,8 @@ public class ReviewRegisterActivity extends Activity {
         JSONObject obj = new JSONObject();
         try {
             obj.put("userid", user.getUserID());
-            obj.put("map_id", mapData.getMapid());
-            obj.put("store_id", mapData.getStore_id());
+            obj.put("map_id", reviewData.getMapid());
+            obj.put("store_id", reviewData.getStore_id());
 
             Log.v("review 등록2 보내기", obj.toString());
         } catch (JSONException e) {
@@ -545,17 +480,16 @@ public class ReviewRegisterActivity extends Activity {
 
         JSONObject obj = new JSONObject();
         try {
-            if (mapData.getReview_text().isEmpty())
-                mapData.setReview_text(directEdit.getText().toString());
+            reviewData.setReview_text(direct_text.getText().toString());
 
-            mapData.setImage_num(mapData.getImage_num()+afterimagenum);
+            reviewData.setImage_num(reviewData.getImage_num()+afterimagenum);
             obj.put("user_id", user.getUserID());
-            obj.put("map_id", mapData.getMapid());
-            obj.put("review_emotion", mapData.getReview_emotion());
-            obj.put("review_text", mapData.getReview_text());
+            obj.put("map_id", reviewData.getMapid());
+            obj.put("review_emotion", reviewData.getReview_emotion());
+            obj.put("review_text", reviewData.getReview_text());
             obj.put("store_id", getIntent().getStringExtra("store_id"));
-            obj.put("image_num", mapData.getImage_num());
-            Log.v("image_num", String.valueOf(mapData.getImage_num()));
+            obj.put("image_num", reviewData.getImage_num());
+            Log.v("image_num", String.valueOf(reviewData.getImage_num()));
 
             Log.v("review 수정 보내기", obj.toString());
         } catch (JSONException e) {
@@ -578,8 +512,8 @@ public class ReviewRegisterActivity extends Activity {
         JSONObject obj = new JSONObject();
         try {
             obj.put("userid", user.getUserID());
-            obj.put("map_id", mapData.getMapid());
-            obj.put("store_id", mapData.getStore_id());
+            obj.put("map_id", reviewData.getMapid());
+            obj.put("store_id", reviewData.getStore_id());
 
             Log.v("review 등록2 보내기", obj.toString());
         } catch (JSONException e) {
@@ -604,10 +538,10 @@ public class ReviewRegisterActivity extends Activity {
                 try {
                     if(response.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_UPDATE_SUCCESS) { // 607
                         // if Map Id modified (지도 변경시)
-                        if(primap_id.equals(mapData.getMapid()) == false){
+                        if(primap_id.equals(reviewData.getMapid()) == false){
                             int pmap_id = Integer.parseInt(primap_id); // 수정 전
-                            int nmap_id = Integer.parseInt(mapData.getMapid()); // 수정 후 map_id
-                            int gu_num = mapData.getGu_num();
+                            int nmap_id = Integer.parseInt(reviewData.getMapid()); // 수정 후 map_id
+                            int gu_num = reviewData.getGu_num();
                             int nmapnocheck = 0; // 0: 리뷰있음 1: no review
 
                             if(user.getPingCount(nmap_id,gu_num) == 0){ // no review check in now map
@@ -647,7 +581,7 @@ public class ReviewRegisterActivity extends Activity {
                             JSONArray farray = user.getMapforpinArray(pmap_id); // 이전 지도에서 리뷰디테일 삭제
                             JSONObject moveobj = new JSONObject();
                             for(int i=0; i<farray.length(); i++){
-                                if(farray.getJSONObject(i).getString("store_id").equals(mapData.getStore_id()) == true){
+                                if(farray.getJSONObject(i).getString("store_id").equals(reviewData.getStore_id()) == true){
                                     moveobj = farray.getJSONObject(i);
                                     farray = removeJsonObjectAtJsonArrayIndex(farray,i);
                                 }
@@ -676,7 +610,7 @@ public class ReviewRegisterActivity extends Activity {
 
                         if(modifyedcheck == true){
                             Log.v("리뷰수정", "OK");
-                            if((mapData.getImage_num()-afterimagenum) == 0)
+                            if((reviewData.getImage_num()-afterimagenum) == 0)
                                 DoModifyset2();
                             else{
                                 serverchoice = 2;
@@ -717,8 +651,8 @@ public class ReviewRegisterActivity extends Activity {
                     if (response.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_ENROLL_SUCCESS) { // 601
                         // 1번째 통신 성공
                         Log.v("리뷰저장", "OK");
-                        mapData.setStore_id(response.getString("store_id"));
-                        if (mapData.getImage_num() != 0)
+                        reviewData.setStore_id(response.getString("store_id"));
+                        if (reviewData.getImage_num() != 0)
                             DoReviewset2(); // 이미지 있으면 2번째 통신 시작
                         else {
                             serverchoice = 1; // no image
@@ -807,8 +741,8 @@ public class ReviewRegisterActivity extends Activity {
 
             obj.put("image_string",image);
             obj.put("userid", user.getUserID());
-            obj.put("map_id", mapData.getMapid());
-            obj.put("store_id", mapData.getStore_id());
+            obj.put("map_id", reviewData.getMapid());
+            obj.put("store_id", reviewData.getStore_id());
             obj.put("image_name", "image" + String.valueOf(imagenum));
             imagenum++;
 
@@ -855,8 +789,8 @@ public class ReviewRegisterActivity extends Activity {
                 Map<String, String> params = new Hashtable<String, String>();
                 params.put("image_string",image);
                 params.put("userid", user.getUserID());
-                params.put("map_id", mapData.getMapid());
-                params.put("store_id", mapData.getStore_id());
+                params.put("map_id", reviewData.getMapid());
+                params.put("store_id", reviewData.getStore_id());
                 params.put("image_name", "image" + String.valueOf(imagenum));
                 imagenum++;
 
@@ -885,8 +819,8 @@ public class ReviewRegisterActivity extends Activity {
 
         Map<String, String> params = new HashMap<String, String>();
         params.put("userid", user.getUserID());
-        params.put("map_id", mapData.getMapid());
-        params.put("store_id", mapData.getStore_id());
+        params.put("map_id", reviewData.getMapid());
+        params.put("store_id", reviewData.getStore_id());
         params.put("image_name", "image" + String.valueOf(imagenum));
         imagenum++;
 
@@ -1045,55 +979,55 @@ public class ReviewRegisterActivity extends Activity {
     // to send Gunum
     public int getGunum() {
         int gunum = -1;
-        if (mapData.getStore_address().contains("서울특별시 도봉구"))
+        if (reviewData.getStore_address().contains("서울특별시 도봉구"))
             gunum = SystemMain.DoBong;
-        else if (mapData.getStore_address().contains("서울특별시 노원구"))
+        else if (reviewData.getStore_address().contains("서울특별시 노원구"))
             gunum = SystemMain.NoWon;
-        else if (mapData.getStore_address().contains("서울특별시 강북구"))
+        else if (reviewData.getStore_address().contains("서울특별시 강북구"))
             gunum = SystemMain.GangBuk;
-        else if (mapData.getStore_address().contains("서울특별시 성북구"))
+        else if (reviewData.getStore_address().contains("서울특별시 성북구"))
             gunum = SystemMain.SungBuk;
-        else if (mapData.getStore_address().contains("서울특별시 중랑구"))
+        else if (reviewData.getStore_address().contains("서울특별시 중랑구"))
             gunum = SystemMain.ZongRang;
-        else if (mapData.getStore_address().contains("서울특별시 은평구"))
+        else if (reviewData.getStore_address().contains("서울특별시 은평구"))
             gunum = SystemMain.EunPhung;
-        else if (mapData.getStore_address().contains("서울특별시 종로구"))
+        else if (reviewData.getStore_address().contains("서울특별시 종로구"))
             gunum = SystemMain.ZongRo;
-        else if (mapData.getStore_address().contains("서울특별시 동대문구"))
+        else if (reviewData.getStore_address().contains("서울특별시 동대문구"))
             gunum = SystemMain.DongDaeMon;
-        else if (mapData.getStore_address().contains("서울특별시 서대문구"))
+        else if (reviewData.getStore_address().contains("서울특별시 서대문구"))
             gunum = SystemMain.SuDaeMon;
-        else if (mapData.getStore_address().contains("서울특별시 중구"))
+        else if (reviewData.getStore_address().contains("서울특별시 중구"))
             gunum = SystemMain.Zhong;
-        else if (mapData.getStore_address().contains("서울특별시 성동구"))
+        else if (reviewData.getStore_address().contains("서울특별시 성동구"))
             gunum = SystemMain.SungDong;
-        else if (mapData.getStore_address().contains("서울특별시 광진구"))
+        else if (reviewData.getStore_address().contains("서울특별시 광진구"))
             gunum = SystemMain.GangZin;
-        else if (mapData.getStore_address().contains("서울특별시 강동구"))
+        else if (reviewData.getStore_address().contains("서울특별시 강동구"))
             gunum = SystemMain.GangDong;
-        else if (mapData.getStore_address().contains("서울특별시 마포구"))
+        else if (reviewData.getStore_address().contains("서울특별시 마포구"))
             gunum = SystemMain.MaPho;
-        else if (mapData.getStore_address().contains("서울특별시 용산구"))
+        else if (reviewData.getStore_address().contains("서울특별시 용산구"))
             gunum = SystemMain.YongSan;
-        else if (mapData.getStore_address().contains("서울특별시 강서구"))
+        else if (reviewData.getStore_address().contains("서울특별시 강서구"))
             gunum = SystemMain.GangSue;
-        else if (mapData.getStore_address().contains("서울특별시 양천구"))
+        else if (reviewData.getStore_address().contains("서울특별시 양천구"))
             gunum = SystemMain.YangChen;
-        else if (mapData.getStore_address().contains("서울특별시 구로구"))
+        else if (reviewData.getStore_address().contains("서울특별시 구로구"))
             gunum = SystemMain.GuRo;
-        else if (mapData.getStore_address().contains("서울특별시 영등포구"))
+        else if (reviewData.getStore_address().contains("서울특별시 영등포구"))
             gunum = SystemMain.YongDengPo;
-        else if (mapData.getStore_address().contains("서울특별시 동작구"))
+        else if (reviewData.getStore_address().contains("서울특별시 동작구"))
             gunum = SystemMain.DongJack;
-        else if (mapData.getStore_address().contains("서울특별시 금천구"))
+        else if (reviewData.getStore_address().contains("서울특별시 금천구"))
             gunum = SystemMain.GemChun;
-        else if (mapData.getStore_address().contains("서울특별시 관악구"))
+        else if (reviewData.getStore_address().contains("서울특별시 관악구"))
             gunum = SystemMain.GanAk;
-        else if (mapData.getStore_address().contains("서울특별시 서초구"))
+        else if (reviewData.getStore_address().contains("서울특별시 서초구"))
             gunum = SystemMain.SeoCho;
-        else if (mapData.getStore_address().contains("서울특별시 강남구"))
+        else if (reviewData.getStore_address().contains("서울특별시 강남구"))
             gunum = SystemMain.GangNam;
-        else if (mapData.getStore_address().contains("서울특별시 송파구"))
+        else if (reviewData.getStore_address().contains("서울특별시 송파구"))
             gunum = SystemMain.SongPa;
 
         return gunum;
@@ -1101,7 +1035,7 @@ public class ReviewRegisterActivity extends Activity {
 
     // setting review text & emotion
     public int reviewtextset() {
-        if (mapData.getReview_emotion() == 0) { // emotion not selected
+        if (reviewData.getReview_emotion() == 0) { // emotion not selected
             // toast
             text_toast.setText("이모티콘을 선택해주세요.");
             Toast toast = new Toast(getApplicationContext());
@@ -1110,7 +1044,7 @@ public class ReviewRegisterActivity extends Activity {
             toast.show();
 
             return -1;
-        } else if ((reviewposition1 == 0) && (reviewposition2 == 0)) { // review text not selected
+        } else if (good_text.getText().toString().trim().isEmpty() && bad_text.getText().toString().trim().isEmpty() && direct_text.getText().toString().trim().isEmpty()) { // review text not selected
             // toast
             text_toast.setText("리뷰를 작성해주세요.");
             Toast toast = new Toast(getApplicationContext());
@@ -1119,22 +1053,7 @@ public class ReviewRegisterActivity extends Activity {
             toast.show();
 
             return -1;
-        } else {
-            if ((reviewposition1 == 15) || (reviewposition2 == 14)) // direct review text
-                mapData.setReview_text(directEdit.getText().toString());
-            else { // selected review text
-                String tmp = "";
-                if (reviewposition1 != 0) // first spinner
-                    tmp = getResources().getStringArray(R.array.spinner_review_regi)[reviewposition1];
-                if (reviewposition2 != 0) { // second spinner
-                    if (reviewposition1 != 0)
-                        tmp += " 하지만 " + getResources().getStringArray(R.array.spinner_review_regi2)[reviewposition2];
-                    else
-                        tmp += " " + getResources().getStringArray(R.array.spinner_review_regi2)[reviewposition2];
-                }
-
-                mapData.setReview_text(tmp); // set final review to send
-            }
+        } else{
             return 1;
         }
     }
@@ -1159,18 +1078,18 @@ public class ReviewRegisterActivity extends Activity {
             } else if (serverchoice == 2) {
 /*
                 if(state==1) // in modify
-                    imagenum=(mapData.getImage_num()-afterimagenum);
+                    imagenum=(reviewData.getImage_num()-afterimagenum);
 */
-                for (int i = 0; i <mapData.getImage_num(); i++)
+                for (int i = 0; i < reviewData.getImage_num(); i++)
                     DoUpload(i);
 
                 user.setAfterModify(true);
             }
 
             if(state == 0) {
-                int tmp = user.getPingCount(Integer.parseInt(mapData.getMapid()), mapData.getGu_num());
-                user.setReviewCount(Integer.parseInt(mapData.getMapid()), mapData.getGu_num(), tmp + 1);
-                user.setMapImage(Integer.parseInt(mapData.getMapid()), res);
+                int tmp = user.getPingCount(Integer.parseInt(reviewData.getMapid()), reviewData.getGu_num());
+                user.setReviewCount(Integer.parseInt(reviewData.getMapid()), reviewData.getGu_num(), tmp + 1);
+                user.setMapImage(Integer.parseInt(reviewData.getMapid()), res);
             }
 
             try {
@@ -1236,8 +1155,8 @@ public class ReviewRegisterActivity extends Activity {
 
     // 사진제거 버튼
     public void deleteImageonClick(View v){
-        if((mapData.getImage_num()+afterimagenum) == 0){ // 이미지가 없는 상태
-            Log.v("imagenum",String.valueOf(mapData.getImage_num()));
+        if((reviewData.getImage_num()+afterimagenum) == 0){ // 이미지가 없는 상태
+            Log.v("imagenum",String.valueOf(reviewData.getImage_num()));
             Log.v("afterimagenum",String.valueOf(afterimagenum));
             // toast
             text_toast.setText("제거할 이미지가 없습니다.");
@@ -1287,7 +1206,7 @@ public class ReviewRegisterActivity extends Activity {
     public void enrollonClick_review_regi(View v) {
             if(reviewtextset() == 1) {
                 DoReviewset(v); // 서버 통신
-                user.setMapforpinNum(Integer.parseInt(mapData.getMapid()), 0); // to review loading
+                user.setMapforpinNum(Integer.parseInt(reviewData.getMapid()), 0); // to review loading
             }
     }
 
@@ -1298,8 +1217,9 @@ public class ReviewRegisterActivity extends Activity {
 
     // 리뷰수정 버튼
     public void modifyonClick_review_regi(View v){
-        reviewtextset();
-        DoModifyset(v);
+        if(reviewtextset()==1){
+            DoModifyset(v);
+        }
     }
 
     // 좋은말 리뷰 더하기 버튼
@@ -1443,8 +1363,15 @@ public class ReviewRegisterActivity extends Activity {
 
     // 직접입력 더하기 버튼
     public void textClick_review_regi(View v){
-        direct_text_logo.setVisibility(View.VISIBLE);
-        direct_text.setVisibility(View.VISIBLE);
+        if(direct_text.getVisibility() == View.INVISIBLE) {
+            textReviewBtn.setBackgroundResource(R.drawable.btn_remove_cricle);
+            direct_text_logo.setVisibility(View.VISIBLE);
+            direct_text.setVisibility(View.VISIBLE);
+        }
+        else{
+            textReviewBtn.setBackgroundResource(R.drawable.btn_add_circle);
+            direct_text_logo.setVisibility(View.INVISIBLE);
+            direct_text.setVisibility(View.INVISIBLE);
+        }
     }
-
 }

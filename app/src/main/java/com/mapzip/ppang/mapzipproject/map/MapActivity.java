@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,9 +24,6 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.google.android.gms.games.GamesMetadata;
-import com.google.android.gms.location.internal.LocationRequestUpdateData;
-import com.mapzip.ppang.mapzipproject.adapter.ImageAdapter;
 import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.activity.ReviewActivity;
@@ -43,9 +39,7 @@ import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.nmapmodel.NMapError;
 import com.nhn.android.maps.overlay.NMapPOIdata;
 import com.nhn.android.maps.overlay.NMapPOIitem;
-import com.nhn.android.mapviewer.overlay.NMapCalloutOverlay;
 import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
-import com.nhn.android.mapviewer.overlay.NMapOverlayManager.OnCalloutOverlayListener;
 import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
 import org.json.JSONArray;
@@ -56,7 +50,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mapzip.ppang.mapzipproject.map.Location.SEOUL;
-import static com.mapzip.ppang.mapzipproject.R.id.map;
 
 
 public class MapActivity extends NMapActivity {
@@ -572,11 +565,11 @@ public class MapActivity extends NMapActivity {
 
                                 if (getIntent().getStringExtra("fragment_id").equals("friend_home")) {
 
-                                    imageLoad(i, SystemMain.SERVER_ROOT_URL + "/client_data/client_" + fuser.getUserID() + "/store_" +fuser.getMapData().getStore_id() + "/image" + String.valueOf(i) + ".jpg");
+                                    imageLoad(i, SystemMain.SERVER_ROOT_URL + "/client_data/client_" + fuser.getUserID() + "/store_" +fuser.getReviewData().getStore_id() + "/image" + String.valueOf(i) + ".jpg");
 
                                 } else {
 
-                                    String url = SystemMain.SERVER_ROOT_URL + "/client_data/client_" + user.getUserID() + "/store_" + user.getMapData().getStore_id() + "/image" + String.valueOf(i) + ".jpg";
+                                    String url = SystemMain.SERVER_ROOT_URL + "/client_data/client_" + user.getUserID() + "/store_" + user.getReviewData().getStore_id() + "/image" + String.valueOf(i) + ".jpg";
 
                                     if(user.isAfterModify()) {
 

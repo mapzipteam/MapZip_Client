@@ -92,7 +92,6 @@
                 android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
-                android:text="맛있어요. 호롤룰루루루루루루루루루루룰룰루잡아라룰루루루루"
                 android:textColor="@color/textbrown"
                 android:textSize="20dp" />
 
@@ -118,7 +117,6 @@
                 android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
-                android:text="맛없어요."
                 android:textColor="@color/white"
                 android:textSize="20dp" />
 
@@ -141,7 +139,6 @@
                 android:layout_marginRight="15dp"
                 android:background="@drawable/rec_review_goodtext_bg"
                 android:gravity="left"
-                android:text="맛있어요. 호롤룰루루루루루루루루루루룰룰루잡아라룰루루루루"
                 android:textColor="@color/darkgrey"
                 android:textSize="20dp" />
 

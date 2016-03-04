@@ -13,7 +13,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -25,7 +24,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.adapter.ImageAdapter;
 import com.mapzip.ppang.mapzipproject.model.FriendData;
-import com.mapzip.ppang.mapzipproject.model.MapData;
+import com.mapzip.ppang.mapzipproject.model.ReviewData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
@@ -49,7 +48,7 @@ public class ReviewActivity extends Activity {
     private boolean userlock = false; // true = friend's, false = mine
 
     // review Data
-    private MapData mapData;
+    private ReviewData reviewData;
     private ImageView review_emotion;
     private TextView store_name;
     private TextView good_text;
@@ -110,27 +109,27 @@ public class ReviewActivity extends Activity {
 
         // get review Data from user Data
         if (userlock == false) { // mine
-            mapData = user.getMapData();
+            reviewData = user.getReviewData();
         } else { // friend's
-            mapData = fuser.getMapData();
+            reviewData = fuser.getReviewData();
         }
 
-        store_name.setText(mapData.getStore_name());
-        review_text.setText(mapData.getReview_text());
-        store_address.setText(mapData.getStore_address());
-        store_contact.setText(mapData.getStore_contact());
+        store_name.setText(reviewData.getStore_name());
+        review_text.setText(reviewData.getReview_text());
+        store_address.setText(reviewData.getStore_address());
+        store_contact.setText(reviewData.getStore_contact());
 
         good_text.setSelected(true);
         bad_text.setSelected(true);
 
         // set Emotion Image
-        if (mapData.getReview_emotion() < 20)
+        if (reviewData.getReview_emotion() < 20)
             review_emotion.setImageResource(R.drawable.emotion1);
-        else if ((20 <= mapData.getReview_emotion()) && (mapData.getReview_emotion() < 40))
+        else if ((20 <= reviewData.getReview_emotion()) && (reviewData.getReview_emotion() < 40))
             review_emotion.setImageResource(R.drawable.emotion2);
-        else if ((40 <= mapData.getReview_emotion()) && (mapData.getReview_emotion() < 60))
+        else if ((40 <= reviewData.getReview_emotion()) && (reviewData.getReview_emotion() < 60))
             review_emotion.setImageResource(R.drawable.emotion3);
-        else if ((60 <= mapData.getReview_emotion()) && (mapData.getReview_emotion() < 80))
+        else if ((60 <= reviewData.getReview_emotion()) && (reviewData.getReview_emotion() < 80))
             review_emotion.setImageResource(R.drawable.emotion4);
         else
             review_emotion.setImageResource(R.drawable.emotion5);
@@ -153,14 +152,14 @@ public class ReviewActivity extends Activity {
     // modify Btn
     public void modifyOnclick(View v) {
         Intent intent = new Intent(this, ReviewRegisterActivity.class);
-        intent.putExtra("store_name", mapData.getStore_name());
-        intent.putExtra("store_address", mapData.getStore_address());
-        intent.putExtra("store_contact", mapData.getStore_contact());
-        intent.putExtra("store_x", mapData.getStore_x());
-        intent.putExtra("store_y", mapData.getStore_y());
+        intent.putExtra("store_name", reviewData.getStore_name());
+        intent.putExtra("store_address", reviewData.getStore_address());
+        intent.putExtra("store_contact", reviewData.getStore_contact());
+        intent.putExtra("store_x", reviewData.getStore_x());
+        intent.putExtra("store_y", reviewData.getStore_y());
         intent.putExtra("store_cx", 0);
         intent.putExtra("store_cy", 0);
-        intent.putExtra("store_id",mapData.getStore_id());
+        intent.putExtra("store_id", reviewData.getStore_id());
         intent.putExtra("state", "modify");
         startActivity(intent);
 
@@ -179,8 +178,8 @@ public class ReviewActivity extends Activity {
                         JSONObject obj = new JSONObject();
                         try {
                             obj.put("user_id", user.getUserID());
-                            obj.put("map_id",mapData.getMapid());
-                            obj.put("store_id",mapData.getStore_id());
+                            obj.put("map_id", reviewData.getMapid());
+                            obj.put("store_id", reviewData.getStore_id());
 
                             Log.v("ReviewActivity 보내기", obj.toString());
                         } catch (JSONException e) {
@@ -226,9 +225,9 @@ public class ReviewActivity extends Activity {
                         // for home fragment(map Image) refresh - @로딩 필요
                         Resources res;
                         res = getResources();
-                        int mapid = Integer.parseInt(mapData.getMapid());
-                        int pingcount = user.getPingCount(mapid,mapData.getGu_num());
-                        user.setReviewCount(mapid, mapData.getGu_num(), pingcount - 1);
+                        int mapid = Integer.parseInt(reviewData.getMapid());
+                        int pingcount = user.getPingCount(mapid, reviewData.getGu_num());
+                        user.setReviewCount(mapid, reviewData.getGu_num(), pingcount - 1);
 
                         if((pingcount-1) == 0){ // no reivew check
                             int checknonzero = 0;
@@ -249,7 +248,7 @@ public class ReviewActivity extends Activity {
                         // for map activity(pin) refresh
                         JSONArray narray = user.getMapforpinArray(mapid);
                         for(int i=0; i<narray.length(); i++){
-                            if(narray.getJSONObject(i).getString("store_id").equals(mapData.getStore_id()) == true){
+                            if(narray.getJSONObject(i).getString("store_id").equals(reviewData.getStore_id()) == true){
                                 narray = removeJsonObjectAtJsonArrayIndex(narray,i);
                             }
                         }
