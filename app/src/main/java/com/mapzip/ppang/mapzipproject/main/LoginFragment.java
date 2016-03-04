@@ -212,6 +212,7 @@ public class LoginFragment extends Fragment {
                 try {
                     if (response.get("state").toString().equals("200")) {
 
+
                         user.LoginOK();
                         user.inputID(inputID.getText().toString());
                         user.inputPW(inputPW.getText().toString());
