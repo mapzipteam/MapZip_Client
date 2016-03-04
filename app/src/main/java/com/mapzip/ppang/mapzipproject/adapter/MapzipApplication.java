@@ -6,10 +6,13 @@ package com.mapzip.ppang.mapzipproject.adapter;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.mapzip.ppang.mapzipproject.main.MainActivity;
+
 import io.fabric.sdk.android.Fabric;
 import java.lang.reflect.Field;
 
@@ -28,6 +31,8 @@ public class MapzipApplication extends Application {
         setDefaultFont(this, "DEFAULT", "default_font2.ttf");
         setDefaultFont(this, "SANS_SERIF", "default_font2.ttf");
         setDefaultFont(this, "SERIF", "default_font2.ttf");
+
+
 
     }
 
