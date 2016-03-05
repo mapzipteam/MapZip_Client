@@ -41,6 +41,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.crashlytics.android.answers.RatingEvent;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.adapter.ImageAdapter;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
@@ -328,6 +329,15 @@ public class ReviewRegisterActivity extends Activity {
         // in modify
         if(state == 1){
             // 리뷰: 좋은말, 나쁜말.
+            if(reviewData.getGood_text().equals("null"))
+                good_text.setText("");
+            else
+                good_text.setText(reviewData.getGood_text());
+
+            if(reviewData.getBad_text().equals("null"))
+                bad_text.setText("");
+            else
+                bad_text.setText(reviewData.getBad_text());
 
             // 직접입력 있을 때.
             direct_text.setText(reviewData.getReview_text());
@@ -419,6 +429,8 @@ public class ReviewRegisterActivity extends Activity {
         JSONObject obj = new JSONObject();
         try {
             reviewData.setReview_text(direct_text.getText().toString());
+            reviewData.setGood_text(good_text.getText().toString());
+            reviewData.setBad_text(bad_text.getText().toString());
 
             if(serverchoice == 2)
                 reviewData.setImage_num(user.getGalImages().length);
@@ -434,6 +446,8 @@ public class ReviewRegisterActivity extends Activity {
             obj.put("review_text", reviewData.getReview_text());
             obj.put("image_num", reviewData.getImage_num());
             obj.put("gu_num", reviewData.getGu_num());
+            obj.put("positive_text",reviewData.getGood_text());
+            obj.put("negative_text",reviewData.getBad_text());
             obj.put("user_name",user.getUserName());
 
             Log.v("review 등록 보내기", obj.toString());
@@ -481,12 +495,16 @@ public class ReviewRegisterActivity extends Activity {
         JSONObject obj = new JSONObject();
         try {
             reviewData.setReview_text(direct_text.getText().toString());
+            reviewData.setGood_text(good_text.getText().toString());
+            reviewData.setBad_text(bad_text.getText().toString());
 
             reviewData.setImage_num(reviewData.getImage_num()+afterimagenum);
             obj.put("user_id", user.getUserID());
             obj.put("map_id", reviewData.getMapid());
             obj.put("review_emotion", reviewData.getReview_emotion());
             obj.put("review_text", reviewData.getReview_text());
+            obj.put("positive_text",reviewData.getGood_text());
+            obj.put("negative_text",reviewData.getBad_text());
             obj.put("store_id", getIntent().getStringExtra("store_id"));
             obj.put("image_num", reviewData.getImage_num());
             Log.v("image_num", String.valueOf(reviewData.getImage_num()));

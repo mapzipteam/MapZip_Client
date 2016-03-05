@@ -115,6 +115,16 @@ public class ReviewActivity extends Activity {
         }
 
         store_name.setText(reviewData.getStore_name());
+        if(reviewData.getGood_text().equals("null"))
+            good_text.setText("");
+        else
+            good_text.setText(reviewData.getGood_text());
+
+        if(reviewData.getBad_text().equals("null"))
+            bad_text.setText("");
+        else
+            bad_text.setText(reviewData.getBad_text());
+
         review_text.setText(reviewData.getReview_text());
         store_address.setText(reviewData.getStore_address());
         store_contact.setText(reviewData.getStore_contact());

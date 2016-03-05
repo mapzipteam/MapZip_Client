@@ -327,11 +327,11 @@ public class FriendData {
             mapforpinNum[i] = 0;
     }
 
-    public void initMapData() {
+    public void initReviewData() {
         reviewData = new ReviewData();
     }
 
-    public void setMapData(String s_id, String m_id, String s_contact, String r_text, String r_emotion, String s_address, String s_name) {
+    public void setReviewData(String s_id, String m_id, String s_contact, String r_text, String r_emotion, String s_address, String s_name, String pr_text, String nr_text) {
         reviewData.setStore_id(s_id);
         reviewData.setMapid(m_id);
         reviewData.setStore_contact(s_contact);
@@ -339,6 +339,8 @@ public class FriendData {
         reviewData.setReview_emotion(Integer.parseInt(r_emotion));
         reviewData.setStore_address(s_address);
         reviewData.setStore_name(s_name);
+        reviewData.setGood_text(pr_text);
+        reviewData.setBad_text(nr_text);
     }
 
     public ReviewData getReviewData() {

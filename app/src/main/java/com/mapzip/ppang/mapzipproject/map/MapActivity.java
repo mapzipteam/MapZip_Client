@@ -511,6 +511,7 @@ public class MapActivity extends NMapActivity {
             @Override
             public void onResponse(JSONObject response) {
 
+                    Log.v("MapDetail",response.toString());
                 try {
 
                     if (response.getString("state").equals("702")) {
@@ -520,13 +521,13 @@ public class MapActivity extends NMapActivity {
 
                         if ((getIntent().getStringExtra("fragment_id").equals("home")))
                         {
-                            user.initMapData();
-                            user.setMapData(obj.getString("store_id"), obj.getString("map_id"), obj.getString("store_contact"), obj.getString("review_text"), obj.getString("review_emotion"), obj.getString("store_address"), obj.getString("store_name"), obj.getString("gu_num"),obj.getString("image_num"));
+                            user.initReviewData();
+                            user.setReviewData(obj.getString("store_id"), obj.getString("map_id"), obj.getString("store_contact"), obj.getString("review_text"), obj.getString("review_emotion"), obj.getString("store_address"), obj.getString("store_name"), obj.getString("gu_num"), obj.getString("image_num"),obj.getString("positive_text"), obj.getString("negative_text"));
                         }
                         else if ((getIntent().getStringExtra("fragment_id").equals("friend_home")))
                         {
-                            fuser.initMapData();
-                            fuser.setMapData(obj.getString("store_id"), obj.getString("map_id"), obj.getString("store_contact"), obj.getString("review_text"), obj.getString("review_emotion"), obj.getString("store_address"), obj.getString("store_name"));
+                            fuser.initReviewData();
+                            fuser.setReviewData(obj.getString("store_id"), obj.getString("map_id"), obj.getString("store_contact"), obj.getString("review_text"), obj.getString("review_emotion"), obj.getString("store_address"), obj.getString("store_name"), obj.getString("positive_text"), obj.getString("negative_text"));
                         }
 
                         // get default image
