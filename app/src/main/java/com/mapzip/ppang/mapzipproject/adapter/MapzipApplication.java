@@ -18,13 +18,13 @@ import java.lang.reflect.Field;
 
 public class MapzipApplication extends Application {
 
-    private boolean mDebugMode;
+    private static boolean mDebugMode;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        initMapzip(true);
+        initMapzip(true); // release 할때는 false 로 바꿔주셔야 합니다
         initFabric();
 
 
@@ -69,8 +69,8 @@ public class MapzipApplication extends Application {
      * @param TAG
      * @param string
      */
-    public void doLogging(String TAG, String string){
-        if(mDebugMode == true){
+    public static void doLogging(String TAG, String string){
+        if(mDebugMode){
             Log.d(TAG,string);
         }
     }

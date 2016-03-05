@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -22,6 +23,7 @@ import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.activity.SuggestActivity;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
 
 import org.json.JSONException;
@@ -125,7 +127,42 @@ public class SettingsFragment extends Fragment {
             }
         });
 
+        Button testBtn = (Button)v.findViewById(R.id.testBtn);
+        testBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
+
+                JSONObject obj = new JSONObject();
+
+                JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
+                        "http://ljs93kr.cafe24.com/mapzip/test/MapzipResponseTest.php",
+                        obj,
+                        MRSuccessListener(),
+                        createMyReqErrorListener()) {
+                };
+                queue.add(myReq);
+            }
+        });
+
         return v;
+    }
+
+    private  Response.Listener<JSONObject> MRSuccessListener(){
+        return new Response.Listener<JSONObject>(){
+
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    MapzipResponse mResponse = new MapzipResponse(response);
+                    mResponse.showAllContents();
+                    mResponse.showHeaders();
+                    mResponse.showDebugs();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 
     private Response.Listener<JSONObject> createMyReqSuccessListener() {
@@ -159,7 +196,7 @@ public class SettingsFragment extends Fragment {
                     }
 
                 }catch (JSONException ex){
-                    Log.v("제이손","에러");
+                    Log.v("제이손", "에러");
                 }
             }
         };
@@ -258,4 +295,6 @@ public class SettingsFragment extends Fragment {
             }
         };
     }
+
+
 }

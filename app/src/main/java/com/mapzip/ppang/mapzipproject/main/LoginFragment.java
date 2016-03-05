@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -300,15 +302,16 @@ public class LoginFragment extends Fragment {
     }
 
     private void sendLoginSuccessToAnswers() {
-//        Answers.getInstance().logContentView(new ContentViewEvent()
-//                .putContentName("Login Action")
-//                .putContentType("Login")
-//                .putContentId("1")
-//                .putCustomAttribute("Login Example1", 2)
-//                .putCustomAttribute("Login Example2", "2"));
+        int app_version = -1;
+        try {
+            PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
+            app_version = packageInfo.versionCode;
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
         Answers.getInstance().logLogin(new LoginEvent()
         .putSuccess(true)
-        .putCustomAttribute("LoginCustomAttr","attr1"));
+        .putCustomAttribute("Version Code", app_version));
     }
 
     private Response.ErrorListener createMyReqErrorListener() {
