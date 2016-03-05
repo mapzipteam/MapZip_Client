@@ -76,4 +76,10 @@
             android:text="최신공지사항 확인하기"/>
     </LinearLayout>
 
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="임시버튼"
+        android:id="@+id/testBtn"/>
+
 </LinearLayout>

@@ -191,6 +191,11 @@ public class JoinFragment extends Fragment {
         return rootView;
     }
 
+    /**
+     *
+     * @param flag 커다란 카테고리 id, pw, interent, success
+     * @param detail 카테고리에 대한 자세한 사항
+     */
     private void sendJoinActionToAnswers(int flag, int detail) {
 //        Answers.getInstance().logContentView(new ContentViewEvent()
 //        .putContentName("Join Action")

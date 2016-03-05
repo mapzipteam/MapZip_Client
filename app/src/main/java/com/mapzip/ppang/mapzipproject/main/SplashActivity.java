@@ -1,7 +1,9 @@
 package com.mapzip.ppang.mapzipproject.main;
 
+import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageInfo;
@@ -25,6 +27,7 @@ import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.gcm.QuickstartPreferences;
 import com.mapzip.ppang.mapzipproject.gcm.RegistrationIntentService;
 import com.mapzip.ppang.mapzipproject.model.UserData;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
 
 public class SplashActivity extends Activity {
 
@@ -43,14 +46,14 @@ public class SplashActivity extends Activity {
 
     private UserData userdata;
 
+    private boolean is_network_check;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
 
         Log.d(TAG, "on Create");
-
-        gcmInit();
 
         userdata = UserData.getInstance();
 
@@ -65,8 +68,38 @@ public class SplashActivity extends Activity {
         StartImage_flag1.startAnimation(start_flag_ani_1);
         StartImage_zi.startAnimation(start_text_ani);
         StartImage_flag2.startAnimation(start_flag_ani_2);
-        Handler hd = new Handler();
-        hd.postDelayed(new splashhandler(),2500);
+
+        is_network_check = false;
+
+        checkNetworkState();
+
+    }
+
+    private void checkNetworkState(){
+        int network_state_check = NetworkUtil.getConnectivityStatus(getApplicationContext());
+        Log.d(TAG, "networkcheck : "+network_state_check);
+        if((network_state_check == NetworkUtil.TYPE_MOBILE) || (network_state_check == NetworkUtil.TYPE_WIFI)){
+            gcmInit();
+            Handler hd = new Handler();
+            if(is_network_check){
+                hd.postDelayed(new splashhandler(),500);
+            }else{
+                hd.postDelayed(new splashhandler(), 2500);
+            }
+
+        }else{
+            is_network_check = true;
+            AlertDialog.Builder ab = new AlertDialog.Builder(SplashActivity.this);
+            ab.setTitle("네트워크 상태 오류");
+            ab.setMessage("인터넷 환경이 아닙니다\n인터넷 연결 후 시도해주세요");
+            ab.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    checkNetworkState();
+                }
+            });
+            ab.show();
+        }
     }
 
     @Override

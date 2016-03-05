@@ -6,28 +6,33 @@ package com.mapzip.ppang.mapzipproject.adapter;
 
 import android.app.Application;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Typeface;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
+import com.mapzip.ppang.mapzipproject.main.MainActivity;
+
 import io.fabric.sdk.android.Fabric;
 import java.lang.reflect.Field;
 
 public class MapzipApplication extends Application {
 
-    private boolean mDebugMode;
+    private static boolean mDebugMode;
 
     @Override
     public void onCreate() {
         super.onCreate();
 
-        initMapzip(true);
+        initMapzip(true); // release 할때는 false 로 바꿔주셔야 합니다
         initFabric();
 
 
         setDefaultFont(this, "DEFAULT", "default_font2.ttf");
         setDefaultFont(this, "SANS_SERIF", "default_font2.ttf");
         setDefaultFont(this, "SERIF", "default_font2.ttf");
+
+
 
     }
 
@@ -64,8 +69,8 @@ public class MapzipApplication extends Application {
      * @param TAG
      * @param string
      */
-    public void doLogging(String TAG, String string){
-        if(mDebugMode == true){
+    public static void doLogging(String TAG, String string){
+        if(mDebugMode){
             Log.d(TAG,string);
         }
     }
