@@ -15,8 +15,14 @@
     <color name="white">#ffffff</color>
     <color name="trans_white">#80ffffff</color>
     <color name="textbrown">#5d474a</color>
+    <color name="textblack">#87000000</color>
     <color name="hotpink">#e7447d</color>
     <color name="pink">#F46496</color>
+    <color name="amberd">#77FFCA28</color>
+    <color name="amber">#44FFCA28</color>
+    <color name="ambert">#22FFCA28</color>
+    <color name="darkbrown">#8d6e63</color>
+    <color name="darkbrownt">#808d6e63</color>
 
     <color name="hashtagbrown">#6a3907</color>
     <color name="hashtagorange">#f5c541</color>

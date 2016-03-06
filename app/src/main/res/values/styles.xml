@@ -69,7 +69,7 @@
         <item name="android:paddingRight">12dp</item>
         <item name="android:paddingTop">5dp</item>
         <item name="android:singleLine">false</item>
-        <item name="android:textColor">@color/white</item>
+        <item name="android:textColor">@color/darkbrown</item>
         <item name="android:textSize">18dp</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

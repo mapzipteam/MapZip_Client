@@ -45,6 +45,7 @@
                     android:id="@+id/emotion_review"
                     android:layout_width="60dp"
                     android:layout_height="60dp"
+                    android:elevation="@dimen/activity_vertical_margin"
                     android:layout_above="@+id/test"
                     android:layout_centerHorizontal="true" />
 
@@ -60,13 +61,13 @@
                     android:textAppearance="?android:attr/textAppearanceLarge" />
 
                 <TextView
-                    android:id="@+id/mapname_review"
+                    android:id="@+id/hashtag_review"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/name_review"
                     android:gravity="center"
                     android:layout_marginBottom="15dp"
-                    android:text="나만의 지도1"
+                    android:text="#해 #쉬 #태 #그 #맛집"
                     android:textColor="@color/darkgrey" />
             </RelativeLayout>
 
@@ -76,6 +77,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"
                 android:layout_marginRight="5dp"
+                android:onClick="closeOnClick"
                 android:background="@drawable/btn_close" />
 
             <TextView
@@ -92,7 +94,7 @@
                 android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
-                android:textColor="@color/textbrown"
+                android:textColor="@color/darkbrown"
                 android:textSize="20dp" />
 
             <TextView
@@ -101,7 +103,7 @@
                 android:layout_alignBaseline="@+id/goodtext_review"
                 android:layout_marginLeft="25dp"
                 android:text=":)"
-                android:textColor="@color/textbrown"
+                android:textColor="@color/darkbrown"
                 android:textSize="20dp" />
 
             <TextView
@@ -117,7 +119,7 @@
                 android:gravity="center"
                 android:marqueeRepeatLimit="marquee_forever"
                 android:singleLine="true"
-                android:textColor="@color/white"
+                android:textColor="@color/darkbrown"
                 android:textSize="20dp" />
 
             <TextView
@@ -126,7 +128,7 @@
                 android:layout_alignBaseline="@+id/badtext_review"
                 android:layout_marginLeft="25dp"
                 android:text=":("
-                android:textColor="@color/white"
+                android:textColor="@color/darkbrown"
                 android:textSize="20dp" />
 
             <TextView
@@ -137,9 +139,9 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:background="@drawable/rec_review_goodtext_bg"
+                android:background="@drawable/rec_review_reviewtext_bg"
                 android:gravity="left"
-                android:textColor="@color/darkgrey"
+                android:textColor="@color/darkbrown"
                 android:textSize="20dp" />
 
             <TextView
@@ -148,81 +150,14 @@
                 android:layout_alignBaseline="@+id/text_review"
                 android:layout_marginLeft="25dp"
                 android:text="☆"
-                android:textColor="@color/darkgrey"
+                android:textColor="@color/darkbrown"
                 android:textSize="20dp" />
-
-
-            <TextView
-                android:id="@+id/tag_review"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:text="# "
-                android:layout_marginLeft="25dp"
-                android:layout_below="@+id/text_review"
-                android:textColor="@color/grey"
-                android:textSize="20dp" />
-
-            <LinearLayout
-                android:id="@+id/hashlayout_review"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/text_review"
-                android:layout_toRightOf="@+id/tag_review"
-                android:gravity="center_horizontal"
-                android:layout_marginLeft="5dp"
-                android:layout_marginRight="15dp"
-                android:orientation="horizontal">
-
-                <HorizontalScrollView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_horizontal">
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:paddingLeft="10dp"
-                        android:paddingRight="10dp">
-
-                        <TextView
-                            android:id="@+id/tagText_review"
-                            style="@style/hashtag_style_review"
-                            android:text="해" />
-
-                        <TextView
-                            android:id="@+id/tagText2_review"
-                            style="@style/hashtag_style_review"
-                            android:layout_marginLeft="10dp"
-                            android:text="쉬" />
-
-                        <TextView
-                            android:id="@+id/tagText3_review"
-                            style="@style/hashtag_style_review"
-                            android:layout_marginLeft="10dp"
-                            android:text="태" />
-
-                        <TextView
-                            android:id="@+id/tagText4_review"
-                            style="@style/hashtag_style_review"
-                            android:layout_marginLeft="10dp"
-                            android:text="그" />
-
-                        <TextView
-                            android:id="@+id/tagText5_review"
-                            style="@style/hashtag_style_review"
-                            android:layout_marginLeft="10dp"
-                            android:text="맛집" />
-                    </LinearLayout>
-                </HorizontalScrollView>
-            </LinearLayout>
 
             <LinearLayout
                 android:id="@+id/address_review"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/hashlayout_review"
+                android:layout_below="@+id/text_review"
                 android:layout_marginTop="20dp"
                 android:gravity="center"
                 android:orientation="horizontal">

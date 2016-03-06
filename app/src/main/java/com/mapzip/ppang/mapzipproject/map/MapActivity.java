@@ -123,7 +123,7 @@ public class MapActivity extends NMapActivity {
         public void onMapInitHandler(NMapView nMapView, NMapError nMapError) {
             if (nMapError == null) {
                 mMapController.setMapCenter(current_point, 9);
-                poiDataOverlay.showAllPOIdata(0);//위에 코드와 달리 처음 지도를 불렀을때 모든 poi 플래그들리 보이도록 자동으로 축적이랑 중심을 변경 시켜주는 코드
+                //poiDataOverlay.showAllPOIdata(0);//위에 코드와 달리 처음 지도를 불렀을때 모든 poi 플래그들리 보이도록 자동으로 축적이랑 중심을 변경 시켜주는 코드
                 //mMapController.set
             } else {
                 if(DEBUG) {

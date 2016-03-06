@@ -49,6 +49,7 @@ public class ReviewActivity extends Activity {
 
     // review Data
     private ReviewData reviewData;
+    private TextView hashtag;
     private ImageView review_emotion;
     private TextView store_name;
     private TextView good_text;
@@ -100,6 +101,7 @@ public class ReviewActivity extends Activity {
 
         // review Data
         review_emotion = (ImageView) findViewById(R.id.emotion_review);
+        hashtag = (TextView) findViewById(R.id.hashtag_review);
         store_name = (TextView) findViewById(R.id.name_review);
         review_text = (TextView) findViewById(R.id.text_review);
         good_text = (TextView) findViewById(R.id.goodtext_review);
@@ -131,6 +133,17 @@ public class ReviewActivity extends Activity {
 
         good_text.setSelected(true);
         bad_text.setSelected(true);
+
+        // get hashtag from userData.mapmetaArray
+        try {
+            if (userlock == false) { // mine
+                hashtag.setText(user.getMapmetaArray().getJSONObject(Integer.parseInt(reviewData.getMapid())-1).getString("hash_tag"));
+            } else { // friend's
+                hashtag.setText(fuser.getMapmetaArray().getJSONObject(Integer.parseInt(reviewData.getMapid())-1).getString("hash_tag"));
+            }
+        }catch (JSONException ex){
+            Log.e("JSONEX","get hash in reviewActivity");
+        }
 
         // set Emotion Image
         if (reviewData.getReview_emotion() < 20)
@@ -214,6 +227,11 @@ public class ReviewActivity extends Activity {
                 });
         AlertDialog alert = alert_confirm.create();
         alert.show();
+    }
+
+    // cancel Btn
+    public void closeOnClick(View v){
+        finish();
     }
 
     private Response.Listener<JSONObject> createMyReqSuccessListener() {
