@@ -103,7 +103,7 @@
                 android:id="@+id/registerBtn_review"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/review_enroll_btn_before"
+                android:background="@drawable/rec_btn_white"
                 android:text="리뷰작성"
                 android:textStyle="bold"
                 android:layout_marginTop="5dp"

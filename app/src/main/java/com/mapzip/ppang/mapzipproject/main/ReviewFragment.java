@@ -307,10 +307,10 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
      */
     private void reviewBtnChange(boolean valid){
         if(valid == true) {
-            review_regi.setBackgroundResource(R.drawable.review_enroll_btn_after);
+            review_regi.setBackgroundResource(R.drawable.rec_btn_pink_round);
             review_regi.setTextColor(getResources().getColor(R.color.white));
         }else{
-            review_regi.setBackgroundResource(R.drawable.review_enroll_btn_before);
+            review_regi.setBackgroundResource(R.drawable.rec_btn_white);
             review_regi.setTextColor(getResources().getColor(R.color.hotpink));
         }
 
