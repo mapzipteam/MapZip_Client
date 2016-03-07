@@ -918,7 +918,7 @@ public class ReviewRegisterActivity extends Activity {
 
         BitmapFactory.Options options = new BitmapFactory.Options();
 
-        options.inSampleSize = 4;
+        options.inSampleSize = 2;
         options.outWidth = maxWidth;
         options.outHeight = maxHeight;
 
