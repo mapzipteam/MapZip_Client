@@ -349,82 +349,28 @@
 
                     <TextView
                         android:id="@+id/tagText"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:background="@drawable/hashdraw"
-                        android:gravity="center"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="5dp"
-                        android:singleLine="false"
                         android:text="해"
-                        android:textColor="@color/hashtagbrown"
-                        android:textSize="18dp" />
+                        style="@style/hashtag_style"/>
 
                     <TextView
                         android:id="@+id/tagText2"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/hashdraw"
-                        android:gravity="center"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="5dp"
-                        android:singleLine="false"
                         android:text="쉬"
-                        android:textColor="@color/hashtagbrown"
-                        android:textSize="18dp" />
+                        style="@style/hashtag_style"/>
 
                     <TextView
                         android:id="@+id/tagText3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/hashdraw"
-                        android:gravity="center"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="5dp"
-                        android:singleLine="false"
                         android:text="태"
-                        android:textColor="@color/hashtagbrown"
-                        android:textSize="18dp" />
+                        style="@style/hashtag_style"/>
 
                     <TextView
                         android:id="@+id/tagText4"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/hashdraw"
-                        android:gravity="center"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="5dp"
-                        android:singleLine="false"
                         android:text="그"
-                        android:textColor="@color/hashtagbrown"
-                        android:textSize="18dp" />
+                        style="@style/hashtag_style"/>
 
                     <TextView
                         android:id="@+id/tagText5"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginLeft="10dp"
-                        android:background="@drawable/hashdraw"
-                        android:gravity="center"
-                        android:paddingBottom="5dp"
-                        android:paddingLeft="12dp"
-                        android:paddingRight="12dp"
-                        android:paddingTop="5dp"
-                        android:singleLine="false"
                         android:text="맛집"
-                        android:textColor="@color/hashtagbrown"
-                        android:textSize="18dp" />
+                        style="@style/hashtag_style"/>
 
                 </LinearLayout>
 

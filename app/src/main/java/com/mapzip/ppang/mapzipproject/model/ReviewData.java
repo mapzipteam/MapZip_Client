@@ -1,11 +1,9 @@
 package com.mapzip.ppang.mapzipproject.model;
 
-import java.util.Map;
-
 /**
  * Created by ppangg on 2015-08-29.
  */
-public class MapData implements Cloneable {
+public class ReviewData implements Cloneable {
     private String mapid;
     private String store_id;
     private double store_x;
@@ -14,11 +12,13 @@ public class MapData implements Cloneable {
     private String store_address;
     private String store_contact;
     private int review_emotion;
+    private String good_text;
+    private String bad_text;
     private String review_text;
     private int gu_num;
     private int image_num;
 
-    public MapData() { this.review_text = ""; }
+    public ReviewData() { this.review_text = ""; }
 
     public String getMapid() { return mapid; }
 
@@ -94,10 +94,26 @@ public class MapData implements Cloneable {
         this.image_num = image_num;
     }
 
-    @Override
-    public MapData clone() throws CloneNotSupportedException {
-        MapData mapData = (MapData) super.clone();
+    public String getGood_text() {
+        return good_text;
+    }
 
-        return mapData;
+    public void setGood_text(String good_text) {
+        this.good_text = good_text;
+    }
+
+    public String getBad_text() {
+        return bad_text;
+    }
+
+    public void setBad_text(String bad_text) {
+        this.bad_text = bad_text;
+    }
+
+    @Override
+    public ReviewData clone() throws CloneNotSupportedException {
+        ReviewData reviewData = (ReviewData) super.clone();
+
+        return reviewData;
     }
 }

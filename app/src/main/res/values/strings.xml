@@ -57,6 +57,48 @@
         <item>직접입력</item>
     </string-array>
 
+    <string-array name="goodtext_review_regi">
+        <item>나만 알고 싶은 장소에요.</item>
+        <item>모든 것이 완벽해요.</item>
+        <item>서비스가 좋아요.</item>
+        <item>인테리어가 이뻐요.</item>
+        <item>시설이 좋아요</item>
+        <item>가격이 저렴해요.</item>
+        <item>가성비가 좋아요.</item>
+        <item>천상의 맛이에요.</item>
+        <item>맛있어요.</item>
+        <item>조용해서 좋아요.</item>
+        <item>시끌벅적 유쾌하네요.</item>
+        <item>교통이 편리해요</item>
+        <item>트렌디한 장소에요.</item>
+        <item>데이트하기 좋아요.</item>
+        <item>회식장소로 딱이에요.</item>
+        <item>부모님이 좋아하세요.</item>
+        <item>친구들과 놀기 좋아요.</item>
+        <item>혼자가기 좋아요.</item>
+    </string-array>
+
+    <string-array name="badtext_review_regi">
+        <item>유명세치곤 별로에요.</item>
+        <item>마음에 드는 구석이 없어요.</item>
+        <item>직원이 불친절해요.</item>
+        <item>인테리어가 이상해요.</item>
+        <item>시설이 불량이에요.</item>
+        <item>가격이 비싸요.</item>
+        <item>가성비가 나빠요.</item>
+        <item>값이 저렴한 이유를 알겠어요.</item>
+        <item>양심이 있으면 돈 받으면 안돼요.</item>
+        <item>맛없어요.</item>
+        <item>너무 시끄러워요.</item>
+        <item>사람이 너무 많아요.</item>
+        <item>조용해서 불편해요.</item>
+        <item>교통이 불편해요.</item>
+        <item>너무 구식이에요.</item>
+        <item>연인이랑 오기 불편해요.</item>
+        <item>혼자가기 불편해요.</item>
+        <item>위생이 안좋아보여요.</item>
+    </string-array>
+
     <string-array name="spinner_suggest">
         <item>선택안함</item>
         <item>버그신고</item>

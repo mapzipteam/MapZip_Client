@@ -30,7 +30,7 @@ public class UserData {
     private Bitmap[] GalImages = new Bitmap[]{};
     private boolean friendlock;
     private boolean reviewListlock;
-    private MapData mapData;
+    private ReviewData reviewData;
     private boolean mapRefreshLock = true;
     private boolean afterModify = false;
 
@@ -64,7 +64,7 @@ public class UserData {
         for(int i =0; i<5; i++)
             mapforpinNum[i] = 0;
         mapmetaNum = 0;
-        mapData = new MapData();
+        reviewData = new ReviewData();
         pingCount = new int[5][26];
         result = new Bitmap[5];
         GalImages = new Bitmap[5];
@@ -394,24 +394,26 @@ public class UserData {
         }
     }
 
-    public void initMapData() {
-        mapData = new MapData();
+    public void initReviewData() {
+        reviewData = new ReviewData();
     }
 
-    public void setMapData(String s_id, String m_id, String s_contact, String r_text, String r_emotion, String s_address, String s_name, String g_num, String i_num) {
-        mapData.setStore_id(s_id);
-        mapData.setMapid(m_id);
-        mapData.setStore_contact(s_contact);
-        mapData.setReview_text(r_text);
-        mapData.setReview_emotion(Integer.parseInt(r_emotion));
-        mapData.setStore_address(s_address);
-        mapData.setStore_name(s_name);
-        mapData.setGu_num(Integer.parseInt(g_num));
-        mapData.setImage_num(Integer.parseInt(i_num));
+    public void setReviewData(String s_id, String m_id, String s_contact, String r_text, String r_emotion, String s_address, String s_name, String g_num, String i_num, String pr_text, String nr_text) {
+        reviewData.setStore_id(s_id);
+        reviewData.setMapid(m_id);
+        reviewData.setStore_contact(s_contact);
+        reviewData.setReview_text(r_text);
+        reviewData.setReview_emotion(Integer.parseInt(r_emotion));
+        reviewData.setStore_address(s_address);
+        reviewData.setStore_name(s_name);
+        reviewData.setGu_num(Integer.parseInt(g_num));
+        reviewData.setImage_num(Integer.parseInt(i_num));
+        reviewData.setGood_text(pr_text);
+        reviewData.setBad_text(nr_text);
     }
 
-    public MapData getMapData() {
-        return mapData;
+    public ReviewData getReviewData() {
+        return reviewData;
     }
 
    public void setIsAuto(int isAuto){

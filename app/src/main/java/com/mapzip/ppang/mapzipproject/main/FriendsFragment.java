@@ -442,7 +442,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
             if(selectlock == false) {
                 selectlock = true;
 
-                fuser.initMapData();
+                fuser.initReviewData();
                 fuser.initmapforpinnum();
                 Loading = new LoadingTask();
 
