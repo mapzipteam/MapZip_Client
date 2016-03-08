@@ -16,7 +16,6 @@ public interface MapInfosContract {
     interface View {
         interface Activity {
             void showLocationMarker(List<LocationInfo> locationInfos);
-            void changeFragment();
         }
 
         interface InfosList {
@@ -24,25 +23,15 @@ public interface MapInfosContract {
 
             void showLocationDetailUI(LocationInfo locationInfo);
         }
-
-        interface ReviewsList {
-            void showComments(List<ReviewData> reviews);
-        }
     }
 
     interface UserActionListener {
         void setInfosListFragment(MapInfosContract.View.InfosList fragment);
-
-        void setReviewsListFragment(MapInfosContract.View.ReviewsList fragment);
 
         void setUpLocationMarkers(List<LocationInfo> locationInfos);
 
         void loadLocationInfos(boolean forceUpdate);
 
         void openLocationDetails(LocationInfo clickedInfo);
-
-        void loadReviewsDatas(boolean forceUpdate);
-
-        void loadReviewFragment();
     }
 }

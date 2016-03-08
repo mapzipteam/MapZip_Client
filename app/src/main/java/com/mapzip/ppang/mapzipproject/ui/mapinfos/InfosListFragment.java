@@ -87,7 +87,7 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
 
     @Override
     public void showLocationDetailUI(LocationInfo locationInfo) {
-        mActionsListener.loadReviewFragment();
+        //Todo : 해당 장소에대한 타인의 리뷰, 그리고 나의 리뷰를 표시해야함.
     }
 
     private static class InfosAdapter extends RecyclerView.Adapter<InfosAdapter.ViewHolder> {

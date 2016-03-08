@@ -8,11 +8,9 @@ import android.support.v7.app.AppCompatCallback;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MotionEvent;
 
 import com.mapzip.ppang.mapzipproject.R;
-import com.mapzip.ppang.mapzipproject.main.LoginFragment;
 import com.mapzip.ppang.mapzipproject.map.NMapPOIflagType;
 import com.mapzip.ppang.mapzipproject.map.NMapViewerResourceProvider;
 import com.mapzip.ppang.mapzipproject.model.LocationInfo;
@@ -107,14 +105,6 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
 
         mPoiDataOverlay = mMapOverlayManager.createPOIdataOverlay(poiData, null);
         mPoiDataOverlay.showAllPOIdata(0);
-    }
-
-    @Override
-    public void changeFragment() {
-        Log.i(TAG, "changeFragment");
-        mFragmentTransaction = mFragmentManager.beginTransaction();
-        mFragmentTransaction.add(R.id.map_infos_container, ReviewsListFragment.newInstance())
-                .commit();
     }
 
     public MapInfosContract.UserActionListener getActionsListener() {
