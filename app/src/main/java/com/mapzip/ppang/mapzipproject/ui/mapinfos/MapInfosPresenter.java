@@ -66,7 +66,7 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
     public void loadReviewsDatas(boolean forceUpdate) {
         List<ReviewData> dummyDatas = new ArrayList<>(3);
         dummyDatas.add(new ReviewData("Ace Kim", "맛있어요!", "2016-03-27"));
-        dummyDatas.add(new ReviewData("ppang", "맛없어요.", "2016-04-27"));
+        dummyDatas.add(new ReviewData("ppang", "맛없어요.\n맛없어요.\n맛없어요.\n맛없어요\n맛없어요\n맛없어요\n맛없어", "2016-04-27"));
         dummyDatas.add(new ReviewData("brain", "그저그래요.", "2016-05-27"));
 
         mReviewsFragment.showComments(dummyDatas);

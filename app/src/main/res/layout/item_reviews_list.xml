@@ -3,13 +3,14 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:minHeight="@dimen/item_two_line_height"
     android:paddingLeft="16dp"
     android:paddingRight="16dp">
 
     <TextView
         android:id="@+id/reviews_author"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:ellipsize="end"
@@ -17,13 +18,12 @@
         android:singleLine="true"
         android:text="Ace Kim"
         android:textColor="@android:color/primary_text_light"
-        app:layout_heightPercent="100%"
         app:layout_widthPercent="15%" />
 
     <TextView
         android:id="@+id/reviews_comment"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_toEndOf="@id/reviews_author"
         android:layout_toRightOf="@id/reviews_author"
         android:ellipsize="end"
@@ -31,18 +31,16 @@
         android:maxLines="10"
         android:text="맛있어요!!!"
         android:textColor="@android:color/primary_text_light"
-        app:layout_heightPercent="100%"
         app:layout_widthPercent="50%" />
 
     <TextView
         android:id="@+id/reviews_date"
         android:layout_width="0dp"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:gravity="center_horizontal"
         android:text="2014-06-08"
         android:textColor="@android:color/primary_text_light"
-        app:layout_heightPercent="100%"
         app:layout_widthPercent="25%" />
 </android.support.percent.PercentRelativeLayout>

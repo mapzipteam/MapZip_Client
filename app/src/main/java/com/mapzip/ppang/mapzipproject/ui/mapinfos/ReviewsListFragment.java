@@ -62,8 +62,10 @@ public class ReviewsListFragment extends Fragment implements MapInfosContract.Vi
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.reviews_list_recyclerview);
         recyclerView.setAdapter(mReviewsAdapter);
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setAutoMeasureEnabled(true);
+
+        recyclerView.setLayoutManager(layoutManager);
 
         return rootView;
     }
