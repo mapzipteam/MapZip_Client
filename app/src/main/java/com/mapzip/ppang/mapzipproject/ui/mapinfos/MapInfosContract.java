@@ -1,7 +1,6 @@
 package com.mapzip.ppang.mapzipproject.ui.mapinfos;
 
 import com.mapzip.ppang.mapzipproject.model.LocationInfo;
-import com.mapzip.ppang.mapzipproject.model.ReviewData;
 
 import java.util.List;
 
@@ -15,11 +14,11 @@ public interface MapInfosContract {
 
     interface View {
         interface Activity {
-            void showLocationMarker(List<LocationInfo> locationInfos);
+            void showLocationMarker(List<Object> locationInfos);
         }
 
         interface InfosList {
-            void showLocationInfos(List<LocationInfo> locationInfos);
+            void showLocationInfos(List<Object> locationInfos);
 
             void showLocationDetailUI(LocationInfo locationInfo);
         }
@@ -28,7 +27,7 @@ public interface MapInfosContract {
     interface UserActionListener {
         void setInfosListFragment(MapInfosContract.View.InfosList fragment);
 
-        void setUpLocationMarkers(List<LocationInfo> locationInfos);
+        void setUpLocationMarkers(List<Object> locationInfos);
 
         void loadLocationInfos(boolean forceUpdate);
 

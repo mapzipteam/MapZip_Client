@@ -87,18 +87,20 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
     }
 
     /**
-     * @param locationInfos : 마커를 생성할 장소들에대한 데이터들
+     * @param objects : 마커를 생성할 장소들에대한 데이터들
      * @see InfosListFragment
      * 장소들에 대한 데이터를 리스트형태로 가져와서 오버레이 아이템(마커)을 생성하고 출력합니다.
      * 이 함수는 InfosListFragment 에서 호출됩니다.
      * @since 2016. 3. 3
      */
     @Override
-    public void showLocationMarker(List<LocationInfo> locationInfos) {
-        NMapPOIdata poiData = new NMapPOIdata(locationInfos.size(), mMapViewerResourceProvider);
+    public void showLocationMarker(List<Object> objects) {
+        NMapPOIdata poiData = new NMapPOIdata(objects.size(), mMapViewerResourceProvider);
 
-        poiData.beginPOIdata(locationInfos.size());
-        for (LocationInfo locationInfo : locationInfos) {
+
+        poiData.beginPOIdata(objects.size());
+        for (Object object : objects) {
+            LocationInfo locationInfo = (LocationInfo) object;
             poiData.addPOIitem(locationInfo.getLocationLatLng().getLatitude(), locationInfo.getLocationLatLng().getLongitude(), locationInfo.getLocationName(), NMapPOIflagType.PIN, locationInfo.getLocationID());
         }
         poiData.endPOIdata();

@@ -18,7 +18,6 @@ import com.mapzip.ppang.mapzipproject.ui.ext.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import static com.google.common.base.Preconditions.checkNotNull;
 
@@ -27,6 +26,7 @@ import static com.google.common.base.Preconditions.checkNotNull;
  */
 public class InfosListFragment extends Fragment implements MapInfosContract.View.InfosList {
 
+    private RecyclerView mRecyclerView;
     private InfosAdapter mInfosAdapter;
     private MapInfosContract.UserActionListener mActionsListener;
 
@@ -48,7 +48,7 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mInfosAdapter = new InfosAdapter(new ArrayList<LocationInfo>(0), mItemListener);
+        mInfosAdapter = new InfosAdapter(new ArrayList<Object>(0), mItemListener);
     }
 
     @Override
@@ -69,18 +69,19 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_infos_list, container, false);
-        RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.infos_list_recyclerview);
-        recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(getActivity(), android.R.drawable.divider_horizontal_bright), true, false));
-        recyclerView.setAdapter(mInfosAdapter);
+        mRecyclerView = (RecyclerView) rootView.findViewById(R.id.infos_list_recyclerview);
+        mRecyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(getActivity(), android.R.drawable.divider_horizontal_bright), true, false));
 
-        recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        layoutManager.setAutoMeasureEnabled(true);
+        mRecyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setAdapter(mInfosAdapter);
 
         return rootView;
     }
 
     @Override
-    public void showLocationInfos(List<LocationInfo> infos) {
+    public void showLocationInfos(List<Object> infos) {
         mInfosAdapter.replaceData(infos);
         mActionsListener.setUpLocationMarkers(infos);
     }
@@ -90,41 +91,83 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
         //Todo : 해당 장소에대한 타인의 리뷰, 그리고 나의 리뷰를 표시해야함.
     }
 
-    private static class InfosAdapter extends RecyclerView.Adapter<InfosAdapter.ViewHolder> {
+    private class InfosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
-        private List<LocationInfo> mInfos;
+        private static final int ITEM_LOCATION_INFORMATION = 0;
+        private static final int ITEM_REVIEW = 1;
+
+        private List<Object> mInfos;
         private InfoItemListener mItemListener;
 
-        public InfosAdapter(List<LocationInfo> infos, InfoItemListener itemListener) {
+        public InfosAdapter(List<Object> infos, InfoItemListener itemListener) {
             setList(infos);
             mItemListener = itemListener;
         }
 
         @Override
-        public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
             Context context = parent.getContext();
             LayoutInflater inflater = LayoutInflater.from(context);
-            View infoView = inflater.inflate(R.layout.item_infos_list, parent, false);
 
-            return new ViewHolder(infoView, mItemListener);
+            switch (viewType) {
+                case ITEM_LOCATION_INFORMATION:
+                    View infoView = inflater.inflate(R.layout.item_locationinfo, parent, false);
+                    return new LocationInfoViewHolder(infoView, mItemListener);
+                case ITEM_REVIEW:
+                    View reviewView = inflater.inflate(R.layout.item_review, parent, false);
+                    return new ReviewViewHolder(reviewView);
+                default:
+                    try {
+                        throw new Exception("Cannot find right item view");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+            }
+
+            return null;
         }
 
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
-            LocationInfo info = mInfos.get(position);
+        public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            switch (holder.getItemViewType()) {
+                case ITEM_LOCATION_INFORMATION:
+                    LocationInfo info = (LocationInfo) mInfos.get(position);
 
-            holder.nameText.setText(info.getLocationName());
-            holder.addressText.setText(info.getLocationAddress());
-            holder.reviewCountsText.setText(String.format(Locale.KOREAN, "%d개의 리뷰 >", info.getReviewCount()));
+                    LocationInfoViewHolder locationInfoViewHolder = (LocationInfoViewHolder) holder;
+                    locationInfoViewHolder.nameText.setText(info.getLocationName());
+                    locationInfoViewHolder.addressText.setText(info.getLocationAddress());
+
+                    break;
+                case ITEM_REVIEW:
+                    break;
+            }
         }
 
-        public void replaceData(List<LocationInfo> infos) {
+        public void replaceData(List<Object> infos) {
             setList(infos);
             notifyDataSetChanged();
         }
 
-        private void setList(List<LocationInfo> infos) {
+        private void setList(List<Object> infos) {
             mInfos = checkNotNull(infos);
+        }
+
+        /**
+         * Todo : RecyclerView에 아이템을 넣을때 사용하는 메소드
+         *
+         * @param view
+         */
+        private void addItem(View view) {
+            int pos = mRecyclerView.getChildAdapterPosition(view);
+            if (pos != RecyclerView.NO_POSITION) {
+                mInfos.add(null);
+                notifyItemInserted(pos);
+            }
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return super.getItemViewType(position);
         }
 
         @Override
@@ -132,31 +175,50 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
             return mInfos.size();
         }
 
-        public LocationInfo getItem(int position) {
+        public Object getItem(int position) {
             return mInfos.get(position);
         }
 
-        public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public class LocationInfoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
             public TextView nameText;
             public TextView addressText;
-            public TextView reviewCountsText;
 
             private InfoItemListener mItemListener;
 
-            public ViewHolder(View itemView, InfoItemListener listener) {
+            public LocationInfoViewHolder(View itemView, InfoItemListener listener) {
                 super(itemView);
                 mItemListener = listener;
-                nameText = (TextView) itemView.findViewById(R.id.infos_list_name);
-                addressText = (TextView) itemView.findViewById(R.id.infos_list_address);
-                reviewCountsText = (TextView) itemView.findViewById(R.id.infos_list_review_count);
+                nameText = (TextView) itemView.findViewById(R.id.item_locationinfo_name);
+                addressText = (TextView) itemView.findViewById(R.id.item_locationinfo_address);
                 itemView.setOnClickListener(this);
             }
 
             @Override
             public void onClick(View v) {
                 int position = getAdapterPosition();
-                LocationInfo info = getItem(position);
+                LocationInfo info = (LocationInfo) getItem(position);
+                mItemListener.onInfoClick(info);
+            }
+        }
+
+        public class ReviewViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+
+            public TextView authorText;
+            public TextView dateText;
+            public TextView reviewText;
+
+            public ReviewViewHolder(View itemView) {
+                super(itemView);
+                authorText = (TextView) itemView.findViewById(R.id.item_review_author);
+                dateText = (TextView) itemView.findViewById(R.id.item_review_date);
+                reviewText = (TextView) itemView.findViewById(R.id.item_review_comment);
+            }
+
+            @Override
+            public void onClick(View v) {
+                int position = getAdapterPosition();
+                LocationInfo info = (LocationInfo) getItem(position);
                 mItemListener.onInfoClick(info);
             }
         }

@@ -15,15 +15,12 @@ public class LocationInfo {
     private String locationAddress;
     @Nullable
     private NGeoPoint locationLatLng;
-    @Nullable
-    private int reviewCount;
 
-    public LocationInfo(int locationID, @Nullable String locationName, @Nullable String locationAddress, @Nullable NGeoPoint locationLatLng, int reviewCount) {
+    public LocationInfo(int locationID, @Nullable String locationName, @Nullable String locationAddress, @Nullable NGeoPoint locationLatLng) {
         this.locationID = locationID;
         this.locationName = locationName;
         this.locationAddress = locationAddress;
         this.locationLatLng = locationLatLng;
-        this.reviewCount = reviewCount;
     }
 
     public int getLocationID() {
@@ -56,13 +53,5 @@ public class LocationInfo {
 
     public void setLocationLatLng(NGeoPoint locationLatLng) {
         this.locationLatLng = locationLatLng;
-    }
-
-    public int getReviewCount() {
-        return reviewCount;
-    }
-
-    public void setReviewCount(int reviewCount) {
-        this.reviewCount = reviewCount;
     }
 }

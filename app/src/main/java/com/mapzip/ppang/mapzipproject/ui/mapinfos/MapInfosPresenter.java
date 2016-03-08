@@ -3,7 +3,6 @@ package com.mapzip.ppang.mapzipproject.ui.mapinfos;
 import android.support.annotation.NonNull;
 
 import com.mapzip.ppang.mapzipproject.model.LocationInfo;
-import com.mapzip.ppang.mapzipproject.model.ReviewData;
 import com.nhn.android.maps.maplib.NGeoPoint;
 
 import java.util.ArrayList;
@@ -32,7 +31,7 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
     }
 
     @Override
-    public void setUpLocationMarkers(List<LocationInfo> locationInfos) {
+    public void setUpLocationMarkers(List<Object> locationInfos) {
 
         mInfosActivity.showLocationMarker(locationInfos);
     }
@@ -43,10 +42,10 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
 
         //EspressoIdlingResource.increment(); // App is busy until further notice
 
-        List<LocationInfo> dummyDatas = new ArrayList<>(3);
-        dummyDatas.add(new LocationInfo(0, "상도곱창", "서울특별시 동작구 상도동 127-7", new NGeoPoint(37.496815, 126.953565), 6));
-        dummyDatas.add(new LocationInfo(1, "현선이네", "서울특별시 동작구 상도동 128-7", new NGeoPoint(37.495183, 126.956716), 100));
-        dummyDatas.add(new LocationInfo(2, "피자헤븐", "서울특별시 동작구 상도동 125-7", new NGeoPoint(37.494955, 126.958133), 1000));
+        List<Object> dummyDatas = new ArrayList<>(3);
+        dummyDatas.add(new LocationInfo(0, "상도곱창", "서울특별시 동작구 상도동 127-7", new NGeoPoint(37.496815, 126.953565)));
+        dummyDatas.add(new LocationInfo(1, "현선이네", "서울특별시 동작구 상도동 128-7", new NGeoPoint(37.495183, 126.956716)));
+        dummyDatas.add(new LocationInfo(2, "피자헤븐", "서울특별시 동작구 상도동 125-7", new NGeoPoint(37.494955, 126.958133)));
 
         mInfosFragment.showLocationInfos(dummyDatas);
     }
