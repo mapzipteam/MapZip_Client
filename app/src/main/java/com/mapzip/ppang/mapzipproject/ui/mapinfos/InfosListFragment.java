@@ -70,7 +70,7 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.fragment_infos_list, container, false);
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.infos_list_recyclerview);
-        recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(getActivity(), android.R.drawable.divider_horizontal_bright)));
+        recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(getActivity(), android.R.drawable.divider_horizontal_bright), true, false));
         recyclerView.setAdapter(mInfosAdapter);
 
         recyclerView.setHasFixedSize(true);

@@ -4,6 +4,7 @@ import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
+import com.mapzip.ppang.mapzipproject.ui.ext.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,6 +62,7 @@ public class ReviewsListFragment extends Fragment implements MapInfosContract.Vi
         View rootView = inflater.inflate(R.layout.fragment_reviews_list, container, false);
 
         RecyclerView recyclerView = (RecyclerView) rootView.findViewById(R.id.reviews_list_recyclerview);
+        recyclerView.addItemDecoration(new DividerItemDecoration(ContextCompat.getDrawable(getActivity(), android.R.drawable.divider_horizontal_bright), true, false));
         recyclerView.setAdapter(mReviewsAdapter);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
