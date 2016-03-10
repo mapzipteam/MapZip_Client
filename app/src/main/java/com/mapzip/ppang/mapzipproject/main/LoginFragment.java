@@ -31,6 +31,7 @@ import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.LoginEvent;
 import com.mapzip.ppang.mapzipproject.R;
+import com.mapzip.ppang.mapzipproject.adapter.MapzipApplication;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
@@ -43,6 +44,8 @@ import org.json.JSONObject;
  * Created by ppangg on 2015-07-31.
  */
 public class LoginFragment extends Fragment {
+
+    private final String TAG = "LoginFragment";
 
     private boolean lockBtn;
     private LoadingTask Loading;
@@ -302,16 +305,9 @@ public class LoginFragment extends Fragment {
     }
 
     private void sendLoginSuccessToAnswers() {
-        int app_version = -1;
-        try {
-            PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
-            app_version = packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
         Answers.getInstance().logLogin(new LoginEvent()
         .putSuccess(true)
-        .putCustomAttribute("Version Code", app_version));
+        .putCustomAttribute("Version Code", user.getBuild_version()));
     }
 
     private Response.ErrorListener createMyReqErrorListener() {

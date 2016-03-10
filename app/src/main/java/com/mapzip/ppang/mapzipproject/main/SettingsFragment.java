@@ -21,8 +21,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.activity.SuggestActivity;
+import com.mapzip.ppang.mapzipproject.adapter.MapzipApplication;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
 import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
 
@@ -132,12 +134,19 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
-
-                JSONObject obj = new JSONObject();
-
+                MapzipRequestBuilder builder = null;
+                try {
+                    builder= new MapzipRequestBuilder();
+                    builder.setCustomAttribute("custom_key1", "string_value");
+                    builder.setCustomAttribute("custom_key2", 5);
+                    builder.setCustomAttribute("custom_key3", true);
+                    builder.showInside();
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
                 JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                         "http://ljs93kr.cafe24.com/mapzip/test/MapzipResponseTest.php",
-                        obj,
+                        builder.build(),
                         MRSuccessListener(),
                         createMyReqErrorListener()) {
                 };

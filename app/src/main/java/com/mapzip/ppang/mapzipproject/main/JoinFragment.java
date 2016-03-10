@@ -28,7 +28,10 @@ import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.fabric.FabricPreferences;
 import com.mapzip.ppang.mapzipproject.fabric.JoinFabric;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -312,19 +315,20 @@ public class JoinFragment extends Fragment {
             }
 
             if (userid != null && !userid.equals("") && userpw != null && !userpw.equals("") && username != null && !username.equals("")) {
-                JSONObject obj = new JSONObject();
+                MapzipRequestBuilder builder = null;
                 try {
-                    obj.put("userid", userid);
-                    obj.put("userpw", userpw);
-                    obj.put("username",username);
-                    Log.v("제이손 보내기",obj.toString());
+                    builder= new MapzipRequestBuilder();
+                    builder.setCustomAttribute("user_id", userid);
+                    builder.setCustomAttribute("user_pw", userpw);
+                    builder.setCustomAttribute("user_name", username);
+                    builder.showInside();
                 } catch (JSONException e) {
-                    Log.v("제이손", "에러");
+                    e.printStackTrace();
                 }
 
                 JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                         SystemMain.SERVER_JOIN_URL,
-                        obj,
+                        builder.build(),
                         createMyReqSuccessListener(),
                         createMyReqErrorListener()) {
                 /*
@@ -348,10 +352,10 @@ public class JoinFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.v("제이손", response.toString());
-
                 try {
-                    if (response.get("join").toString().equals("1")) {
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_JOIN)) {
                         // toast
                         text_toast.setText("회원가입에 성공하였습니다.");
                         Toast toast = new Toast(getActivity());
@@ -359,10 +363,9 @@ public class JoinFragment extends Fragment {
                         toast.setView(layout_toast);
                         toast.show();
 
-                        sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_SUCCESS,0);
+                        sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_SUCCESS, 0);
 
-                        //state.setText("회원가입에 성공하였습니다.");
-                        Log.v("회원가입", "성공");
+
                     } else {
                         // toast
                         text_toast.setText("이미 존재하는 계정정보입니다.");
@@ -373,8 +376,6 @@ public class JoinFragment extends Fragment {
 
                         sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_ERROR_ID, joinFabric.FABRIC_JOIN_ERROR_DUPID);
 
-                        //state.setText("이미 존재하는 계정입니다.");
-                        Log.v("회원가입", "실패");
                     }
                 }catch (JSONException e){
                     Log.v("에러", "제이손");

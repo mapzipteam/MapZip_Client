@@ -44,6 +44,9 @@ public class UserData {
     // gcm-key
     private String gcm_token;
 
+    // Build Version Code
+    private int build_version;
+
     public static UserData getInstance() {
         if (ourInstance == null) {
             ourInstance = new UserData();
@@ -75,6 +78,9 @@ public class UserData {
 
         //gcm-key
         gcm_token = null;
+
+        // Build Version Code
+        build_version = -1;
     }
 
     //서버에서 리뷰 갯슈 받아오기(지역별 index는 구글드라이브 지도번호 -1 하면 됨) // pingCount
@@ -461,5 +467,13 @@ public class UserData {
     }
     public String getGcm_token(){
         return this.gcm_token;
+    }
+
+    public int getBuild_version() {
+        return build_version;
+    }
+
+    public void setBuild_version(int build_version) {
+        this.build_version = build_version;
     }
 }

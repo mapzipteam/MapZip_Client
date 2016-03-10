@@ -5,5 +5,6 @@ package com.mapzip.ppang.mapzipproject.network;
  */
 public class ResponseUtil {
 
-    public static int APPLICATION_SETUP = 1;
+    public final static int PROCESS_APPLICATION_SETUP = 1;
+    public final static int PROCESS_JOIN = 2;
 }

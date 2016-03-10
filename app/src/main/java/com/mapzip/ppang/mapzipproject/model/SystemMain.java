@@ -139,4 +139,10 @@ public class SystemMain {
     public static final int GangNam = 24;
     public static final int SongPa = 25;
 
+    // Build Version Code
+    public class Build{
+        public static final int EMERALD = 5; // 애매랄드, 5월의 탄생석
+        public static final int PEARL = 6; // 진주, 6월의 탄생석
+    }
+
 }
