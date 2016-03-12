@@ -62,14 +62,8 @@ public class MapzipApplication extends Application {
         user.setBuild_version(app_version);
         MapzipApplication.doLogging(TAG, "userdata_app_version : "+user.getBuild_version());
 
-
     }
 
-    /**
-     * Fabric을 애플리케이션 실행시에 초기화 시키는 루틴입니다.
-     * debuggable의 true 인자는 Play Store에 배포시에 false로 변경해야합니다.
-     *
-     */
     private void initFabric() {
         final Fabric fabric = new Fabric.Builder(this)
                 .kits(new Crashlytics())
@@ -113,5 +107,8 @@ public class MapzipApplication extends Application {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
     }
+
+
 }
