@@ -15,7 +15,6 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -51,7 +50,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.mapzip.ppang.mapzipproject.map.Location.SEOUL;
-import static com.mapzip.ppang.mapzipproject.R.id.map;
 
 
 public class MapActivity extends NMapActivity {
@@ -116,7 +114,7 @@ public class MapActivity extends NMapActivity {
         public void onMapInitHandler(NMapView nMapView, NMapError nMapError) {
             if (nMapError == null) {
                 mMapController.setMapCenter(current_point, 9);
-                poiDataOverlay.showAllPOIdata(0);//위에 코드와 달리 처음 지도를 불렀을때 모든 poi 플래그들리 보이도록 자동으로 축적이랑 중심을 변경 시켜주는 코드
+                //poiDataOverlay.showAllPOIdata(0);//위에 코드와 달리 처음 지도를 불렀을때 모든 poi 플래그들리 보이도록 자동으로 축적이랑 중심을 변경 시켜주는 코드
                 //mMapController.set
             } else {
                 if (DEBUG) {
@@ -489,6 +487,7 @@ public class MapActivity extends NMapActivity {
             @Override
             public void onResponse(JSONObject response) {
 
+                    Log.v("MapDetail",response.toString());
                 try {
 
                     if (response.getString("state").equals("702")) {
@@ -496,12 +495,15 @@ public class MapActivity extends NMapActivity {
                         JSONArray jarr = response.getJSONArray("map_detail");
                         JSONObject obj = jarr.getJSONObject(0);
 
-                        if ((getIntent().getStringExtra("fragment_id").equals("home"))) {
-                            user.initMapData();
-                            user.setMapData(obj.getString("store_id"), obj.getString("map_id"), obj.getString("store_contact"), obj.getString("review_text"), obj.getString("review_emotion"), obj.getString("store_address"), obj.getString("store_name"), obj.getString("gu_num"), obj.getString("image_num"));
-                        } else if ((getIntent().getStringExtra("fragment_id").equals("friend_home"))) {
-                            fuser.initMapData();
-                            fuser.setMapData(obj.getString("store_id"), obj.getString("map_id"), obj.getString("store_contact"), obj.getString("review_text"), obj.getString("review_emotion"), obj.getString("store_address"), obj.getString("store_name"));
+                        if ((getIntent().getStringExtra("fragment_id").equals("home")))
+                        {
+                            user.initReviewData();
+                            user.setReviewData(obj.getString("store_id"), obj.getString("map_id"), obj.getString("store_contact"), obj.getString("review_text"), obj.getString("review_emotion"), obj.getString("store_address"), obj.getString("store_name"), obj.getString("gu_num"), obj.getString("image_num"),obj.getString("positive_text"), obj.getString("negative_text"));
+                        }
+                        else if ((getIntent().getStringExtra("fragment_id").equals("friend_home")))
+                        {
+                            fuser.initReviewData();
+                            fuser.setReviewData(obj.getString("store_id"), obj.getString("map_id"), obj.getString("store_contact"), obj.getString("review_text"), obj.getString("review_emotion"), obj.getString("store_address"), obj.getString("store_name"), obj.getString("positive_text"), obj.getString("negative_text"));
                         }
 
                         // get default image
@@ -540,11 +542,10 @@ public class MapActivity extends NMapActivity {
 
                                 if (getIntent().getStringExtra("fragment_id").equals("friend_home")) {
 
-                                    imageLoad(i, SystemMain.SERVER_ROOT_URL + "/client_data/client_" + fuser.getUserID() + "/store_" + fuser.getMapData().getStore_id() + "/image" + String.valueOf(i) + ".jpg");
-
+                                    imageLoad(i, SystemMain.SERVER_ROOT_URL + "/client_data/client_" + fuser.getUserID() + "/store_" +fuser.getReviewData().getStore_id() + "/image" + String.valueOf(i) + ".jpg");
                                 } else {
 
-                                    String url = SystemMain.SERVER_ROOT_URL + "/client_data/client_" + user.getUserID() + "/store_" + user.getMapData().getStore_id() + "/image" + String.valueOf(i) + ".jpg";
+                                    String url = SystemMain.SERVER_ROOT_URL + "/client_data/client_" + user.getUserID() + "/store_" + user.getReviewData().getStore_id() + "/image" + String.valueOf(i) + ".jpg";
 
                                     if (user.isAfterModify()) {
 

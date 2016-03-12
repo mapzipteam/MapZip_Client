@@ -30,7 +30,7 @@
         android:id="@+id/delBtn_friend"
         android:layout_width="35dp"
         android:layout_height="35dp"
-        android:background="@drawable/addfriend"
+        android:background="@drawable/removefriend"
         android:layout_marginBottom="5dp"
         android:layout_alignBottom="@+id/friend_list"
         android:layout_alignParentRight="true"

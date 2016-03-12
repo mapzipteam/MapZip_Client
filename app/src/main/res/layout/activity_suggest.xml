@@ -58,7 +58,7 @@
                 android:layout_gravity="bottom"
                 android:layout_margin="10dp"
                 android:layout_marginLeft="10dp"
-                android:background="@color/mainOrange"
+                android:background="@drawable/rec_btn_pink_round"
                 android:onClick="cancelOnclick_suggest"
                 android:text="취소"
                 android:textColor="@color/white" />
@@ -72,7 +72,7 @@
                 android:layout_gravity="bottom"
                 android:layout_margin="10dp"
                 android:layout_marginRight="10dp"
-                android:background="@color/mainOrange"
+                android:background="@drawable/rec_btn_pink_round"
                 android:onClick="saveOnclick_suggest"
                 android:text="보내기"
                 android:textColor="@color/white" />

@@ -124,10 +124,10 @@
         <Button
             android:id="@+id/saveBtn_setting"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:onClick="saveOnclick"
-            android:background="@color/mainOrange"
+            android:background="@drawable/rec_btn_pink_round"
             android:text="저  장"
             android:textSize="17dp"
             android:textColor="@color/white"/>
@@ -135,11 +135,11 @@
         <Button
             android:id="@+id/cancelBtn_setting"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:onClick="cancelOnclick"
             android:layout_marginLeft="15dp"
-            android:background="@color/mainOrange"
+            android:background="@drawable/rec_btn_pink_round"
             android:text="취  소"
             android:textSize="17dp"
             android:textColor="@color/white"/>
@@ -147,11 +147,11 @@
         <Button
             android:id="@+id/resetBtn_setting"
             android:layout_width="wrap_content"
-            android:layout_height="35dp"
+            android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:onClick="resetOnClick"
             android:layout_marginLeft="15dp"
-            android:background="@color/mainOrange"
+            android:background="@drawable/rec_btn_pink_round"
             android:text="초기화"
             android:textSize="17dp"
             android:textColor="@color/white"/>

@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="15dp"
+        android:gravity="center_horizontal"
+        android:text="가장 어울리는 칭찬의 말을 선택해주세요! (0~5개)" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <CheckBox
+                android:id="@+id/checkbox1"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox2"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox3"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox4"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox5"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox6"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox7"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox8"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox9"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox10"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox11"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox12"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox13"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox14"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox15"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox16"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox17"
+                style="@style/checkbox_style_review_regi" />
+
+            <CheckBox
+                android:id="@+id/checkbox18"
+                style="@style/checkbox_style_review_regi" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

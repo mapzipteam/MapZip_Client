@@ -30,6 +30,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.activity.FriendsHomeActivity;
 import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.R;
+import com.mapzip.ppang.mapzipproject.model.RequestUtil;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
@@ -51,6 +52,7 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
     // search
     private EditText searchhash;
     private Button searchBtn;
+    private Button searchAllBtn;
     private int seq;
 
     // toast
@@ -65,6 +67,7 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
     private View footer;
 
     // 스크롤 로딩
+    private int mSearchType = RequestUtil.SEARCHBYHASH;
     private LayoutInflater mInflater;
     private boolean mLockListView;
 
@@ -107,6 +110,7 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
 
         searchhash = (EditText) v.findViewById(R.id.searchText);
         searchBtn = (Button) v.findViewById(R.id.searchBtn);
+        searchAllBtn = (Button) v.findViewById(R.id.searchAllBtn);
 
         mListView = (ListView) v.findViewById(R.id.searchList);
         mListView.setOnItemClickListener(new ListViewItemClickListener());
@@ -127,24 +131,44 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(searchhash.getWindowToken(), 0);
                 if (searchhash.getText().toString().trim().isEmpty())
                     return;
 
                 marItem.clear();
-                mMyAdapte = new MyListAdapter(getActivity(),R.layout.v_list_f_search, marItem);
+                mMyAdapte = new MyListAdapter(getActivity(), R.layout.v_list_f_search, marItem);
                 mListView.addFooterView(footer);
                 mListView.setAdapter(mMyAdapte);
                 mMyAdapte.notifyDataSetChanged();
                 seq = 0;
 
                 mLockBtn = false;
-                DoSearch(v);
+                mSearchType = RequestUtil.SEARCHBYHASH;
+                DoSearch(RequestUtil.SEARCHBYHASH);
 
                 // 임시 데이터 등록
                 //addItems(3);
 
+            }
+        });
+
+        searchAllBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                InputMethodManager imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+                imm.hideSoftInputFromWindow(searchhash.getWindowToken(), 0);
+
+                marItem.clear();
+                mMyAdapte = new MyListAdapter(getActivity(), R.layout.v_list_f_search, marItem);
+                mListView.addFooterView(footer);
+                mListView.setAdapter(mMyAdapte);
+                mMyAdapte.notifyDataSetChanged();
+                seq = 0;
+
+                mLockBtn = false;
+                mSearchType = RequestUtil.SEARCHALL;
+                DoSearch(RequestUtil.SEARCHALL);
             }
         });
 
@@ -287,14 +311,14 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
 
         if (firstVisibleItem >= count && totalItemCount != 0 && mLockListView == false && mLockBtn == false && mSendLock == false) {
             Log.i("list", "Loading next items");
-            DoSearch(v);
+            DoSearch(mSearchType);
 
             // addItems(3);
         }
 
     }
 
-    public void DoSearch(View v) {
+    public void DoSearch(int type) {
         if (mSendLock == false) {
             mSendLock = true;
 
@@ -305,6 +329,7 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
                 obj.put("target", searchhash.getText().toString());
                 obj.put("user_id",user.getUserID());
                 obj.put("more", seq);
+                obj.put("type",type);
                 Log.v("searchmap 보내기", obj.toString());
             } catch (JSONException e) {
                 Log.v("제이손", "에러");
@@ -379,7 +404,7 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
             if(selectlock == false)
             {
                 selectlock = true;
-                fuser.initMapData();
+                fuser.initReviewData();
                 fuser.initmapforpinnum();
                 Loading = new LoadingTask();
 

@@ -27,7 +27,7 @@ public class FriendData {
     private Bitmap[] result; //map
     private Bitmap[] GalImages = new Bitmap[]{
     };
-    private MapData mapData;
+    private ReviewData reviewData;
 
     public static FriendData getInstance() {
         if (ourInstance == null) {
@@ -44,7 +44,7 @@ public class FriendData {
         UserID = null;
         UserName = null;
         mapforpinArray = new JSONArray[5];
-        mapData = new MapData();
+        reviewData = new ReviewData();
         pingCount = new int[5][26];
         result = new Bitmap[5];
     }
@@ -327,22 +327,24 @@ public class FriendData {
             mapforpinNum[i] = 0;
     }
 
-    public void initMapData() {
-        mapData = new MapData();
+    public void initReviewData() {
+        reviewData = new ReviewData();
     }
 
-    public void setMapData(String s_id, String m_id, String s_contact, String r_text, String r_emotion, String s_address, String s_name) {
-        mapData.setStore_id(s_id);
-        mapData.setMapid(m_id);
-        mapData.setStore_contact(s_contact);
-        mapData.setReview_text(r_text);
-        mapData.setReview_emotion(Integer.parseInt(r_emotion));
-        mapData.setStore_address(s_address);
-        mapData.setStore_name(s_name);
+    public void setReviewData(String s_id, String m_id, String s_contact, String r_text, String r_emotion, String s_address, String s_name, String pr_text, String nr_text) {
+        reviewData.setStore_id(s_id);
+        reviewData.setMapid(m_id);
+        reviewData.setStore_contact(s_contact);
+        reviewData.setReview_text(r_text);
+        reviewData.setReview_emotion(Integer.parseInt(r_emotion));
+        reviewData.setStore_address(s_address);
+        reviewData.setStore_name(s_name);
+        reviewData.setGood_text(pr_text);
+        reviewData.setBad_text(nr_text);
     }
 
-    public MapData getMapData() {
-        return mapData;
+    public ReviewData getReviewData() {
+        return reviewData;
     }
 
 }

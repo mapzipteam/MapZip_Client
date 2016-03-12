@@ -31,7 +31,7 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginTop="10dp"
-            android:layout_weight="6"
+            android:layout_weight="7"
             android:background="#ffffff"
             android:hint="가게이름으로 검색"
             android:padding="10dp" />
@@ -66,14 +66,15 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_below="@+id/search_layout_review">
+        android:layout_below="@+id/search_layout_review"
+        android:background="@drawable/rec_gradation_bg">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="8"
-            android:background="@drawable/reviewsearchbg"
             android:orientation="vertical"
+            android:background="@drawable/f_review_bg"
             android:animateLayoutChanges="true">
 
             <ListView
@@ -102,9 +103,10 @@
                 android:id="@+id/registerBtn_review"
                 android:layout_width="match_parent"
                 android:layout_height="50dp"
-                android:background="@drawable/review_enroll_btn_before"
+                android:background="@drawable/rec_btn_white"
                 android:text="리뷰작성"
                 android:textStyle="bold"
+                android:layout_marginTop="5dp"
                 android:layout_marginLeft="10dp"
                 android:layout_marginRight="10dp"
                 android:textColor="@color/hotpink"
@@ -116,6 +118,7 @@
                 android:layout_height="wrap_content"
                 android:gravity="center"
                 android:text="찾으시는 가게가 없으신가요?"
+                android:layout_marginTop="10dp"
                 android:textColor="@color/counter_text_bg"
                 android:textSize="10dp"/>
 
@@ -127,6 +130,7 @@
                 android:background="@drawable/hyperlink_underline"
                 android:textColor="@color/counter_text_bg"
                 android:text="직접 등록 하러가기"
+                android:layout_marginBottom="5dp"
                 android:textSize="15dp"
                 />
 

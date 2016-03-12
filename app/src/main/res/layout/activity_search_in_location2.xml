@@ -141,7 +141,7 @@
         android:textColor="@color/white"
         android:text="리뷰작성"
         android:textSize="20dp"
-        android:background="@color/mainOrange"
+        android:background="@drawable/rec_btn_pink"
         />
 
 </LinearLayout>
