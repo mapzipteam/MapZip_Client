@@ -34,7 +34,10 @@ import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.adapter.MapzipApplication;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -47,14 +50,14 @@ public class LoginFragment extends Fragment {
 
     private final String TAG = "LoginFragment";
 
-    private boolean lockBtn;
+    private boolean lockBtn=false;
     private LoadingTask Loading;
     private Resources res;
     private EditText inputID;
     private EditText inputPW;
     private Button LoginBtn;
     public UserData user;
-    public int map;
+    public int mapCount = 0;
     public ProgressDialog  asyncDialog;
 
     // head
@@ -171,7 +174,6 @@ public class LoginFragment extends Fragment {
         return rootView;
     }
 
-    @SuppressLint("LongLogTag")
     public void DoLogin(View v) {
         RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
 
@@ -187,19 +189,20 @@ public class LoginFragment extends Fragment {
             InputMethodManager imm2 = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(inputID.getWindowToken(), 0);
 
-            JSONObject obj = new JSONObject();
+            MapzipRequestBuilder builder = null;
             try {
-                obj.put("userid", userid);
-                obj.put("userpw", userpw);
-                obj.put("gcm_key", gcm_key);
-                Log.v("제이손 보내기", obj.toString());
+                builder= new MapzipRequestBuilder();
+                builder.setCustomAttribute("user_id", userid);
+                builder.setCustomAttribute("user_pw", userpw);
+                builder.setCustomAttribute("gcm_key", gcm_key);
+                builder.showInside();
             } catch (JSONException e) {
                 Log.v("제이손", "에러");
             }
 
             JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                     SystemMain.SERVER_LOGIN_URL,
-                    obj,
+                    builder.build(),
                     createMyReqSuccessListener(),
                     createMyReqErrorListener());
 
@@ -212,70 +215,27 @@ public class LoginFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.v("제이손", response.toString());
-
                 try {
-                    if (response.get("state").toString().equals("200")) {
+                    lockBtn =false;
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
 
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_LOGIN)) {
 
                         user.LoginOK();
                         user.inputID(inputID.getText().toString());
                         user.inputPW(inputPW.getText().toString());
-                        user.inputName(response.get("username").toString());
+                        user.inputName(mapzipResponse.getUserName_login());
 
-                        Log.v("테스트 아이디", user.getUserID());
-                        Log.v("테스트 로그인", String.valueOf(user.getLoginPermission()));
-                        Log.v("테스트 이름", user.getUserName());
-
-                        int mapcount = response.getJSONArray("mapmeta_info").length();
-                        map = mapcount;
+                        mapCount = mapzipResponse.getMapCount();
 
                         // 지도 순서 맞추기
-                        int metaorder[] = new int[mapcount+1];
-                        metaorder[0] = -1;
-                        for(int i=0; i<mapcount; i++){
-                            metaorder[Integer.parseInt(response.getJSONArray("mapmeta_info").getJSONObject(i).getString("map_id"))] = i;
-                        }
+                        user.setMapmetaArray(mapzipResponse.setMapMetaOrder());
 
-                        JSONArray newmetaarr = new JSONArray();
-                        for(int j=1; j<metaorder.length; j++){
-                            newmetaarr.put(response.getJSONArray("mapmeta_info").getJSONObject(metaorder[j]));
-                        }
+                        // 구별 리뷰 갯수 저장하기
+                        mapzipResponse.setMapReviewCount();
 
-                        user.setMapmetaArray(newmetaarr);
-                        Log.v("맵메타",String.valueOf(user.getMapmetaArray()));
-
-                        JSONObject jar = response.getJSONObject("gu_enroll_num");
-                        Log.v("구넘버", String.valueOf(jar));
-
-                        Log.v("구넘버", "진입");
-
-                        for (int mapnum = 1; mapnum <= mapcount; mapnum++) {
-                            if (jar.has(String.valueOf(mapnum))) {
-                                JSONObject tmp = jar.getJSONObject(String.valueOf(mapnum));
-                                int gunumber = 1;
-                                int reviewnum = 0;
-                                for (gunumber = 1; gunumber <= SystemMain.SeoulGuCount; gunumber++) {
-                                    if (tmp.has(String.valueOf(gunumber))) {
-                                        reviewnum = tmp.getInt(String.valueOf(gunumber));
-                                        Log.v("구넘버o", tmp.get(String.valueOf(gunumber)).toString());
-                                        //배열에 추가
-                                    } else {
-                                        reviewnum = 0;
-                                        Log.v("구넘버x", String.valueOf(gunumber));
-                                        //배열에 0 추가
-                                    }
-                                    user.setReviewCount(mapnum, gunumber, reviewnum);
-                                }
-                            } else {
-                                for (int gunumber = 1; gunumber <= SystemMain.SeoulGuCount; gunumber++)
-                                    user.setReviewCount(mapnum, gunumber, 0);
-                            }
-                        }
-
-                           Loading.execute();
-
-
+                        Loading.execute();
 
                         // toast
                         text_toast.setText("환영합니다!");
@@ -287,7 +247,7 @@ public class LoginFragment extends Fragment {
                         // fabric-Login
                         sendLoginSuccessToAnswers();
 
-                    } else if(response.get("state").toString().equals("201")) {
+                    } else{
                         // toast
                         text_toast.setText("존재하지 않는 계정정보입니다.");
                         Toast toast = new Toast(getActivity());
@@ -296,10 +256,8 @@ public class LoginFragment extends Fragment {
                         toast.show();
                     }
                 } catch (JSONException e) {
-                    Log.v("에러", "제이손");
+                    Log.v(TAG, "JSON ERROR");
                 }
-
-                lockBtn =false;
             }
         };
     }
@@ -314,6 +272,8 @@ public class LoginFragment extends Fragment {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                lockBtn =false;
+
                 try {
                     // toast
                     text_toast.setText("인터넷 연결이 필요합니다.");
@@ -322,13 +282,11 @@ public class LoginFragment extends Fragment {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("LoginFragment", error.getMessage());
+                    Log.e(TAG, error.getMessage());
                 } catch (NullPointerException ex) {
                     // toast
-                    Log.e("LoginFragment", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
-
-                lockBtn =false;
             }
         };
     }
@@ -348,8 +306,8 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            for (int mapnum = 1; mapnum <= map; mapnum++)
-            user.setMapImage(mapnum, res);
+            for (int mapnum = 1; mapnum <= mapCount; mapnum++)
+                user.setMapImage(mapnum, res);
          return null;
         }
 

@@ -141,8 +141,8 @@ public class SystemMain {
 
     // Build Version Code
     public class Build{
-        public static final int EMERALD = 5; // 애매랄드, 5월의 탄생석
-        public static final int PEARL = 6; // 진주, 6월의 탄생석
+        public static final int GARNET = 5; // 가넷, 1월의 탄생석 // versionCode 5, versionName "1.5"
+        public static final int GARNET_END = 100;
     }
 
 }

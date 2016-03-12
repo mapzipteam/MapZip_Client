@@ -44,6 +44,7 @@ import static com.mapzip.ppang.mapzipproject.fabric.FabricPreferences.*;
  * Created by ppangg on 2015-07-31.
  */
 public class JoinFragment extends Fragment {
+    private final String TAG = "JoinFragment";
 
     private EditText inputID;
     private EditText inputName;
@@ -398,10 +399,10 @@ public class JoinFragment extends Fragment {
 
                     sendJoinActionToAnswers(FabricPreferences.FAIL_BY_INTERNET, 0);
 
-                    Log.e("searchmap", error.getMessage());
+                    Log.e(TAG, error.getMessage());
                 }catch (NullPointerException ex){
                     // toast
-                    Log.e("searchmap", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
             }
         };
