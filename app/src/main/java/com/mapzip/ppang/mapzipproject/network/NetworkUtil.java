@@ -9,6 +9,14 @@ import android.net.NetworkInfo;
  * Created by myZZUNG on 2016. 3. 4..
  */
 public class NetworkUtil {
+    public static final String USER_NAME = "user_name";
+    public static final String MAP_META_INFO = "mapmeta_info"; // hashtag, mapname, review count...
+    public static final String MAP_ID = "map_id";
+    public static final String GU_ENROLL_NUM = "gu_enroll_num";
+    public static final String MAP_TITLE = "title";
+    public static final String MAP_CATEGORY = "category";
+    public static final String MAP_HASH_TAG = "hash_tag";
+    public static final String REVIEW_META = "map_meta"; // review flags data
 
     public static final int TYPE_WIFI = 1;
     public static final int TYPE_MOBILE = 2;

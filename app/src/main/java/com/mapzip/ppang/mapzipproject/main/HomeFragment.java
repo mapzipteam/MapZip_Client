@@ -37,8 +37,12 @@ import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.map.Location;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -46,6 +50,8 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class HomeFragment extends Fragment implements View.OnClickListener {
+
+    private final String TAG = "HomeFragment";
 
     private View v;
     private UserData user;
@@ -131,7 +137,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         sppinerList = new ArrayList<String>();
         try {
             for (int i = 0; i < mapnum; i++) {
-                sppinerList.add(user.getMapmetaArray().getJSONObject(i).getString("title"));
+                sppinerList.add(user.getMapmetaArray().getJSONObject(i).getString(NetworkUtil.MAP_TITLE));
             }
         } catch (JSONException ex) {
 
@@ -147,12 +153,12 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         layout_toast = inflater.inflate(R.layout.my_custom_toast, (ViewGroup) getActivity().findViewById(R.id.custom_toast_layout));
         text_toast = (TextView) layout_toast.findViewById(R.id.textToShow);
 
-      //  topstate = (TextView) v.findViewById(R.id.topstate);
-      //  topstate.setText(user.getUserName());
+        //  topstate = (TextView) v.findViewById(R.id.topstate);
+        //  topstate.setText(user.getUserName());
        /*topstate.append(" (");
         topstate.append(user.getUserID());
         topstate.append(")");*/
-      //  topstate.append("의 지도");
+        //  topstate.append("의 지도");
 
 
         scalableLayout = (ScalableLayout) v.findViewById(R.id.scalablelayout);
@@ -196,7 +202,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         // map name
         spinner = (Spinner) v.findViewById(R.id.spinner);
-        adapter = new ArrayAdapter(getActivity(),R.layout.spinner_centerhorizontal, sppinerList);
+        adapter = new ArrayAdapter(getActivity(), R.layout.spinner_centerhorizontal, sppinerList);
         adapter.setDropDownViewResource(R.layout.spinner_centerhorizontal);
         spinner.setAdapter(adapter);
 
@@ -216,8 +222,8 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     JSONObject mapmeta = null;
                     mapmeta = user.getMapmetaArray().getJSONObject(position);
                     mapcurname = sppinerList.get(position);
-                    mapkindnum = mapmeta.get("category").toString();
-                    mapid = mapmeta.get("map_id").toString();
+                    mapkindnum = mapmeta.get(NetworkUtil.MAP_CATEGORY).toString();
+                    mapid = mapmeta.get(NetworkUtil.MAP_ID).toString();
 
                     Bitmap result = user.getResult(Integer.parseInt(mapid));
 //2016.01.08        imageview.setImageBitmap(result);
@@ -227,7 +233,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     scalableLayout.setBackground(drawable);
                     //scalableLayout.setBackground(new BitmapDrawable(getActivity().getResources(), result));
 
-                    hashString =  mapmeta.get("hash_tag").toString();
+                    hashString = mapmeta.get(NetworkUtil.MAP_HASH_TAG).toString();
                     String[] hasharr = hashString.split("#");
 
                     for (int i = 1; i < hasharr.length; i++) {
@@ -252,8 +258,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
                     // category select (SEOUL)
-                    if (Integer.parseInt(mapmeta.get("category").toString()) == SystemMain.SEOUL_MAP_NUM) {
-
+                    if (Integer.parseInt(mapmeta.get(NetworkUtil.MAP_CATEGORY).toString()) == SystemMain.SEOUL_MAP_NUM) {
                         seoulBtnVisibility("visible", mapid);
                     }
                 } catch (JSONException ex) {
@@ -314,7 +319,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 int[] location = new int[2];
                 imageview.getLocationOnScreen(location);
 
-
                 ScreenSize();
 
                 Log.e("Display size : ", "" + realWidth);
@@ -323,9 +327,9 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 if (Build.BRAND.equals("lge")) {
                     Log.e("check", "ok");
                     fix_x = 47;
-                    fix_y = -40-(realHeight/18);
+                    fix_y = -40 - (realHeight / 18);
                 } else {
-                    fix_y=-(realHeight/13)-(realHeight/400); //17~18
+                    fix_y = -(realHeight / 13) - (realHeight / 400); //17~18
                     Log.e("check", "No");
                 }
 //김민정이 코드
@@ -438,8 +442,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 scalableLayout.setScale_TextSize(GangBuk, 150);
 
 
-
-
                 //도봉
                 ScalableLayout.LayoutParams layoutParams6 = new ScalableLayout.LayoutParams(2800, 600, 700f, 500f);
                 DoBong.setLayoutParams(layoutParams6);//scalableLayout.addView(DoBong, layoutParams6);
@@ -464,8 +466,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 ScalableLayout.LayoutParams layoutParams10 = new ScalableLayout.LayoutParams(390, 2050, 700f, 500f);
                 GangSue.setLayoutParams(layoutParams10);//scalableLayout.addView(GangSue, layoutParams10);
                 scalableLayout.setScale_TextSize(GangSue, 150);
-
-
 
 
                 ///////////////////////
@@ -495,8 +495,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 scalableLayout.setScale_TextSize(YongDengPo, 150);
 
 
-
-
                 /////////////////////////
                 //관악
                 ScalableLayout.LayoutParams layoutParams16 = new ScalableLayout.LayoutParams(1750, 3500, 700f, 500f);
@@ -522,8 +520,6 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                 ScalableLayout.LayoutParams layoutParams20 = new ScalableLayout.LayoutParams(2900, 2250, 700f, 500f);
                 SungDong.setLayoutParams(layoutParams20);//scalableLayout.addView(SungDong, layoutParams20);
                 scalableLayout.setScale_TextSize(SungDong, 150);
-
-
 
 
                 //////////////////////////////////
@@ -808,19 +804,17 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
         if (user.getMapforpinNum(Integer.parseInt(mapid)) == 0) {
             GetStorearrary(v);
-        } else if(user.getMapforpinNum(Integer.parseInt(mapid)) == 2){
+        } else if (user.getMapforpinNum(Integer.parseInt(mapid)) == 2) {
             // toast
             text_toast.setText("등록 된 리뷰가 없습니다.");
             Toast toast = new Toast(getActivity());
             toast.setDuration(Toast.LENGTH_LONG);
             toast.setView(layout_toast);
             toast.show();
-        }
-        else {
-
-            Log.v("홈", "맵인텐트");
+        } else {
+            Log.v(TAG, "맵인텐트");
             Intent intent = new Intent(getActivity(), MapActivity.class);
-            intent.putExtra("fragment_id","home");
+            intent.putExtra("fragment_id", "home");
             intent.putExtra("LNG", loc_LNG);
             intent.putExtra("LAT", loc_LAT);
             intent.putExtra("mapid", mapid);
@@ -841,13 +835,13 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
         sppinerList = new ArrayList<String>();
         try {
             for (int i = 0; i < mapnum; i++) {
-                sppinerList.add(user.getMapmetaArray().getJSONObject(i).getString("title"));
+                sppinerList.add(user.getMapmetaArray().getJSONObject(i).getString(NetworkUtil.MAP_TITLE));
             }
         } catch (JSONException ex) {
 
         }
 
-        adapter = new ArrayAdapter(getActivity(),R.layout.spinner_centerhorizontal, sppinerList);
+        adapter = new ArrayAdapter(getActivity(), R.layout.spinner_centerhorizontal, sppinerList);
         adapter.setDropDownViewResource(R.layout.spinner_centerhorizontal);
         spinner.setAdapter(adapter);
 
@@ -924,31 +918,27 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.v("홈 가게", response.toString());
                 try {
-                    if (response.getInt("state") == SystemMain.CLIENT_REVIEW_META_DOWN_SUCCESS) { // 701
-                        user.setMapforpinNum(Integer.parseInt(mapid), 1);
-                        user.setMapforpinArray(response.getJSONArray("map_meta"), Integer.parseInt(response.getJSONArray("map_meta").getJSONObject(0).get("map_id").toString()));
-                        Log.v("홈에서 맵 어레이", user.getMapforpinArray(Integer.parseInt(mapid)).toString());
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
 
-                        Log.v("홈", "맵인텐트");
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_HOME_GET_REVIEW_META)) { // 701
+                        user.setMapforpinNum(Integer.parseInt(mapid), 1);
+                        JSONArray reviewMeta = (JSONArray)mapzipResponse.getFieldsMember(mapzipResponse.TYPE_JSONARRAY,NetworkUtil.REVIEW_META);
+                        user.setMapforpinArray(reviewMeta, reviewMeta.getJSONObject(0).getInt(NetworkUtil.MAP_ID));
+                        Log.v(TAG+"To Map", user.getMapforpinArray(Integer.parseInt(mapid)).toString());
+
+                        Log.v(TAG, "맵인텐트");
                         Intent intent = new Intent(getActivity(), MapActivity.class);
-                        intent.putExtra("fragment_id","home");
+                        intent.putExtra("fragment_id", "home");
                         intent.putExtra("LNG", loc_LNG);
                         intent.putExtra("LAT", loc_LAT);
                         intent.putExtra("mapid", mapid);
                         startActivity(intent);
-                    } else if (response.getInt("state") == SystemMain.CLIENT_REVIEW_META_DOWN_EMPTY) { // 711
+                    } else { // 711
                         user.setMapforpinNum(Integer.parseInt(mapid), 2);
                         // toast
                         text_toast.setText("등록 된 리뷰가 없습니다.");
-                        Toast toast = new Toast(getActivity());
-                        toast.setDuration(Toast.LENGTH_LONG);
-                        toast.setView(layout_toast);
-                        toast.show();
-                    } else{
-                        // toast
-                        text_toast.setText("다시 시도해주세요.");
                         Toast toast = new Toast(getActivity());
                         toast.setDuration(Toast.LENGTH_LONG);
                         toast.setView(layout_toast);
@@ -973,10 +963,10 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("homeFragment", error.getMessage());
+                    Log.e(TAG, error.getMessage());
                 } catch (NullPointerException ex) {
                     // toast
-                    Log.e("homeFragment", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
             }
         };

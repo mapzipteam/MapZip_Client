@@ -1,11 +1,8 @@
 package com.mapzip.ppang.mapzipproject.main;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,15 +25,14 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.LoginEvent;
 import com.mapzip.ppang.mapzipproject.R;
-import com.mapzip.ppang.mapzipproject.adapter.MapzipApplication;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
 import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
 import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
 import org.json.JSONArray;
@@ -225,9 +221,9 @@ public class LoginFragment extends Fragment {
                         user.LoginOK();
                         user.inputID(inputID.getText().toString());
                         user.inputPW(inputPW.getText().toString());
-                        user.inputName(mapzipResponse.getUserName_login());
+                        user.inputName((String) mapzipResponse.getFieldsMember(mapzipResponse.TYPE_STRING, NetworkUtil.USER_NAME));
 
-                        mapCount = mapzipResponse.getMapCount();
+                        mapCount = ((JSONArray)mapzipResponse.getFieldsMember(mapzipResponse.TYPE_JSONARRAY,NetworkUtil.MAP_META_INFO)).length();
 
                         // 지도 순서 맞추기
                         user.setMapmetaArray(mapzipResponse.setMapMetaOrder());
