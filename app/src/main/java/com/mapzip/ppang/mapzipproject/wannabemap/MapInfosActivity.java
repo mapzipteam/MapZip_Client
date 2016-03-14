@@ -1,4 +1,4 @@
-package com.mapzip.ppang.mapzipproject.ui.mapinfos;
+package com.mapzip.ppang.mapzipproject.wannabemap;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;

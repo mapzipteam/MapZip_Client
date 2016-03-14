@@ -1,6 +1,7 @@
-package com.mapzip.ppang.mapzipproject.ui.mapinfos;
+package com.mapzip.ppang.mapzipproject.wannabemap;
 
 import android.support.annotation.NonNull;
+import android.view.View;
 
 import com.mapzip.ppang.mapzipproject.model.LocationInfo;
 import com.nhn.android.maps.maplib.NGeoPoint;
@@ -38,8 +39,6 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
 
     @Override
     public void loadLocationInfos(boolean forceUpdate) {
-        //Todo : 이곳에서 DummyData를 생성하고 View(Fragment)에 보여주는 작업을 진행해야함.
-
         //EspressoIdlingResource.increment(); // App is busy until further notice
 
         List<Object> dummyDatas = new ArrayList<>(3);
@@ -51,8 +50,8 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
     }
 
     @Override
-    public void openLocationDetails(@NonNull LocationInfo requestedInfo) {
-        checkNotNull(requestedInfo, "requestedInfo cannot be null!");
-        mInfosFragment.showLocationDetailUI(requestedInfo);
+    public void openUserReview(@NonNull View view) {
+        checkNotNull(view, "requestedInfo cannot be null!");
+        mInfosFragment.showUserReview(view);
     }
 }

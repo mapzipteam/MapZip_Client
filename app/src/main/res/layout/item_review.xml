@@ -41,7 +41,7 @@
         </LinearLayout>
 
         <TextView
-            android:id="@+id/item_review_comment"
+            android:id="@+id/item_review_review"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="12dp"

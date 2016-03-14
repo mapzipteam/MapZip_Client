@@ -1,4 +1,4 @@
-package com.mapzip.ppang.mapzipproject.ui.mapinfos;
+package com.mapzip.ppang.mapzipproject.wannabemap;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -14,7 +14,8 @@ import android.widget.TextView;
 
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.LocationInfo;
-import com.mapzip.ppang.mapzipproject.ui.ext.DividerItemDecoration;
+import com.mapzip.ppang.mapzipproject.model.ReviewData;
+import com.mapzip.ppang.mapzipproject.ui.DividerItemDecoration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,8 +33,8 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
 
     InfoItemListener mItemListener = new InfoItemListener() {
         @Override
-        public void onInfoClick(LocationInfo clickedInfo) {
-            mActionsListener.openLocationDetails(clickedInfo);
+        public void onInfoClick(View view) {
+            mActionsListener.openUserReview(view);
         }
     };
 
@@ -87,8 +88,8 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     }
 
     @Override
-    public void showLocationDetailUI(LocationInfo locationInfo) {
-        //Todo : 해당 장소에대한 타인의 리뷰, 그리고 나의 리뷰를 표시해야함.
+    public void showUserReview(View view) {
+
     }
 
     private class InfosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
@@ -129,16 +130,26 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+            Object object = mInfos.get(position);
             switch (holder.getItemViewType()) {
                 case ITEM_LOCATION_INFORMATION:
-                    LocationInfo info = (LocationInfo) mInfos.get(position);
+
+                    LocationInfo info = (LocationInfo) object;
 
                     LocationInfoViewHolder locationInfoViewHolder = (LocationInfoViewHolder) holder;
                     locationInfoViewHolder.nameText.setText(info.getLocationName());
                     locationInfoViewHolder.addressText.setText(info.getLocationAddress());
 
                     break;
+
                 case ITEM_REVIEW:
+
+                    ReviewData review = (ReviewData) object;
+
+                    ReviewViewHolder reviewViewHolder = (ReviewViewHolder) holder;
+                    reviewViewHolder.authorText.setText(review.getAuthor());
+                    reviewViewHolder.dateText.setText(review.getDate());
+                    reviewViewHolder.reviewText.setText(review.getReview());
                     break;
             }
         }
@@ -152,22 +163,13 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
             mInfos = checkNotNull(infos);
         }
 
-        /**
-         * Todo : RecyclerView에 아이템을 넣을때 사용하는 메소드
-         *
-         * @param view
-         */
-        private void addItem(View view) {
-            int pos = mRecyclerView.getChildAdapterPosition(view);
-            if (pos != RecyclerView.NO_POSITION) {
-                mInfos.add(null);
-                notifyItemInserted(pos);
-            }
-        }
-
         @Override
         public int getItemViewType(int position) {
-            return super.getItemViewType(position);
+            if (mInfos.get(position).getClass().equals(LocationInfo.class)) {
+                return ITEM_LOCATION_INFORMATION;
+            } else {
+                return ITEM_REVIEW;
+            }
         }
 
         @Override
@@ -195,14 +197,12 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
             }
 
             @Override
-            public void onClick(View v) {
-                int position = getAdapterPosition();
-                LocationInfo info = (LocationInfo) getItem(position);
-                mItemListener.onInfoClick(info);
+            public void onClick(View view) {
+                mItemListener.onInfoClick(view);
             }
         }
 
-        public class ReviewViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public class ReviewViewHolder extends RecyclerView.ViewHolder {
 
             public TextView authorText;
             public TextView dateText;
@@ -212,19 +212,12 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
                 super(itemView);
                 authorText = (TextView) itemView.findViewById(R.id.item_review_author);
                 dateText = (TextView) itemView.findViewById(R.id.item_review_date);
-                reviewText = (TextView) itemView.findViewById(R.id.item_review_comment);
-            }
-
-            @Override
-            public void onClick(View v) {
-                int position = getAdapterPosition();
-                LocationInfo info = (LocationInfo) getItem(position);
-                mItemListener.onInfoClick(info);
+                reviewText = (TextView) itemView.findViewById(R.id.item_review_review);
             }
         }
     }
 
     public interface InfoItemListener {
-        void onInfoClick(LocationInfo clickedInfo);
+        void onInfoClick(View view);
     }
 }

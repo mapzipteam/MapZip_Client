@@ -1,4 +1,4 @@
-package com.mapzip.ppang.mapzipproject.ui.ext;
+package com.mapzip.ppang.mapzipproject.ui;
 
 import android.content.Context;
 import android.content.res.TypedArray;

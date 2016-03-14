@@ -1,6 +1,5 @@
-package com.mapzip.ppang.mapzipproject.ui.mapinfos;
+package com.mapzip.ppang.mapzipproject.wannabemap;
 
-import com.mapzip.ppang.mapzipproject.model.LocationInfo;
 
 import java.util.List;
 
@@ -20,7 +19,7 @@ public interface MapInfosContract {
         interface InfosList {
             void showLocationInfos(List<Object> locationInfos);
 
-            void showLocationDetailUI(LocationInfo locationInfo);
+            void showUserReview(android.view.View view);
         }
     }
 
@@ -31,6 +30,6 @@ public interface MapInfosContract {
 
         void loadLocationInfos(boolean forceUpdate);
 
-        void openLocationDetails(LocationInfo clickedInfo);
+        void openUserReview(android.view.View view);
     }
 }

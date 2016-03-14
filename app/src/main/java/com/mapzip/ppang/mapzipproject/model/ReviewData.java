@@ -9,13 +9,13 @@ public class ReviewData {
     @NonNull
     private String author;
     @NonNull
-    private String comment;
+    private String review;
     @NonNull
     private String date;
 
-    public ReviewData(@NonNull String author, @NonNull String comment, @NonNull String date) {
+    public ReviewData(@NonNull String author, @NonNull String review, @NonNull String date) {
         this.author = author;
-        this.comment = comment;
+        this.review = review;
         this.date = date;
     }
 
@@ -29,12 +29,12 @@ public class ReviewData {
     }
 
     @NonNull
-    public String getComment() {
-        return comment;
+    public String getReview() {
+        return review;
     }
 
-    public void setComment(@NonNull String comment) {
-        this.comment = comment;
+    public void setReview(@NonNull String review) {
+        this.review = review;
     }
 
     @NonNull
