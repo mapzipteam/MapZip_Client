@@ -45,6 +45,12 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
         dummyDatas.add(new LocationInfo(0, "상도곱창", "서울특별시 동작구 상도동 127-7", new NGeoPoint(37.496815, 126.953565)));
         dummyDatas.add(new LocationInfo(1, "현선이네", "서울특별시 동작구 상도동 128-7", new NGeoPoint(37.495183, 126.956716)));
         dummyDatas.add(new LocationInfo(2, "피자헤븐", "서울특별시 동작구 상도동 125-7", new NGeoPoint(37.494955, 126.958133)));
+        dummyDatas.add(new LocationInfo(3, "상도곱창", "서울특별시 동작구 상도동 127-7", new NGeoPoint(37.496815, 126.953565)));
+        dummyDatas.add(new LocationInfo(4, "현선이네", "서울특별시 동작구 상도동 128-7", new NGeoPoint(37.495183, 126.956716)));
+        dummyDatas.add(new LocationInfo(5, "피자헤븐", "서울특별시 동작구 상도동 125-7", new NGeoPoint(37.494955, 126.958133)));
+        dummyDatas.add(new LocationInfo(6, "상도곱창", "서울특별시 동작구 상도동 127-7", new NGeoPoint(37.496815, 126.953565)));
+        dummyDatas.add(new LocationInfo(7, "현선이네", "서울특별시 동작구 상도동 128-7", new NGeoPoint(37.495183, 126.956716)));
+        dummyDatas.add(new LocationInfo(8, "피자헤븐", "서울특별시 동작구 상도동 125-7", new NGeoPoint(37.494955, 126.958133)));
 
         mInfosFragment.showLocationInfos(dummyDatas);
     }
