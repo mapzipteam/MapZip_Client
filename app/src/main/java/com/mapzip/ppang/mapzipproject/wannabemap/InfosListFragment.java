@@ -89,7 +89,6 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
 
     @Override
     public void showUserReview(View view) {
-
     }
 
     private class InfosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
