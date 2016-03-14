@@ -36,9 +36,6 @@
             android:theme="@android:style/Theme.NoTitleBar"></activity>
 
         <activity
-            android:name=".ui.addmap.AddMapActivity"
-            android:theme="@style/MapzipAppTheme" />
-        <activity
             android:name=".wannabemap.MapInfosActivity"
             android:theme="@style/MapzipAppTheme.NoActionBar">
             <intent-filter>

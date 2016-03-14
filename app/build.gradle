@@ -15,7 +15,13 @@ android {
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode rootProject.ext.versionCode
         versionName rootProject.ext.versionName
+
+        generatedDensities = []
         testInstrumentationRunner 'android.support.test.runner.AndroidJUnitRunner'
+    }
+
+    aaptOptions {
+        additionalParameters "--no-version-vectors"
     }
 
     buildTypes {
@@ -72,9 +78,9 @@ dependencies {
     compile "com.mcxiaoke.volley:library:$rootProject.volleyVersion"
     compile 'com.naver.maps.open:naver-map-api:2.1.1@aar'
     compile('org.apache.httpcomponents:httpmime:4.3.6')
-    {
-        exclude module: 'httpclient'
-    }
+            {
+                exclude module: 'httpclient'
+            }
     compile 'org.apache.httpcomponents:httpcore:4.4.4'
     compile("com.crashlytics.sdk.android:crashlytics:$rootProject.crashlyticsVersion@aar") {
         transitive = true;

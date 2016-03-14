@@ -6,7 +6,7 @@
         <!-- Customize your theme here. -->
     </style>
 
-    <style name="AppBaseTheme" parent="@android:style/Theme.Holo.Light" >
+    <style name="AppBaseTheme" parent="@android:style/Theme.Holo.Light">
         <item name="android:actionBarStyle">@style/MyActionBar</item>
         <item name="android:typeface">sans</item>
         <item name="android:actionBarItemBackground">@drawable/select_actionbar</item>
@@ -35,16 +35,27 @@
     </style>
 
     <declare-styleable name="ScalableLayout">
-        <attr name="scale_base_width"       format="float" />
-        <attr name="scale_base_height"       format="float" />
-        <attr name="scale_textsize"    format="float" />
-        <attr name="scale_top"          format="float" />
-        <attr name="scale_left"       format="float" />
-        <attr name="scale_width"       format="float" />
-        <attr name="scale_height"       format="float" />
-        <attr name="textview_wrapcontent_direction"       format="string" />
-        <attr name="textview_wrapcontent_resizesurrounded"    format="boolean" />
-        <attr name="textview_wrapcontent_movesiblings"    format="boolean" />
+        <attr name="scale_base_width" format="float" />
+        <attr name="scale_base_height" format="float" />
+        <attr name="scale_textsize" format="float" />
+        <attr name="scale_top" format="float" />
+        <attr name="scale_left" format="float" />
+        <attr name="scale_width" format="float" />
+        <attr name="scale_height" format="float" />
+        <attr name="textview_wrapcontent_direction" format="string" />
+        <attr name="textview_wrapcontent_resizesurrounded" format="boolean" />
+        <attr name="textview_wrapcontent_movesiblings" format="boolean" />
     </declare-styleable>
+
+    <style name="DetailReviewContentsRow">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">72dp</item>
+        <item name="android:drawablePadding">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+    </style>
 
 </resources>
