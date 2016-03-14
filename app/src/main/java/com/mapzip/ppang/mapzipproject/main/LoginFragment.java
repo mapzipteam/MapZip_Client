@@ -188,9 +188,9 @@ public class LoginFragment extends Fragment {
             MapzipRequestBuilder builder = null;
             try {
                 builder= new MapzipRequestBuilder();
-                builder.setCustomAttribute("user_id", userid);
-                builder.setCustomAttribute("user_pw", userpw);
-                builder.setCustomAttribute("gcm_key", gcm_key);
+                builder.setCustomAttribute(NetworkUtil.USER_ID, userid);
+                builder.setCustomAttribute(NetworkUtil.USER_PW, userpw);
+                builder.setCustomAttribute(NetworkUtil.GCM_KEY, gcm_key);
                 builder.showInside();
             } catch (JSONException e) {
                 Log.v("제이손", "에러");

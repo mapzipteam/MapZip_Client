@@ -37,6 +37,7 @@ import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.map.Location;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
 import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
 import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
@@ -893,18 +894,19 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
     public void GetStorearrary(View v) {
         RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
 
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            obj.put("userid", user.getUserID());
-            obj.put("map_id", mapid);
-            Log.v("제이손 보내기", obj.toString());
+            builder= new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+            builder.setCustomAttribute(NetworkUtil.MAP_ID, mapid);
+            builder.showInside();
         } catch (JSONException e) {
             Log.v("제이손", "에러");
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_HOMETOMAP_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener(),
                 createMyReqErrorListener()) {
         };

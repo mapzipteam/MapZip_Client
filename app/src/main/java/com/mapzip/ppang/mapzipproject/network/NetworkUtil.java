@@ -10,6 +10,9 @@ import android.net.NetworkInfo;
  */
 public class NetworkUtil {
     public static final String USER_NAME = "user_name";
+    public static final String USER_ID = "user_id";
+    public static final String USER_PW = "user_pw";
+    public static final String GCM_KEY = "gcm_key";
     public static final String MAP_META_INFO = "mapmeta_info"; // hashtag, mapname, review count...
     public static final String MAP_ID = "map_id";
     public static final String GU_ENROLL_NUM = "gu_enroll_num";
