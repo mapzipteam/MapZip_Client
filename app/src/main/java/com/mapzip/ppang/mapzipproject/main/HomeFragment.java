@@ -926,7 +926,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
                     if (mapzipResponse.getState(ResponseUtil.PROCESS_HOME_GET_REVIEW_META)) { // 701
                         user.setMapforpinNum(Integer.parseInt(mapid), 1);
-                        JSONArray reviewMeta = (JSONArray)mapzipResponse.getFieldsMember(mapzipResponse.TYPE_JSONARRAY,NetworkUtil.REVIEW_META);
+                        JSONArray reviewMeta = (JSONArray)mapzipResponse.getFieldsMember(mapzipResponse.TYPE_JSON_ARRAY,NetworkUtil.REVIEW_META);
                         user.setMapforpinArray(reviewMeta, reviewMeta.getJSONObject(0).getInt(NetworkUtil.MAP_ID));
                         Log.v(TAG+"To Map", user.getMapforpinArray(Integer.parseInt(mapid)).toString());
 
