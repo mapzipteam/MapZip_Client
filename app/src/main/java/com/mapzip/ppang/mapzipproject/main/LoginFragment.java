@@ -229,7 +229,7 @@ public class LoginFragment extends Fragment {
                         user.setMapmetaArray(mapzipResponse.setMapMetaOrder());
 
                         // 구별 리뷰 갯수 저장하기
-                        mapzipResponse.setMapReviewCount();
+                        mapzipResponse.setMapReviewCount(SystemMain.TYPE_USER);
 
                         Loading.execute();
 
@@ -302,8 +302,8 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            for (int mapnum = 1; mapnum <= mapCount; mapnum++)
-                user.setMapImage(mapnum, res);
+            for (int mapNum = 1; mapNum <= mapCount; mapNum++)
+                user.setMapImage(mapNum, res);
          return null;
         }
 

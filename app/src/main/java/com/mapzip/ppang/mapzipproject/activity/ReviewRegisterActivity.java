@@ -225,7 +225,7 @@ public class ReviewRegisterActivity extends Activity {
             oPerlishArray.toArray(bitarr); // fill the array
             user.inputGalImages(bitarr);
         }
-        imageadapter = new ImageAdapter(this, SystemMain.justuser);
+        imageadapter = new ImageAdapter(this, SystemMain.TYPE_USER);
         viewPager.setAdapter(imageadapter);
 
         /*
@@ -407,7 +407,7 @@ public class ReviewRegisterActivity extends Activity {
 
                     afterimagenum++;
                     serverchoice = 2;
-                    imageadapter = new ImageAdapter(this, SystemMain.justuser);
+                    imageadapter = new ImageAdapter(this, SystemMain.TYPE_USER);
                     viewPager.setAdapter(imageadapter);
                     imageadapter.notifyDataSetChanged();
 //                } catch (FileNotFoundException e) {
@@ -1214,7 +1214,7 @@ public class ReviewRegisterActivity extends Activity {
         user.inputGalImages(bitarr);
 
         //set imageadapter
-        imageadapter = new ImageAdapter(this, SystemMain.justuser);
+        imageadapter = new ImageAdapter(this, SystemMain.TYPE_USER);
         viewPager.setAdapter(imageadapter);
         imageadapter.notifyDataSetChanged();
 

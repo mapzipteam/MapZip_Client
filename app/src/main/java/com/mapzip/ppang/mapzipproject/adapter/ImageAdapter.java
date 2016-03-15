@@ -26,14 +26,14 @@ public class ImageAdapter extends PagerAdapter {
         this.context=context;
         nowwho = i;
 
-        if(i == SystemMain.justuser)
+        if(i == SystemMain.TYPE_USER)
             user = UserData.getInstance();
-        else if(i == SystemMain.justfuser)
+        else if(i == SystemMain.TYPE_FRIEND)
             fuser = FriendData.getInstance();
     }
     @Override
     public int getCount() {
-        if(nowwho == SystemMain.justuser)
+        if(nowwho == SystemMain.TYPE_USER)
             return user.getGalImages().length;
         else
             return fuser.getGalImages().length;
@@ -54,7 +54,7 @@ public class ImageAdapter extends PagerAdapter {
         //imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
         imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         Log.v("이미지 어댑터 포지션",String.valueOf(position));
-        if(nowwho == SystemMain.justuser)
+        if(nowwho == SystemMain.TYPE_USER)
             imageView.setImageBitmap(user.getGalImages()[position]);
         else
             imageView.setImageBitmap(fuser.getGalImages()[position]);

@@ -30,10 +30,14 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.activity.FriendsHomeActivity;
 import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.R;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
 import com.mapzip.ppang.mapzipproject.network.RequestUtil;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +46,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class SearchFragment extends Fragment implements AbsListView.OnScrollListener {
+    private final String TAG = "SearchFragment";
 
     private boolean selectlock;
 
@@ -79,7 +84,7 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
     private Handler handler;
 
     private Resources res;
-    public int map;
+    public int mapCount = 0;
     public ProgressDialog  asyncDialog;
     private LoadingTask Loading;
 
@@ -324,20 +329,21 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
 
             RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
 
-            JSONObject obj = new JSONObject();
+            MapzipRequestBuilder builder = null;
             try {
-                obj.put("target", searchhash.getText().toString());
-                obj.put("user_id",user.getUserID());
-                obj.put("more", seq);
-                obj.put("type",type);
-                Log.v("searchmap 보내기", obj.toString());
+                builder= new MapzipRequestBuilder();
+                builder.setCustomAttribute(NetworkUtil.SEARCH_TARGET, searchhash.getText().toString());
+                builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+                builder.setCustomAttribute(NetworkUtil.SEARCH_SEQ_NUM, seq);
+                builder.setCustomAttribute(NetworkUtil.SEARCH_TYPE, type);
+                builder.showInside();
             } catch (JSONException e) {
                 Log.v("제이손", "에러");
             }
 
             JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                     SystemMain.SERVER_MAPSEARCH_URL,
-                    obj,
+                    builder.build(),
                     createMyReqSuccessListener(),
                     createMyReqErrorListener()) {
             };
@@ -345,32 +351,29 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
         }
     }
 
-
     private Response.Listener<JSONObject> createMyReqSuccessListener() {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
                 try {
-                    int state = response.getInt("state");
-                    if (state == 501) {
-                        getArray = response.getJSONArray("map_search");
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_SEARCH_MAP)) {
+                        getArray = response.getJSONArray(NetworkUtil.SEARCH_MAP);
                         seq++;
 
                         addItems(6);
 
-                        Log.v("searchmap 받기", response.toString());
+                        Log.v(TAG, response.toString());
+                    } else {
+                    Log.v(TAG, response.toString());
 
-                    } else if (state == 502) {
-                        Log.v("searchmap 받기", response.toString());
-
-                        mLockBtn = true;
-                        mListView.removeFooterView(footer);
-
-                    }
-
+                    mLockBtn = true;
+                    mListView.removeFooterView(footer);
+                }
                 } catch (JSONException e) {
-
+                    Log.e(TAG, "제이손 에러");
                 }
                 mSendLock = false;
             }
@@ -389,10 +392,10 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("searchmap", error.getMessage());
+                    Log.e(TAG, error.getMessage());
                 } catch (NullPointerException ex) {
                     // toast
-                    Log.e("searchmap", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
             }
         };
@@ -422,17 +425,18 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
     public void GoFriendHome(View v, String fid) {
         RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
 
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            obj.put("target_id", fid);
-            Log.v("searchmap_friend 보내기", obj.toString());
+            builder= new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.FRIEND_ID, fid);
+            builder.showInside();
         } catch (JSONException e) {
             Log.v("제이손", "에러");
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_FRIENDHOME_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener_friend(),
                 createMyReqErrorListener()) {
         };
@@ -444,64 +448,32 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.v("searchmap_friend 받기", response.toString());
                 try {
-                    if (response.get("state").toString().equals("801")) {
-                        int mapcount = response.getJSONArray("mapmeta_info").length();
-                        map = mapcount;
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_FRIEND_GET_REVIEW_META)) {
+                        mapCount = ((JSONArray)mapzipResponse.getFieldsMember(mapzipResponse.TYPE_JSON_ARRAY,NetworkUtil.MAP_META_INFO)).length();
 
                         // 지도 순서 맞추기
-                        int metaorder[] = new int[mapcount+1];
-                        metaorder[0] = -1;
-                        for(int i=0; i<mapcount; i++){
-                            metaorder[Integer.parseInt(response.getJSONArray("mapmeta_info").getJSONObject(i).getString("map_id"))] = i;
-                        }
+                        fuser.setMapmetaArray(mapzipResponse.setMapMetaOrder());
 
-                        JSONArray newmetaarr = new JSONArray();
-                        for(int j=1; j<metaorder.length; j++){
-                            newmetaarr.put(response.getJSONArray("mapmeta_info").getJSONObject(metaorder[j]));
-                        }
-
-                        fuser.setMapmetaArray(newmetaarr);
-                        Log.v("맵메타",String.valueOf(user.getMapmetaArray()));
-
-
-                        JSONObject jar = response.getJSONObject("gu_enroll_num");
-                        Log.v("구넘버", String.valueOf(jar));
-
-                        Log.v("구넘버", "진입");
-                        for (int mapnum = 1; mapnum <= mapcount; mapnum++) {
-                            if (jar.has(String.valueOf(mapnum))) {
-                                JSONObject tmp = jar.getJSONObject(String.valueOf(mapnum));
-                                int gunumber = 1;
-                                int reviewnum = 0;
-                                for (gunumber = 1; gunumber <= 25; gunumber++) {
-                                    if (tmp.has(String.valueOf(gunumber))) {
-                                        reviewnum = tmp.getInt(String.valueOf(gunumber));
-                                        Log.v("구넘버o", tmp.get(String.valueOf(gunumber)).toString());
-                                        //배열에 추가
-                                    } else {
-                                        reviewnum = 0;
-                                        Log.v("구넘버x", String.valueOf(gunumber));
-                                        //배열에 0 추가
-                                    }
-                                    fuser.setReviewCount(mapnum, gunumber, reviewnum);
-                                }
-                            } else {
-                                for (int gunumber = 1; gunumber <= 25; gunumber++)
-                                    fuser.setReviewCount(mapnum, gunumber, 0);
-                            }
-                        }
+                        // 구별 리뷰 갯수 저장하기
+                        mapzipResponse.setMapReviewCount(SystemMain.TYPE_FRIEND);
 
                         Loading.execute();
-
+                    }else{
+                        // toast
+                        text_toast.setText("다시 시도해주세요.");
+                        Toast toast = new Toast(getActivity());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
                     }
                 } catch (JSONException e) {
                     Log.v("에러", "제이손");
                 }
 
                 selectlock = false;
-
             }
         };
     }
@@ -522,7 +494,7 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            for (int mapnum = 1; mapnum <= map; mapnum++)
+            for (int mapnum = 1; mapnum <= mapCount; mapnum++)
                 fuser.setMapImage(mapnum, res);
             return null;
         }

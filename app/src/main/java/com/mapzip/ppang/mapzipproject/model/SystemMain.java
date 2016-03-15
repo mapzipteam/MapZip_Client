@@ -87,6 +87,9 @@ public class SystemMain {
     public static final int FRIEND_ITEM_SHOW_SUCCESS = 901; // success to show user's friend list
     public static final int FRIEND_ITEM_SHOW_EMPTY = 902; // if user's friend list is empty..
 
+    public static final int FRIEND_ITEM_DELETE_SUCCESS = 911; // 맵갈피 삭제 성공
+    public static final int FRIEND_ITEM_DELETE_FAIL = 912; // 맵갈피 삭제 실패
+
     // state define 1000~ : about interact with users
     public static final int USER_SOUND_INSERT_SUCCESS = 1001; // success to insert in user sound to mz_user_sound table
     public static final int USER_SOUND_INSERT_FAIL = 1002; // fail it
@@ -107,8 +110,8 @@ public class SystemMain {
     public static final int MAP_YELLOW_NUM = 1;
 
     // for imageadapter
-    public static final int justuser = 1;
-    public static final int justfuser = 2;
+    public static final int TYPE_USER = 1;
+    public static final int TYPE_FRIEND = 2;
     public static final int MAXIMAGENUM = 10;
 
     // GU number DEFAULT

@@ -164,9 +164,9 @@ public class ReviewActivity extends Activity {
 
         // set Imageadapter
         if(userlock == false)
-            imageadapter = new ImageAdapter(getApplicationContext(), SystemMain.justuser);
+            imageadapter = new ImageAdapter(getApplicationContext(), SystemMain.TYPE_USER);
         else
-            imageadapter = new ImageAdapter(getApplicationContext(), SystemMain.justfuser);
+            imageadapter = new ImageAdapter(getApplicationContext(), SystemMain.TYPE_FRIEND);
 
         viewPager.setAdapter(imageadapter);
         imageadapter.notifyDataSetChanged();

@@ -1,6 +1,7 @@
 package com.mapzip.ppang.mapzipproject.network;
 
 import com.mapzip.ppang.mapzipproject.adapter.MapzipApplication;
+import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 
@@ -69,8 +70,8 @@ public class MapzipResponse {
         }
     }
 
-    public Object getFieldsMember(int type, String name) throws JSONException{
-        switch (type){
+    public Object getFieldsMember(int type, String name) throws JSONException {
+        switch (type) {
             case TYPE_STRING:
                 return mFields.getString(name);
             case TYPE_INT:
@@ -85,7 +86,7 @@ public class MapzipResponse {
     }
 
     public boolean getState(int process_type) throws JSONException {
-        if ((mBuildVersion >= SystemMain.Build.GARNET) && (mBuildVersion < SystemMain.Build.GARNET_END) ) {
+        if ((mBuildVersion >= SystemMain.Build.GARNET) && (mBuildVersion < SystemMain.Build.GARNET_END)) {
             switch (process_type) {
                 case ResponseUtil.PROCESS_JOIN:
                     if (mFields.getInt("state") == SystemMain.JOIN_SUCCESS) {
@@ -100,11 +101,35 @@ public class MapzipResponse {
                         return false;
                     }
                 case ResponseUtil.PROCESS_HOME_GET_REVIEW_META:
-                    if(mFields.getInt("state") == SystemMain.CLIENT_REVIEW_META_DOWN_SUCCESS){
+                    if (mFields.getInt("state") == SystemMain.CLIENT_REVIEW_META_DOWN_SUCCESS) {
                         return true;
                     } else {
                         return false;
                     }
+                case ResponseUtil.PROCESS_SEARCH_MAP:
+                    if (mFields.getInt("state") == SystemMain.MAP_SEARCH_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case ResponseUtil.PROCESS_FRIEND_GET_REVIEW_META:
+                    if (mFields.getInt("state") == SystemMain.FRIEND_HOME_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case ResponseUtil.PROCESS_FRIEND_DELETE:
+                    if (mFields.getInt("state") == SystemMain.FRIEND_ITEM_DELETE_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case ResponseUtil.PROCESS_FRIEND_LIST:
+                if (mFields.getInt("state") == SystemMain.FRIEND_ITEM_SHOW_SUCCESS) {
+                    return true;
+                } else {
+                    return false;
+                }
                 default:
                     MapzipApplication.doLogging(TAG, "getState default logic..");
             }
@@ -118,7 +143,7 @@ public class MapzipResponse {
      */
     public JSONArray setMapMetaOrder() throws JSONException { // MapMeta 지도 순서 맞추기
         if ((SystemMain.Build.GARNET <= mBuildVersion) && (mBuildVersion < SystemMain.Build.GARNET_END)) {
-            int mapCount =  mFields.getJSONArray(NetworkUtil.MAP_META_INFO).length(); // 지도 갯수
+            int mapCount = mFields.getJSONArray(NetworkUtil.MAP_META_INFO).length(); // 지도 갯수
 
             int mapMetaOrderArr[] = new int[mapCount + 1];
             mapMetaOrderArr[0] = -1;
@@ -137,9 +162,11 @@ public class MapzipResponse {
         return null;
     }
 
-    public void setMapReviewCount() throws JSONException { // 구별 리뷰갯수 저장
+    public void setMapReviewCount(int type) throws JSONException { // 구별 리뷰갯수 저장
         if ((SystemMain.Build.GARNET <= mBuildVersion) && (mBuildVersion < SystemMain.Build.GARNET_END)) {
             UserData user = UserData.getInstance();
+            FriendData fuser = FriendData.getInstance();
+
             JSONObject reviewCountObj = mFields.getJSONObject(NetworkUtil.GU_ENROLL_NUM);
             int mapCount = mFields.getJSONArray(NetworkUtil.MAP_META_INFO).length(); // 지도 갯수
 
@@ -156,11 +183,19 @@ public class MapzipResponse {
                             reviewnum = 0;
                             //배열에 0 추가
                         }
-                        user.setReviewCount(mapnum, gunumber, reviewnum);
+                        if (type == SystemMain.TYPE_USER)
+                            user.setReviewCount(mapnum, gunumber, reviewnum);
+                        else
+                            fuser.setReviewCount(mapnum, gunumber, reviewnum);
+
                     }
                 } else {
-                    for (int gunumber = 1; gunumber <= SystemMain.SeoulGuCount; gunumber++)
-                        user.setReviewCount(mapnum, gunumber, 0);
+                    for (int gunumber = 1; gunumber <= SystemMain.SeoulGuCount; gunumber++) {
+                        if (type == SystemMain.TYPE_USER)
+                            user.setReviewCount(mapnum, gunumber, 0);
+                        else
+                            fuser.setReviewCount(mapnum, gunumber, 0);
+                    }
                 }
             }
         }

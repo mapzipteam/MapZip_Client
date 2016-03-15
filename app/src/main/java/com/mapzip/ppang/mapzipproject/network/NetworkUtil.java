@@ -20,6 +20,13 @@ public class NetworkUtil {
     public static final String MAP_CATEGORY = "category";
     public static final String MAP_HASH_TAG = "hash_tag";
     public static final String REVIEW_META = "map_meta"; // review flags data
+    public static final String SEARCH_TARGET = "target";
+    public static final String SEARCH_SEQ_NUM = "more";
+    public static final String SEARCH_TYPE = "type";
+    public static final String SEARCH_MAP = "map_search";
+    public static final String FRIEND_ID = "target_id";
+    public static final String FRIEND_LIST = "friend_list";
+    public static final String TOTAL_REVIEW = "total_review";
 
     public static final int TYPE_WIFI = 1;
     public static final int TYPE_MOBILE = 2;
