@@ -1,4 +1,4 @@
-package com.mapzip.ppang.mapzipproject.model;
+package com.mapzip.ppang.mapzipproject.network;
 
 /**
  * Created by ppangg on 2016-03-05.

@@ -30,7 +30,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.activity.FriendsHomeActivity;
 import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.R;
-import com.mapzip.ppang.mapzipproject.model.RequestUtil;
+import com.mapzip.ppang.mapzipproject.network.RequestUtil;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;

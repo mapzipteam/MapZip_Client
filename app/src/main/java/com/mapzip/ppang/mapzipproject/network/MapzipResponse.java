@@ -19,6 +19,11 @@ public class MapzipResponse {
     private final String RESPONSE_FIELDS = "fields";
     private final String RESPONSE_DEBUGS = "debugs";
 
+    public static final int TYPE_STRING = 1;
+    public static final int TYPE_INT = 2;
+    public static final int TYPE_JSONOBJECT = 3;
+    public static final int TYPE_JSONARRAY = 4;
+
     private JSONObject mJsonObject; // total
 
     private JSONObject mHeaders;
@@ -29,11 +34,6 @@ public class MapzipResponse {
     private int mBuildVersion = -1; // build_version
 
     //private UserData user;
-
-    private final String userName = "user_name";
-    private final String mapMetaInfo = "mapmeta_info"; // hashtag, mapname, review count...
-    private final String mapId = "map_id";
-    private final String guEnrollNum = "gu_enroll_num";
 
     public MapzipResponse() {
 
@@ -69,6 +69,21 @@ public class MapzipResponse {
         }
     }
 
+    public Object getFieldsMember(int type,String name) throws JSONException{
+        switch (type){
+            case TYPE_STRING:
+                return mFields.getString(name);
+            case TYPE_INT:
+                return mFields.getInt(name);
+            case TYPE_JSONOBJECT:
+                return mFields.getJSONObject(name);
+            case TYPE_JSONARRAY:
+                return mFields.getJSONArray(name);
+            default:
+                return null;
+        }
+    }
+
     public boolean getState(int process_type) throws JSONException {
         if (mBuildVersion >= SystemMain.Build.GARNET) {
             switch (process_type) {
@@ -84,6 +99,12 @@ public class MapzipResponse {
                     } else {
                         return false;
                     }
+                case ResponseUtil.PROCESS_HOME_GET_REVIEW_META:
+                    if(mFields.getInt("state") == SystemMain.CLIENT_REVIEW_META_DOWN_SUCCESS){
+                        return true;
+                    } else {
+                        return false;
+                    }
                 default:
                     MapzipApplication.doLogging(TAG, "getState default logic..");
             }
@@ -95,34 +116,19 @@ public class MapzipResponse {
     /*
         LoginFragment
      */
-    public String getUserName_login() throws JSONException { // get UserName
-        if ((SystemMain.Build.GARNET <= mBuildVersion) && (mBuildVersion <= SystemMain.Build.GARNET_END)) {
-            return mFields.getString(userName);
-        }
-        return null;
-    }
-
-    public int getMapCount() throws JSONException { // get UserName
-        if ((SystemMain.Build.GARNET <= mBuildVersion) && (mBuildVersion <= SystemMain.Build.GARNET_END)) {
-            int mapCount = mFields.getJSONArray(mapMetaInfo).length(); // 지도 갯수
-            return mapCount;
-        }
-        return -1;
-    }
-
     public JSONArray setMapMetaOrder() throws JSONException { // MapMeta 지도 순서 맞추기
         if ((SystemMain.Build.GARNET <= mBuildVersion) && (mBuildVersion <= SystemMain.Build.GARNET_END)) {
-            int mapCount = getMapCount(); // 지도 갯수
+            int mapCount =  mFields.getJSONArray(NetworkUtil.MAP_META_INFO).length(); // 지도 갯수
 
             int mapMetaOrderArr[] = new int[mapCount + 1];
             mapMetaOrderArr[0] = -1;
             for (int i = 0; i < mapCount; i++) {
-                mapMetaOrderArr[Integer.parseInt(mFields.getJSONArray(mapMetaInfo).getJSONObject(i).getString(mapId))] = i;
+                mapMetaOrderArr[Integer.parseInt(mFields.getJSONArray(NetworkUtil.MAP_META_INFO).getJSONObject(i).getString(NetworkUtil.MAP_ID))] = i;
             }
 
             JSONArray newMapMetaArr = new JSONArray();
             for (int j = 1; j < mapMetaOrderArr.length; j++) {
-                newMapMetaArr.put(mFields.getJSONArray(mapMetaInfo).getJSONObject(mapMetaOrderArr[j]));
+                newMapMetaArr.put(mFields.getJSONArray(NetworkUtil.MAP_META_INFO).getJSONObject(mapMetaOrderArr[j]));
             }
 
             return newMapMetaArr;
@@ -134,8 +140,8 @@ public class MapzipResponse {
     public void setMapReviewCount() throws JSONException { // 구별 리뷰갯수 저장
         if ((SystemMain.Build.GARNET <= mBuildVersion) && (mBuildVersion <= SystemMain.Build.GARNET_END)) {
             UserData user = UserData.getInstance();
-            JSONObject reviewCountObj = mFields.getJSONObject(guEnrollNum);
-            int mapCount = getMapCount(); // 지도 갯수
+            JSONObject reviewCountObj = mFields.getJSONObject(NetworkUtil.GU_ENROLL_NUM);
+            int mapCount = mFields.getJSONArray(NetworkUtil.MAP_META_INFO).length(); // 지도 갯수
 
             for (int mapnum = 1; mapnum <= mapCount; mapnum++) {
                 if (reviewCountObj.has(String.valueOf(mapnum))) {

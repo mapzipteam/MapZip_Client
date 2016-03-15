@@ -31,6 +31,7 @@ import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
 import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
 import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
 import org.json.JSONException;
@@ -319,9 +320,9 @@ public class JoinFragment extends Fragment {
                 MapzipRequestBuilder builder = null;
                 try {
                     builder= new MapzipRequestBuilder();
-                    builder.setCustomAttribute("user_id", userid);
-                    builder.setCustomAttribute("user_pw", userpw);
-                    builder.setCustomAttribute("user_name", username);
+                    builder.setCustomAttribute(NetworkUtil.USER_ID, userid);
+                    builder.setCustomAttribute(NetworkUtil.USER_PW, userpw);
+                    builder.setCustomAttribute(NetworkUtil.USER_NAME, username);
                     builder.showInside();
                 } catch (JSONException e) {
                     e.printStackTrace();
