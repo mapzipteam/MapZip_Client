@@ -24,9 +24,12 @@ public class NetworkUtil {
     public static final String SEARCH_SEQ_NUM = "more";
     public static final String SEARCH_TYPE = "type";
     public static final String SEARCH_MAP = "map_search";
-    public static final String FRIEND_ID = "target_id";
+    public static final String TARGET_ID = "target_id";
     public static final String FRIEND_LIST = "friend_list";
     public static final String TOTAL_REVIEW = "total_review";
+    public static final String STATE = "state";
+    public static final String NOTICE_VERSION = "version";
+    public static final String NOTICE_CONTENTS = "contents";
 
     public static final int TYPE_WIFI = 1;
     public static final int TYPE_MOBILE = 2;

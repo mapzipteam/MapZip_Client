@@ -262,7 +262,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
                                     try {
                                         builder= new MapzipRequestBuilder();
                                         builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
-                                        builder.setCustomAttribute(NetworkUtil.FRIEND_ID, mMyAdapte.getID(position));
+                                        builder.setCustomAttribute(NetworkUtil.TARGET_ID, mMyAdapte.getID(position));
                                         builder.showInside();
                                     } catch (JSONException e) {
                                         Log.v("제이손", "에러");
@@ -417,7 +417,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
                     MapzipResponse mapzipResponse = new MapzipResponse(response);
                     mapzipResponse.showAllContents();
                     if (mapzipResponse.getState(ResponseUtil.PROCESS_FRIEND_LIST)) {
-                        getArray = response.getJSONArray(NetworkUtil.FRIEND_LIST);
+                        getArray = (JSONArray)mapzipResponse.getFieldsMember(mapzipResponse.TYPE_JSON_ARRAY,NetworkUtil.FRIEND_LIST);
                         seq++;
 
                         addItems(6);
@@ -484,7 +484,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
         MapzipRequestBuilder builder = null;
         try {
             builder= new MapzipRequestBuilder();
-            builder.setCustomAttribute(NetworkUtil.FRIEND_ID, fid);
+            builder.setCustomAttribute(NetworkUtil.TARGET_ID, fid);
             builder.showInside();
         } catch (JSONException e) {
             Log.v("제이손", "에러");

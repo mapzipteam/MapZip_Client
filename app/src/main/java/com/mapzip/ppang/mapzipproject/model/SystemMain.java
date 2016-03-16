@@ -94,6 +94,10 @@ public class SystemMain {
     public static final int USER_SOUND_INSERT_SUCCESS = 1001; // success to insert in user sound to mz_user_sound table
     public static final int USER_SOUND_INSERT_FAIL = 1002; // fail it
 
+    public static final int USER_GCM_UPDATE_FAIL = 1101; // 로그인할때, 유저 GCM테이블에 업데이트가 실패
+
+    public static final int PATCH_NOTE_GET_SUCCESS = 1201; //	MapZip 공지사항을 정상적으로 전달함
+
 
     /*
      * local

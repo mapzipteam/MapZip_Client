@@ -125,11 +125,23 @@ public class MapzipResponse {
                         return false;
                     }
                 case ResponseUtil.PROCESS_FRIEND_LIST:
-                if (mFields.getInt("state") == SystemMain.FRIEND_ITEM_SHOW_SUCCESS) {
-                    return true;
-                } else {
-                    return false;
-                }
+                    if (mFields.getInt("state") == SystemMain.FRIEND_ITEM_SHOW_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case ResponseUtil.PROCESS_SETTING_LEAVE:
+                    if (mFields.getInt("state") == SystemMain.LEAVE_ALL_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case ResponseUtil.PROCESS_SETTING_NOTICE:
+                    if (mFields.getInt("state") == SystemMain.PATCH_NOTE_GET_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 default:
                     MapzipApplication.doLogging(TAG, "getState default logic..");
             }

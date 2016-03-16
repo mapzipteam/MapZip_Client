@@ -13,4 +13,6 @@ public class ResponseUtil {
     public final static int PROCESS_FRIEND_GET_REVIEW_META = 6;
     public final static int PROCESS_FRIEND_DELETE = 7;
     public final static int PROCESS_FRIEND_LIST = 8;
+    public final static int PROCESS_SETTING_LEAVE = 9;
+    public final static int PROCESS_SETTING_NOTICE = 10;
 }

@@ -25,12 +25,19 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class MainActivity extends FragmentActivity {
+    private final String TAG = "MainActivity";
 
     // toast
     private View layout_toast;
@@ -139,17 +146,18 @@ public class MainActivity extends FragmentActivity {
     private void getNotice() {
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
 
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            obj.put("state", 1);
-            Log.v("mainActivity 보내기", obj.toString());
+            builder = new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.STATE, 1);
+            builder.showInside();
         } catch (JSONException e) {
-            Log.v("제이손", "에러");
+            Log.e(TAG,"제이손 에러");
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_NOTICE_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener(),
                 createMyReqErrorListener()) {
         };
@@ -161,30 +169,32 @@ public class MainActivity extends FragmentActivity {
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.v("mainActivity 받기", response.toString());
-
                 try{
-                    if(response.get("version").equals(pref.getString("notice_version","0"))){
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_SETTING_NOTICE)) {
+                        if (mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING,NetworkUtil.NOTICE_VERSION).equals(pref.getString("notice_version", "0"))) {
 
-                    }else {
-                        noticeString = "버전: " + response.get("version").toString() + "\n\n";
+                        } else {
+                            noticeString = "버전: " + mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING, NetworkUtil.NOTICE_VERSION)+"\n\n";
 
-                        noticeString += response.get("contents").toString()+"\n\n";
-                        noticeString += "@이 창은 공지사항탭에서 다시 확인할 수 있습니다.";
+                            noticeString += mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING, NetworkUtil.NOTICE_CONTENTS) + "\n\n";
+                            noticeString += "@이 창은 공지사항탭에서 다시 확인할 수 있습니다.";
 
-                        AlertDialog.Builder ab = new AlertDialog.Builder(MainActivity.this);
-                        ab.setTitle("새로운 MapZip의 패치소식 ^0^/");
-                        ab.setMessage(noticeString);
-                        ab.setPositiveButton("확인", null);
+                            AlertDialog.Builder ab = new AlertDialog.Builder(MainActivity.this);
+                            ab.setTitle("새로운 MapZip의 패치소식 ^0^/");
+                            ab.setMessage(noticeString);
+                            ab.setPositiveButton("확인", null);
 
-                        SharedPreferences.Editor editor = pref.edit();
-                        editor.putString("notice_version", response.get("version").toString());
-                        editor.commit();
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.putString("notice_version", (String)mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING, NetworkUtil.NOTICE_VERSION));
+                            editor.commit();
 
-                        ab.show();
+                            ab.show();
+                        }
                     }
                 }catch (JSONException e){
-                    Log.v("제이손", "에러");
+                    Log.e(TAG, "제이손 에러");
                 }
             }
         };
@@ -202,10 +212,10 @@ public class MainActivity extends FragmentActivity {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("mainActivity", error.getMessage());
+                    Log.e(TAG, error.getMessage());
                 }catch (NullPointerException ex){
                     // toast
-                    Log.e("mainActivity", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
             }
         };

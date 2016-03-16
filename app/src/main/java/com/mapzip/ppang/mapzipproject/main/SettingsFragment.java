@@ -21,12 +21,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.activity.SuggestActivity;
-import com.mapzip.ppang.mapzipproject.adapter.MapzipApplication;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
 import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +36,7 @@ import org.json.JSONObject;
  * Created by ppangg on 2015-12-29.
  */
 public class SettingsFragment extends Fragment {
+    private final String TAG = "SettingsFragment";
 
     private View v;
 
@@ -90,17 +92,18 @@ public class SettingsFragment extends Fragment {
                                 // 'YES' target_id,
                                 RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
 
-                                JSONObject obj = new JSONObject();
+                                MapzipRequestBuilder builder = null;
                                 try {
-                                    obj.put("target_id", user.getUserID());
-                                    Log.v("userdat_del 보내기", obj.toString());
+                                    builder = new MapzipRequestBuilder();
+                                    builder.setCustomAttribute(NetworkUtil.TARGET_ID, user.getUserID());
+                                    builder.showInside();
                                 } catch (JSONException e) {
-                                    Log.v("제이손", "에러");
+                                    Log.e(TAG, "제이손 에러");
                                 }
 
                                 JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                                         SystemMain.SERVER_DELETEUSER_URL,
-                                        obj,
+                                        builder.build(),
                                         createMyReqSuccessListener(),
                                         createMyReqErrorListener()) {
                                 };
@@ -129,14 +132,14 @@ public class SettingsFragment extends Fragment {
             }
         });
 
-        Button testBtn = (Button)v.findViewById(R.id.testBtn);
+        Button testBtn = (Button) v.findViewById(R.id.testBtn);
         testBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
                 MapzipRequestBuilder builder = null;
                 try {
-                    builder= new MapzipRequestBuilder();
+                    builder = new MapzipRequestBuilder();
                     builder.setCustomAttribute("custom_key1", "string_value");
                     builder.setCustomAttribute("custom_key2", 5);
                     builder.setCustomAttribute("custom_key3", true);
@@ -157,8 +160,8 @@ public class SettingsFragment extends Fragment {
         return v;
     }
 
-    private  Response.Listener<JSONObject> MRSuccessListener(){
-        return new Response.Listener<JSONObject>(){
+    private Response.Listener<JSONObject> MRSuccessListener() {
+        return new Response.Listener<JSONObject>() {
 
             @Override
             public void onResponse(JSONObject response) {
@@ -178,12 +181,10 @@ public class SettingsFragment extends Fragment {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
-                Log.v("userdata_del 받기", response.toString());
-
                 try {
-                    if (Integer.parseInt(response.getString("state")) == SystemMain.LEAVE_ALL_SUCCESS) {
-
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_SETTING_LEAVE)) {
                         // toast
                         text_toast.setText("정상적으로 탈퇴가 완료되었습니다.");
                         Toast toast = new Toast(getActivity());
@@ -194,18 +195,16 @@ public class SettingsFragment extends Fragment {
                         Intent intent = new Intent(getActivity(), MainActivity.class);
                         startActivity(intent);
                         getActivity().finish();
-                    }
-                    else{
+                    } else {
                         // toast
-                        text_toast.setText("회원탈퇴에 실패하였습니다.");
+                        text_toast.setText("다시 시도해주세요.");
                         Toast toast = new Toast(getActivity());
                         toast.setDuration(Toast.LENGTH_LONG);
                         toast.setView(layout_toast);
                         toast.show();
                     }
-
-                }catch (JSONException ex){
-                    Log.v("제이손", "에러");
+                } catch (JSONException ex) {
+                    Log.e(TAG, "제이손 에러");
                 }
             }
         };
@@ -223,29 +222,31 @@ public class SettingsFragment extends Fragment {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("user_del", error.getMessage());
-                }catch (NullPointerException ex){
+                    Log.e(TAG, error.getMessage());
+                } catch (NullPointerException ex) {
                     // toast
-                    Log.e("user_del", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
             }
         };
     }
+
     // notice get method
     private void getNotice() {
         RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
 
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            obj.put("state", 1);
-            Log.v("mainActivity 보내기", obj.toString());
+            builder = new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.STATE, 1);
+            builder.showInside();
         } catch (JSONException e) {
-            Log.v("제이손", "에러");
+            Log.e(TAG,"제이손 에러");
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_NOTICE_URL,
-                obj,
+                builder.build(),
                 createNoticeReqSuccessListener(),
                 createNoticeReqErrorListener()) {
         };
@@ -257,13 +258,14 @@ public class SettingsFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.v("mainActivity 받기", response.toString());
+                try {
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_SETTING_NOTICE)) {
 
-                try{
+                        noticeString = "버전: " + mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING,NetworkUtil.NOTICE_VERSION)+"\n\n";
 
-                        noticeString = "버전: " + response.get("version").toString() + "\n\n";
-
-                        noticeString += response.get("contents").toString()+"\n\n";
+                        noticeString += mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING,NetworkUtil.NOTICE_CONTENTS) + "\n\n";
                         noticeString += "@이 창은 공지사항탭에서 다시 확인할 수 있습니다.";
 
                         AlertDialog.Builder ab = new AlertDialog.Builder(getActivity());
@@ -272,13 +274,20 @@ public class SettingsFragment extends Fragment {
                         ab.setPositiveButton("확인", null);
 
                         SharedPreferences.Editor editor = pref.edit();
-                        editor.putString("notice_version", response.get("version").toString());
+                        editor.putString("notice_version", (String)mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING, NetworkUtil.NOTICE_VERSION));
                         editor.commit();
 
                         ab.show();
-
-                }catch (JSONException e){
-                    Log.v("제이손", "에러");
+                    }else{
+                        // toast
+                        text_toast.setText("다시 시도해주세요.");
+                        Toast toast = new Toast(getActivity());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
+                    }
+                } catch (JSONException e) {
+                    Log.e(TAG, "제이손 에러");
                 }
             }
         };
@@ -296,10 +305,10 @@ public class SettingsFragment extends Fragment {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("mainActivity", error.getMessage());
-                }catch (NullPointerException ex){
+                    Log.e(TAG, error.getMessage());
+                } catch (NullPointerException ex) {
                     // toast
-                    Log.e("mainActivity", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
             }
         };
