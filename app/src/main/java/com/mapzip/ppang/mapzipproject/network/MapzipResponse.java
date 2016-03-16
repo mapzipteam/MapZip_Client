@@ -142,6 +142,18 @@ public class MapzipResponse {
                     } else {
                         return false;
                     }
+                case ResponseUtil.PROCESS_FRIEND_SEARCH_BY_NAME:
+                    if (mFields.getInt("state") == SystemMain.FRIEND_SEARCH_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case ResponseUtil.PROCESS_FRIEND_ADD:
+                    if (mFields.getInt("state") == SystemMain.FRIEND_ITEM_ENROLL_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 default:
                     MapzipApplication.doLogging(TAG, "getState default logic..");
             }

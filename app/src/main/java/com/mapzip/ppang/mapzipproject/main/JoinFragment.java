@@ -367,7 +367,6 @@ public class JoinFragment extends Fragment {
 
                         sendJoinActionToAnswers(joinFabric.FABRIC_JOIN_SUCCESS, 0);
 
-
                     } else {
                         // toast
                         text_toast.setText("이미 존재하는 계정정보입니다.");

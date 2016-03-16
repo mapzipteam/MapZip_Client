@@ -90,6 +90,11 @@ public class SystemMain {
     public static final int FRIEND_ITEM_DELETE_SUCCESS = 911; // 맵갈피 삭제 성공
     public static final int FRIEND_ITEM_DELETE_FAIL = 912; // 맵갈피 삭제 실패
 
+    public static final int FRIEND_ITEM_ENROLL_SUCCESS = 921; // 사용자의 맵갈피 정보 하나 등록 성공
+    public static final int FRIEND_ITEM_ENROLL_FAIL = 922; // 사용자의 맵갈피 정보 하나 등록 실패
+
+    public static final int FRIEND_SEARCH_SUCCESS = 931; // 사용자의 맵갈피 정보 찾기 성공
+
     // state define 1000~ : about interact with users
     public static final int USER_SOUND_INSERT_SUCCESS = 1001; // success to insert in user sound to mz_user_sound table
     public static final int USER_SOUND_INSERT_FAIL = 1002; // fail it

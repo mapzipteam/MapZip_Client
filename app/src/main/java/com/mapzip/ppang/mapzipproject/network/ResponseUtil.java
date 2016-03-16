@@ -15,4 +15,6 @@ public class ResponseUtil {
     public final static int PROCESS_FRIEND_LIST = 8;
     public final static int PROCESS_SETTING_LEAVE = 9;
     public final static int PROCESS_SETTING_NOTICE = 10;
+    public final static int PROCESS_FRIEND_SEARCH_BY_NAME = 11;
+    public final static int PROCESS_FRIEND_ADD = 12;
 }

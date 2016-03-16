@@ -26,6 +26,9 @@ public class NetworkUtil {
     public static final String SEARCH_MAP = "map_search";
     public static final String TARGET_ID = "target_id";
     public static final String FRIEND_LIST = "friend_list";
+    public static final String FRIEND_ID = "friend_id";
+    public static final String FRIEND_NAME = "friend_name";
+    public static final String IS_FRIEND = "is_friend";
     public static final String TOTAL_REVIEW = "total_review";
     public static final String STATE = "state";
     public static final String NOTICE_VERSION = "version";

@@ -36,8 +36,13 @@ import com.mapzip.ppang.mapzipproject.map.Location;
 import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -45,6 +50,7 @@ import java.lang.reflect.Method;
 import java.util.ArrayList;
 
 public class FriendsHomeActivity extends Activity implements View.OnClickListener {
+    private final String TAG = "FriendsHomeActivity";
 
     private FriendData fuser;
     private UserData user;
@@ -53,13 +59,9 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
     private View layout_toast;
     private TextView text_toast;
 
-    private int fix_x = 0;
-    private int fix_y = 0;
-
     private double loc_LNG = 0;
     private double loc_LAT = 0;
 
-    private TextView topstate; // fuser info
     private ImageView imageview; // map image
     private String hashString;
     private TextView hashstate1; // hashtag
@@ -67,9 +69,6 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
     private TextView hashstate3; // hashtag
     private TextView hashstate4; // hashtag
     private TextView hashstate5; // hashtag
-    private LinearLayout hashtaglayout;
-    private String mapcurname = ""; // 현재 지도 이름
-    private String mapkindnum; // 현재 지도 속성 번호
     private String mapid; // 현재 지도 pid값
 
     private ArrayList<String> sppinerList; // map name
@@ -121,14 +120,14 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
 
         fuser = FriendData.getInstance();
         user = UserData.getInstance();
-        getActionBar().setTitle(fuser.getUserName() + "의 지도");
+        getActionBar().setTitle("   "+fuser.getUserName() + "의 지도");
         getActionBar().setDisplayShowHomeEnabled(false);
 
         mapnum = fuser.getMapmetaArray().length();
         sppinerList = new ArrayList<String>();
         try {
             for (int i = 0; i < mapnum; i++) {
-                sppinerList.add(fuser.getMapmetaArray().getJSONObject(i).getString("title"));
+                sppinerList.add(fuser.getMapmetaArray().getJSONObject(i).getString(NetworkUtil.MAP_TITLE));
             }
         } catch (JSONException ex) {
 
@@ -148,14 +147,12 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
         //2016.01.08 송지원이 고침
         scalableLayout = (ScalableLayout)findViewById(R.id.scalablelayout);
 
-
         imageview = (ImageView) findViewById(R.id.mapimage);
         hashstate1 = (TextView) findViewById(R.id.tagText);
         hashstate2 = (TextView) findViewById(R.id.tagText2);
         hashstate3 = (TextView) findViewById(R.id.tagText3);
         hashstate4 = (TextView) findViewById(R.id.tagText4);
         hashstate5 = (TextView) findViewById(R.id.tagText5);
-        hashtaglayout = (LinearLayout) findViewById(R.id.taglayout);
         mapsetting = (Button) findViewById(R.id.mapsetting);
 
         if(user.getUserID().equals(fuser.getUserID()))
@@ -216,11 +213,8 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
                     tagLayout.setMargins(10, (int) realHeight / 24 * 17, 10, 0);
                     //hashtaglayout.setLayoutParams(tagLayout);
 
-                    JSONObject mapmeta = null;
-                    mapmeta = fuser.getMapmetaArray().getJSONObject(position);
-                    mapcurname = sppinerList.get(position);
-                    mapkindnum = mapmeta.get("category").toString();
-                    mapid = mapmeta.get("map_id").toString();
+                    JSONObject mapmeta = fuser.getMapmetaArray().getJSONObject(position);
+                    mapid = mapmeta.get(NetworkUtil.MAP_ID).toString();
 
                     Bitmap result = fuser.getResult(Integer.parseInt(mapid));
 //2016.01.08        imageview.setImageBitmap(result);
@@ -228,7 +222,7 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
                     Drawable drawable = new BitmapDrawable(result);
                     scalableLayout.setBackground(drawable);
 
-                    hashString =  mapmeta.get("hash_tag").toString();
+                    hashString =  mapmeta.get(NetworkUtil.MAP_HASH_TAG).toString();
                     String[] hasharr = hashString.split("#");
 
                     for (int i = 1; i < hasharr.length; i++) {
@@ -252,8 +246,7 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
                     }
 
                     // category select (SEOUL)
-                    if (Integer.parseInt(mapmeta.get("category").toString()) == SystemMain.SEOUL_MAP_NUM) {
-
+                    if (Integer.parseInt(mapmeta.get(NetworkUtil.MAP_CATEGORY).toString()) == SystemMain.SEOUL_MAP_NUM) {
                         seoulBtnVisibility("visible", mapid);
                     }
                 } catch (JSONException ex) {
@@ -302,99 +295,6 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
                 imageview.getLocationOnScreen(location);
 
                 ScreenSize();
-                Log.e("Display size : ", "" + realWidth);
-                Log.e("Display size : ", "" + realHeight);
-                Log.e("check brand", "BRAND = " + Build.BRAND);
-                if (Build.BRAND.equals("lge")) {
-                    Log.e("check", "ok");
-                    fix_x = 47;
-                    fix_y = -40-(realHeight/18);
-                } else {
-                    fix_y=-(realHeight/13)-(realHeight/400); //17~18
-                    Log.e("check", "No");
-                }
-//                RelativeLayout.LayoutParams layoutParms1 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms1.setMargins((realWidth / 100 * 33) + fix_x, realHeight / 100 * 36 + fix_y, 0, 0); // left, top, 0, 0
-//                EunPhung.setLayoutParams(layoutParms1);
-//                RelativeLayout.LayoutParams layoutParms2 = new RelativeLayout.LayoutParams(90 + fix_x, 90); // width, height
-//                layoutParms2.setMargins(realWidth / 100 * 34 + fix_x, realHeight / 100 * 45 + fix_y, 0, 0); // left, top, 0, 0
-//                SuDaeMon.setLayoutParams(layoutParms2);
-//                RelativeLayout.LayoutParams layoutParms3 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms3.setMargins(realWidth / 100 * 45 + fix_x, realHeight / 100 * 43 + fix_y, 0, 0); // left, top, 0, 0
-//                ZongRo.setLayoutParams(layoutParms3);
-//                RelativeLayout.LayoutParams layoutParms4 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms4.setMargins(realWidth / 100 * 54 + fix_x, realHeight / 100 * 40 + fix_y, 0, 0); // left, top, 0, 0
-//                SungBuk.setLayoutParams(layoutParms4);
-//                RelativeLayout.LayoutParams layoutParms5 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms5.setMargins(realWidth / 100 * 52 + fix_x, realHeight / 100 * 32 + fix_y, 0, 0); // left, top, 0, 0
-//                GangBuk.setLayoutParams(layoutParms5);
-//
-//                RelativeLayout.LayoutParams layoutParms6 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms6.setMargins(realWidth / 100 * 58 + fix_x, realHeight / 100 * 27 + fix_y, 0, 0); // left, top, 0, 0
-//                DoBong.setLayoutParams(layoutParms6);
-//                RelativeLayout.LayoutParams layoutParms7 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms7.setMargins(realWidth / 100 * 68 + fix_x, realHeight / 100 * 33 + fix_y, 0, 0); // left, top, 0, 0
-//                NoWon.setLayoutParams(layoutParms7);
-//                RelativeLayout.LayoutParams layoutParms8 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms8.setMargins(realWidth / 100 * 72 + fix_x, realHeight / 100 * 40 + fix_y, 0, 0); // left, top, 0, 0
-//                ZongRang.setLayoutParams(layoutParms8);
-//                RelativeLayout.LayoutParams layoutParms9 = new RelativeLayout.LayoutParams(90 + fix_x, 90); // width, height
-//                layoutParms9.setMargins(realWidth / 100 * 62 + fix_x, realHeight / 100 * 44 + fix_y, 0, 0); // left, top, 0, 0
-//                DongDaeMon.setLayoutParams(layoutParms9);
-//                RelativeLayout.LayoutParams layoutParms10 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms10.setMargins(realWidth / 100 * 9 + fix_x, realHeight / 100 * 47 + fix_y, 0, 0); // left, top, 0, 0
-//                GangSue.setLayoutParams(layoutParms10);
-//
-//                RelativeLayout.LayoutParams layoutParms11 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms11.setMargins(realWidth / 100 * 17 + fix_x, realHeight / 100 * 56 + fix_y, 0, 0); // left, top, 0, 0
-//                YangChen.setLayoutParams(layoutParms11);
-//                RelativeLayout.LayoutParams layoutParms12 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms12.setMargins(realWidth / 100 * 13 + fix_x, realHeight / 100 * 62 + fix_y, 0, 0); // left, top, 0, 0
-//                GuRo.setLayoutParams(layoutParms12);
-//                RelativeLayout.LayoutParams layoutParms13 = new RelativeLayout.LayoutParams(90, 90);// width, height
-//                layoutParms13.setMargins(realWidth / 100 * 26 + fix_x, realHeight / 100 * 68 + fix_y, 0, 0); // left, top, 0, 0
-//                GemChun.setLayoutParams(layoutParms13);
-//                RelativeLayout.LayoutParams layoutParms14 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms14.setMargins(realWidth / 100 * 29 + fix_x, realHeight / 100 * 49 + fix_y, 0, 0); // left, top, 0, 0
-//                MaPho.setLayoutParams(layoutParms14);
-//                RelativeLayout.LayoutParams layoutParms15 = new RelativeLayout.LayoutParams(90 + fix_x, 90); // width, height
-//                layoutParms15.setMargins(realWidth / 100 * 29 + fix_x, realHeight / 100 * 56 + fix_y, 0, 0); // left, top, 0, 0
-//                YongDengPo.setLayoutParams(layoutParms15);
-//
-//                RelativeLayout.LayoutParams layoutParms16 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms16.setMargins(realWidth / 100 * 37 + fix_x, realHeight / 100 * 67 + fix_y, 0, 0); // left, top, 0, 0
-//                GanAk.setLayoutParams(layoutParms16);
-//                RelativeLayout.LayoutParams layoutParms17 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms17.setMargins((realWidth / 100 * 39) + fix_x, realHeight / 100 * 59 + fix_y, 0, 0); // left, top, 0, 0
-//                DongJack.setLayoutParams(layoutParms17);
-//                RelativeLayout.LayoutParams layoutParms18 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms18.setMargins(realWidth / 100 * 45 + fix_x, realHeight / 100 * 53 + fix_y, 0, 0); // left, top, 0, 0
-//                YongSan.setLayoutParams(layoutParms18);
-//                RelativeLayout.LayoutParams layoutParms19 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms19.setMargins(realWidth / 100 * 49 + fix_x, realHeight / 100 * 48 + fix_y, 0, 0); // left, top, 0, 0
-//                Zhong.setLayoutParams(layoutParms19);
-//                RelativeLayout.LayoutParams layoutParms20 = new RelativeLayout.LayoutParams(90, 90);// width, height
-//                layoutParms20.setMargins(realWidth / 100 * 60 + fix_x, realHeight / 100 * 50 + fix_y, 0, 0); // left, top, 0, 0
-//                SungDong.setLayoutParams(layoutParms20);
-//
-//                RelativeLayout.LayoutParams layoutParms21 = new RelativeLayout.LayoutParams(90, 90);// width, height
-//                layoutParms21.setMargins(realWidth / 100 * 53 + fix_x, realHeight / 100 * 64 + fix_y, 0, 0); // left, top, 0, 0
-//                SeoCho.setLayoutParams(layoutParms21);
-//                RelativeLayout.LayoutParams layoutParms22 = new RelativeLayout.LayoutParams(90, 90);// width, height
-//                layoutParms22.setMargins(realWidth / 100 * 63 + fix_x, realHeight / 100 * 61 + fix_y, 0, 0); // left, top, 0, 0
-//                GangNam.setLayoutParams(layoutParms22);
-//                RelativeLayout.LayoutParams layoutParms23 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms23.setMargins(realWidth / 100 * 70 + fix_x, realHeight / 100 * 51 + fix_y, 0, 0); // left, top, 0, 0
-//                GangZin.setLayoutParams(layoutParms23);
-//                RelativeLayout.LayoutParams layoutParms24 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms24.setMargins(realWidth / 100 * 75 + fix_x, realHeight / 100 * 58 + fix_y, 0, 0); // left, top, 0, 0
-//                SongPa.setLayoutParams(layoutParms24);
-//                RelativeLayout.LayoutParams layoutParms25 = new RelativeLayout.LayoutParams(90, 90); // width, height
-//                layoutParms25.setMargins(realWidth / 100 * 83 + fix_x, realHeight / 100 * 49 + fix_y, 0, 0); // left, top, 0, 0
-//                GangDong.setLayoutParams(layoutParms25);
-//
-//                //  SungBuk.setLayoutParams(layoutParms5);
-//                Log.e("owl", "" + imageview.getHeight());
 
                 //은평
                 ScalableLayout.LayoutParams layoutParams1 = new ScalableLayout.LayoutParams(1600, 1300, 700f, 500f);
@@ -809,7 +709,6 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
     public void ScreenSize() {
         Display display = getWindowManager().getDefaultDisplay();
 
-
         if (Build.VERSION.SDK_INT >= 17) {
             //new pleasant way to get real metrics
             DisplayMetrics realMetrics = new DisplayMetrics();
@@ -841,19 +740,19 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
 
     public void GetStorearrary(View v) {
         RequestQueue queue = MyVolley.getInstance(getApplicationContext()).getRequestQueue();
-
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            obj.put("userid", fuser.getUserID());
-            obj.put("map_id", mapid);
-            Log.v("제이손 보내기", obj.toString());
+            builder= new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.USER_ID, fuser.getUserID());
+            builder.setCustomAttribute(NetworkUtil.MAP_ID, mapid);
+            builder.showInside();
         } catch (JSONException e) {
-            Log.v("제이손", "에러");
+            e.printStackTrace();
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_HOMETOMAP_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener(),
                 createMyReqErrorListener()) {
         };
@@ -866,22 +765,23 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
-                Log.v("홈 가게", response.toString());
                 try {
-                    if (response.getInt("state") == SystemMain.CLIENT_REVIEW_META_DOWN_SUCCESS) { // 701
-                        fuser.setMapforpinNum(Integer.parseInt(mapid), 1);
-                        fuser.setMapforpinArray(response.getJSONArray("map_meta"), Integer.parseInt(response.getJSONArray("map_meta").getJSONObject(0).get("map_id").toString()));
-                        Log.v("홈에서 맵 어레이", fuser.getMapforpinArray(Integer.parseInt(mapid)).toString());
 
-                        Log.v("홈", "맵인텐트");
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_HOME_GET_REVIEW_META)) { // 701
+                        fuser.setMapforpinNum(Integer.parseInt(mapid), 1);
+                        JSONArray reviewMeta = (JSONArray)mapzipResponse.getFieldsMember(mapzipResponse.TYPE_JSON_ARRAY,NetworkUtil.REVIEW_META);
+                        fuser.setMapforpinArray(reviewMeta, reviewMeta.getJSONObject(0).getInt(NetworkUtil.MAP_ID));
+
+                        Log.v(TAG, "맵인텐트");
                         Intent intent = new Intent(getApplicationContext(), MapActivity.class);
                         intent.putExtra("fragment_id","friend_home");
                         intent.putExtra("LNG", loc_LNG);
                         intent.putExtra("LAT", loc_LAT);
                         intent.putExtra("mapid", mapid);
                         startActivity(intent);
-                    } else if (response.getInt("state") == SystemMain.CLIENT_REVIEW_META_DOWN_EMPTY) { // 711
+                    } else { // 711
                         fuser.setMapforpinNum(Integer.parseInt(mapid), 2);
                         // toast
                         text_toast.setText("등록 된 리뷰가 없습니다.");
@@ -891,7 +791,7 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
                         toast.show();
                     }
                 } catch (JSONException ex) {
-
+                    Log.v(TAG, "제이손 에러");
                 }
             }
         };
@@ -909,10 +809,10 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("homeFragment", error.getMessage());
+                    Log.e(TAG, error.getMessage());
                 } catch (NullPointerException ex) {
                     // toast
-                    Log.e("homeFragment", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
             }
         };
@@ -921,20 +821,20 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
     public void addFriend_enroll(View v) {
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
 
-        JSONObject obj = new JSONObject();
+       MapzipRequestBuilder builder = null;
         try {
-            obj.put("user_id", user.getUserID());
-            obj.put("friend_id",fuser.getUserID());
-            obj.put("user_name",user.getUserName());
-
-            Log.v("addfriend_enroll 보내기", obj.toString());
+            builder= new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+            builder.setCustomAttribute(NetworkUtil.FRIEND_ID, fuser.getUserID());
+            builder.setCustomAttribute(NetworkUtil.USER_NAME, user.getUserName());
+            builder.showInside();
         } catch (JSONException e) {
-            Log.v("제이손", "에러");
+            e.printStackTrace();
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_ADDFRIENDENROLL_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener_enroll(),
                 createMyReqErrorListener()) {
         };
@@ -946,20 +846,34 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.v("addfriend_enroll", response.toString());
+                try {
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_FRIEND_ADD)) {
 
-                mapsetting.setVisibility(View.INVISIBLE);
-                mapsetting.setEnabled(false);
-                mapsetting.setBackgroundResource(R.drawable.addfriend);
-                mapsetting.setVisibility(View.VISIBLE);
+                        mapsetting.setVisibility(View.INVISIBLE);
+                        mapsetting.setEnabled(false);
+                        mapsetting.setBackgroundResource(R.drawable.addfriend);
+                        mapsetting.setVisibility(View.VISIBLE);
 
-                // toast
-                text_toast.setText(fuser.getUserID()+"님을 맵갈피에 추가하였습니다.");
-                Toast toast = new Toast(getApplicationContext());
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setView(layout_toast);
-                toast.show();
+                        // toast
+                        text_toast.setText(fuser.getUserID()+"님을 맵갈피에 추가하였습니다.");
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
 
+                    } else {
+                        // toast
+                        text_toast.setText("다시 시도해주세요.");
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
+                    }
+                }catch (JSONException e){
+                    Log.e(TAG,"제이손 에러");
+                }
             }
         };
     }
@@ -967,20 +881,19 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
 
     public void addFriend_search() {
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
-
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            obj.put("user_id", user.getUserID());
-            obj.put("friend_id",fuser.getUserID());
-
-            Log.v("addfriend_search 보내기", obj.toString());
+            builder= new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+            builder.setCustomAttribute(NetworkUtil.FRIEND_ID, fuser.getUserID());
+            builder.showInside();
         } catch (JSONException e) {
-            Log.v("제이손", "에러");
+            e.printStackTrace();
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_ADDFRIENDSEARCH_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener_search(),
                 createMyReqErrorListener()) {
         };
@@ -992,17 +905,26 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.v("addfriend_search", response.toString());
-
                 try {
-                    if(response.getInt("is_friend")==1){
-                        mapsetting.setVisibility(View.INVISIBLE);
-                        mapsetting.setEnabled(false);
-                        mapsetting.setBackgroundResource(R.drawable.addfriend);
-                        mapsetting.setVisibility(View.VISIBLE);
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_FRIEND_SEARCH_BY_NAME)) {
+                        if (mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING,NetworkUtil.IS_FRIEND).equals("true")) {
+                            mapsetting.setVisibility(View.INVISIBLE);
+                            mapsetting.setEnabled(false);
+                            mapsetting.setBackgroundResource(R.drawable.addfriend);
+                            mapsetting.setVisibility(View.VISIBLE);
+                        }
+                    }else{
+                        // toast
+                        text_toast.setText("다시 시도해주세요.");
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
                     }
                 }catch (JSONException ex){
-                    Log.e("제이손","에러");
+                    Log.e(TAG,"제이손 에러");
                 }
 
             }
