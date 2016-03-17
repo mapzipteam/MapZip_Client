@@ -39,4 +39,8 @@
         </android.support.percent.PercentRelativeLayout>
     </RelativeLayout>
 
+    <include
+        android:id="@+id/map_infos_bottomsheet"
+        layout="@layout/layout_detailreview" />
+
 </android.support.design.widget.CoordinatorLayout>
