@@ -138,20 +138,19 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
     }
 
     /**
-     * @param objects : 마커를 생성할 장소들에대한 데이터들
+     * @param datas : 마커를 생성할 장소들에대한 데이터들
      * @see InfosListFragment
      * 장소들에 대한 데이터를 리스트형태로 가져와서 오버레이 아이템(마커)을 생성하고 출력합니다.
      * 이 함수는 InfosListFragment 에서 호출됩니다.
      * @since 2016. 3. 3
      */
     @Override
-    public void showLocationMarker(List<Object> objects) {
-        NMapPOIdata poiData = new NMapPOIdata(objects.size(), mMapViewerResourceProvider);
+    public void showLocationMarker(List<ReviewData> datas) {
+        NMapPOIdata poiData = new NMapPOIdata(datas.size(), mMapViewerResourceProvider);
 
-        poiData.beginPOIdata(objects.size());
-        for (Object object : objects) {
-            ReviewData locationInfo = (ReviewData) object;
-            poiData.addPOIitem(locationInfo.getLocationLatLng().getLatitude(), locationInfo.getLocationLatLng().getLongitude(), locationInfo.getLocationName(), NMapPOIflagType.PIN, locationInfo.getLocationID());
+        poiData.beginPOIdata(datas.size());
+        for (ReviewData data : datas) {
+            poiData.addPOIitem(data.getLocationLatLng().getLatitude(), data.getLocationLatLng().getLongitude(), data.getLocationName(), NMapPOIflagType.PIN, data.getLocationID());
         }
         poiData.endPOIdata();
 
@@ -160,17 +159,17 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
     }
 
     @Override
-    public void showDetailReview(ReviewData locationData) {
+    public void showDetailReview(ReviewData data) {
         mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         setLayoutColor();
-        mNameText.setText(locationData.getLocationName());
-        mTagsText.setText(locationData.getTags());
-        mGoodReviewText.setText(locationData.getGoodReview());
-        mBadReviewText.setText(locationData.getBadReview());
-        mCustomReviewText.setText(locationData.getCustumReview());
-        mAddressText.setText(locationData.getLocationAddress());
-        mContactText.setText(locationData.getContact());
+        mNameText.setText(data.getLocationName());
+        mTagsText.setText(data.getTags());
+        mGoodReviewText.setText(data.getGoodReview());
+        mBadReviewText.setText(data.getBadReview());
+        mCustomReviewText.setText(data.getCustumReview());
+        mAddressText.setText(data.getLocationAddress());
+        mContactText.setText(data.getContact());
     }
 
     private void setLayoutColor() {

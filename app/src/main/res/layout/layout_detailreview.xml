@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="100dp"
         android:layout_below="@id/detailreview_image"
-        android:background="#26A69A"
+        android:background="@color/colorPrimary"
         android:gravity="center_vertical"
         android:padding="16dp">
 
@@ -51,7 +51,7 @@
 
         <TextView
             android:id="@+id/detailreview_goodreview"
-            style="@style/DetailReviewContentsRow"
+            style="@style/DetailReviewContentsItemStyle"
             android:drawableLeft="@drawable/ic_mood_24px"
             android:drawableStart="@drawable/ic_mood_24px"
             android:text="분위기가 좋은것이 장점이에요."
@@ -64,7 +64,7 @@
 
         <TextView
             android:id="@+id/detailreview_badreview"
-            style="@style/DetailReviewContentsRow"
+            style="@style/DetailReviewContentsItemStyle"
             android:layout_below="@id/detailreview_goodreview"
             android:drawableLeft="@drawable/ic_mood_bad_24px"
             android:drawableStart="@drawable/ic_mood_bad_24px"
@@ -78,7 +78,7 @@
 
         <TextView
             android:id="@+id/detailreview_customreview"
-            style="@style/DetailReviewContentsRow"
+            style="@style/DetailReviewContentsItemStyle"
             android:layout_below="@id/detailreview_badreview"
             android:drawableLeft="@drawable/ic_stars_24px"
             android:drawableStart="@drawable/ic_stars_24px"
@@ -92,7 +92,7 @@
 
         <TextView
             android:id="@+id/detailreview_address"
-            style="@style/DetailReviewContentsRow"
+            style="@style/DetailReviewContentsItemStyle"
             android:layout_below="@id/detailreview_customreview"
             android:drawableLeft="@drawable/ic_place_24px"
             android:drawableStart="@drawable/ic_place_24px"
@@ -106,7 +106,7 @@
 
         <TextView
             android:id="@+id/detailreview_contact"
-            style="@style/DetailReviewContentsRow"
+            style="@style/DetailReviewContentsItemStyle"
             android:layout_below="@id/detailreview_address"
             android:drawableLeft="@drawable/ic_contact_phone_24px"
             android:drawableStart="@drawable/ic_contact_phone_24px"

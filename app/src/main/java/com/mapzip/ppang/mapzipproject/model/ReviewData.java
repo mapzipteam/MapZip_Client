@@ -7,7 +7,7 @@ import com.nhn.android.maps.maplib.NGeoPoint;
 /**
  * Created by acekim on 16. 2. 25.
  */
-public class LocationInfo {
+public class ReviewData {
     private int locationID;
     @Nullable
     private String locationName;
@@ -26,7 +26,7 @@ public class LocationInfo {
     @Nullable
     private String contact;
 
-    public LocationInfo(int locationID, String locationName, String locationAddress, NGeoPoint locationLatLng, String tags, String goodReview, String badReview, String custumReview, String contact) {
+    public ReviewData(int locationID, String locationName, String locationAddress, NGeoPoint locationLatLng, String tags, String goodReview, String badReview, String custumReview, String contact) {
         this.locationID = locationID;
         this.locationName = locationName;
         this.locationAddress = locationAddress;

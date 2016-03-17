@@ -20,7 +20,7 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
 
     private MapInfosContract.View.Activity mInfosActivity;
     private MapInfosContract.View.InfosList mInfosFragment;
-    private List dummyDatas;
+    private List<ReviewData> dummyDatas;
 
     public MapInfosPresenter(@NonNull MapInfosContract.View.Activity infosActivity) {
         mInfosActivity = checkNotNull(infosActivity, "InfosActivity cannot be null!!");
@@ -32,9 +32,9 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
     }
 
     @Override
-    public void setUpLocationMarkers(List<Object> locationInfos) {
+    public void setUpLocationMarkers(List<ReviewData> datas) {
 
-        mInfosActivity.showLocationMarker(locationInfos);
+        mInfosActivity.showLocationMarker(datas);
     }
 
     @Override
@@ -57,7 +57,7 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
 
     @Override
     public void openUserReview() {
-        ReviewData data = (ReviewData) dummyDatas.get(0);
+        ReviewData data = dummyDatas.get(0);
         mInfosActivity.showDetailReview(data);
     }
 }

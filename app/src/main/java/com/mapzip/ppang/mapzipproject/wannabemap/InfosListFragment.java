@@ -48,7 +48,7 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mInfosAdapter = new InfosAdapter(new ArrayList<Object>(0), mItemListener);
+        mInfosAdapter = new InfosAdapter(new ArrayList<ReviewData>(0), mItemListener);
     }
 
     @Override
@@ -81,20 +81,20 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     }
 
     @Override
-    public void showLocationInfos(List<Object> infos) {
-        mInfosAdapter.replaceData(infos);
-        mActionsListener.setUpLocationMarkers(infos);
+    public void showLocationInfos(List<ReviewData> datas) {
+        mInfosAdapter.replaceData(datas);
+        mActionsListener.setUpLocationMarkers(datas);
     }
 
     private class InfosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int ITEM_LOCATION_INFORMATION = 0;
 
-        private List<Object> mInfos;
+        private List<ReviewData> mDatas;
         private InfoItemListener mItemListener;
 
-        public InfosAdapter(List<Object> infos, InfoItemListener itemListener) {
-            setList(infos);
+        public InfosAdapter(List<ReviewData> datas, InfoItemListener itemListener) {
+            setList(datas);
             mItemListener = itemListener;
         }
 
@@ -120,11 +120,10 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
 
         @Override
         public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
-            Object object = mInfos.get(position);
             switch (holder.getItemViewType()) {
                 case ITEM_LOCATION_INFORMATION:
 
-                    ReviewData info = (ReviewData) object;
+                    ReviewData info = mDatas.get(position);
 
                     LocationInfoViewHolder locationInfoViewHolder = (LocationInfoViewHolder) holder;
                     locationInfoViewHolder.nameText.setText(info.getLocationName());
@@ -134,18 +133,18 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
             }
         }
 
-        public void replaceData(List<Object> infos) {
-            setList(infos);
+        public void replaceData(List<ReviewData> datas) {
+            setList(datas);
             notifyDataSetChanged();
         }
 
-        private void setList(List<Object> infos) {
-            mInfos = checkNotNull(infos);
+        private void setList(List<ReviewData> datas) {
+            mDatas = checkNotNull(datas);
         }
 
         @Override
         public int getItemViewType(int position) {
-            if (mInfos.get(position).getClass().equals(ReviewData.class)) {
+            if (mDatas.get(position).getClass().equals(ReviewData.class)) {
                 return ITEM_LOCATION_INFORMATION;
             }
             return -1;
@@ -153,11 +152,11 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
 
         @Override
         public int getItemCount() {
-            return mInfos.size();
+            return mDatas.size();
         }
 
         public Object getItem(int position) {
-            return mInfos.get(position);
+            return mDatas.get(position);
         }
 
         public class LocationInfoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {

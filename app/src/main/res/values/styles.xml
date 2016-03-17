@@ -47,7 +47,7 @@
         <attr name="textview_wrapcontent_movesiblings" format="boolean" />
     </declare-styleable>
 
-    <style name="DetailReviewContentsRow">
+    <style name="DetailReviewContentsItemStyle">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">56dp</item>
         <item name="android:paddingLeft">16dp</item>

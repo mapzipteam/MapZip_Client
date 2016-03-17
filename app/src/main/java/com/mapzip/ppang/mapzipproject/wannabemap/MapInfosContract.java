@@ -15,20 +15,20 @@ public interface MapInfosContract {
 
     interface View {
         interface Activity {
-            void showLocationMarker(List<Object> locationInfos);
+            void showLocationMarker(List<ReviewData> datas);
 
-            void showDetailReview(ReviewData locationinfo);
+            void showDetailReview(ReviewData data);
         }
 
         interface InfosList {
-            void showLocationInfos(List<Object> locationInfos);
+            void showLocationInfos(List<ReviewData> datas);
         }
     }
 
     interface UserActionListener {
         void setInfosListFragment(MapInfosContract.View.InfosList fragment);
 
-        void setUpLocationMarkers(List<Object> locationInfos);
+        void setUpLocationMarkers(List<ReviewData> datas);
 
         void loadLocationInfos(boolean forceUpdate);
 
