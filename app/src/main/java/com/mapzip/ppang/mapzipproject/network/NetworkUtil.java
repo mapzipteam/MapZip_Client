@@ -47,6 +47,7 @@ public class NetworkUtil {
     public static final String REVIEW_DATA_NEGATIVE_TEXT = "negative_text";
     public static final String REVIEW_DATA_IMAGE_STRING = "image_string";
     public static final String REVIEW_DATA_IMAGE_NAME = "image_name";
+    public static final String REVIEW_DETAIL = "map_detail";
 
     public static final int TYPE_WIFI = 1;
     public static final int TYPE_MOBILE = 2;

@@ -29,7 +29,11 @@ import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.activity.ReviewActivity;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapOverlay;
@@ -319,10 +323,10 @@ public class MapActivity extends NMapActivity {
 
                 for (arrnum = 0; arrnum < jarr.length(); arrnum++) {
 
-                    double store_x = Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_x"));
-                    double store_y = Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_y"));
-                    String store_name = jarr.getJSONObject(arrnum).getString("store_name");
-                    int store_id = Integer.parseInt(jarr.getJSONObject(arrnum).getString("store_id"));
+                    double store_x = Double.parseDouble(jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_STORE_X));
+                    double store_y = Double.parseDouble(jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_STORE_Y));
+                    String store_name = jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_STORE_NAME);
+                    int store_id = Integer.parseInt(jarr.getJSONObject(arrnum).getString(NetworkUtil.STORE_ID));
 
                     //NMapPOIitem addPOIitem(NGeoPoint point, String title, int markerId, Object tag, int id)
                     /*POI 아이템을 추가한다. 아이템이 표시될 좌표와 마커 Id는 필수 인자이며, title을 null로 전달하면 마커 선택 시 말풍선이 표시되지 않는다.
@@ -351,10 +355,10 @@ public class MapActivity extends NMapActivity {
                 int arrnum = 0;
                 for (arrnum = 0; arrnum < jarr.length(); arrnum++) {
 
-                    double store_x = Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_x"));
-                    double store_y = Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_y"));
-                    String store_name = jarr.getJSONObject(arrnum).getString("store_name");
-                    int store_id = Integer.parseInt(jarr.getJSONObject(arrnum).getString("store_id"));
+                    double store_x = Double.parseDouble(jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_STORE_X));
+                    double store_y = Double.parseDouble(jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_STORE_Y));
+                    String store_name = jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_STORE_NAME);
+                    int store_id = Integer.parseInt(jarr.getJSONObject(arrnum).getString(NetworkUtil.STORE_ID));
 
                     //NMapPOIitem addPOIitem(NGeoPoint point, String title, int markerId, Object tag, int id)
                     /*POI 아이템을 추가한다. 아이템이 표시될 좌표와 마커 Id는 필수 인자이며, title을 null로 전달하면 마커 선택 시 말풍선이 표시되지 않는다.
@@ -455,27 +459,22 @@ public class MapActivity extends NMapActivity {
     public void GetMapDetail(int poiid) {
 
         RequestQueue queue = MyVolley.getInstance(getApplicationContext()).getRequestQueue();
-
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
+            builder = new MapzipRequestBuilder();
             if ((getIntent().getStringExtra("fragment_id").equals("home")))
-                obj.put("userid", user.getUserID());
+                builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
             else if ((getIntent().getStringExtra("fragment_id").equals("friend_home")))
-                obj.put("userid", fuser.getUserID());
-            obj.put("store_id", poiid);
-
-            if (DEBUG) {
-                Log.v(LOG_TAG + "Map제이손보내기", obj.toString());
-            }
+                builder.setCustomAttribute(NetworkUtil.USER_ID, fuser.getUserID());
+            builder.setCustomAttribute(NetworkUtil.STORE_ID, poiid);
+            builder.showInside();
         } catch (JSONException e) {
-            if (DEBUG) {
-                Log.v(LOG_TAG + "제이손", "에러");
-            }
+            e.printStackTrace();
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_MAPTOREVIEW_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener(),
                 createMyReqErrorListener()) {
         };
@@ -486,24 +485,19 @@ public class MapActivity extends NMapActivity {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
-                    Log.v("MapDetail",response.toString());
                 try {
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_DETAIL)) {
+                        JSONArray reviewDetail = mapzipResponse.getFieldsJSONArray(NetworkUtil.REVIEW_DETAIL);
+                        JSONObject reviewDetailObj = reviewDetail.getJSONObject(0);
 
-                    if (response.getString("state").equals("702")) {
-
-                        JSONArray jarr = response.getJSONArray("map_detail");
-                        JSONObject obj = jarr.getJSONObject(0);
-
-                        if ((getIntent().getStringExtra("fragment_id").equals("home")))
-                        {
+                        if ((getIntent().getStringExtra("fragment_id").equals("home"))) {
                             user.initReviewData();
-                            user.setReviewData(obj.getString("store_id"), obj.getString("map_id"), obj.getString("store_contact"), obj.getString("review_text"), obj.getString("review_emotion"), obj.getString("store_address"), obj.getString("store_name"), obj.getString("gu_num"), obj.getString("image_num"),obj.getString("positive_text"), obj.getString("negative_text"));
-                        }
-                        else if ((getIntent().getStringExtra("fragment_id").equals("friend_home")))
-                        {
+                            user.setReviewData(reviewDetailObj.getString(NetworkUtil.STORE_ID), reviewDetailObj.getString(NetworkUtil.MAP_ID), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_CONTACT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_EMOTION), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_ADDRESS), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_NAME), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_GU_NUM), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_IMAGE_NUM), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_POSITIVE_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_NEGATIVE_TEXT));
+                        } else if ((getIntent().getStringExtra("fragment_id").equals("friend_home"))) {
                             fuser.initReviewData();
-                            fuser.setReviewData(obj.getString("store_id"), obj.getString("map_id"), obj.getString("store_contact"), obj.getString("review_text"), obj.getString("review_emotion"), obj.getString("store_address"), obj.getString("store_name"), obj.getString("positive_text"), obj.getString("negative_text"));
+                            fuser.setReviewData(reviewDetailObj.getString(NetworkUtil.STORE_ID), reviewDetailObj.getString(NetworkUtil.MAP_ID), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_CONTACT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_EMOTION), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_ADDRESS), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_NAME), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_POSITIVE_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_NEGATIVE_TEXT));
                         }
 
                         // get default image
@@ -522,7 +516,7 @@ public class MapActivity extends NMapActivity {
                             user.inputGalImages(bitarrfornone);
                         }
 
-                        image_num = Integer.parseInt(obj.getString("image_num"));
+                        image_num = Integer.parseInt(reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_IMAGE_NUM));
 
                         // if image exist, get & set Image
                         if (image_num != 0) {
@@ -542,7 +536,7 @@ public class MapActivity extends NMapActivity {
 
                                 if (getIntent().getStringExtra("fragment_id").equals("friend_home")) {
 
-                                    imageLoad(i, SystemMain.SERVER_ROOT_URL + "/client_data/client_" + fuser.getUserID() + "/store_" +fuser.getReviewData().getStore_id() + "/image" + String.valueOf(i) + ".jpg");
+                                    imageLoad(i, SystemMain.SERVER_ROOT_URL + "/client_data/client_" + fuser.getUserID() + "/store_" + fuser.getReviewData().getStore_id() + "/image" + String.valueOf(i) + ".jpg");
                                 } else {
 
                                     String url = SystemMain.SERVER_ROOT_URL + "/client_data/client_" + user.getUserID() + "/store_" + user.getReviewData().getStore_id() + "/image" + String.valueOf(i) + ".jpg";

@@ -36,6 +36,7 @@ public class SplashActivity extends Activity {
 
     private BroadcastReceiver mRegistrationBroadcastReceiver;
 
+    private ImageView splashText;
     private ImageView StartImage_ma;
     private ImageView StartImage_flag1;
     private ImageView StartImage_zi;
@@ -57,6 +58,11 @@ public class SplashActivity extends Activity {
 
         userdata = UserData.getInstance();
 
+        splashText = (ImageView) findViewById(R.id.splash_text);
+        start_text_ani = AnimationUtils.loadAnimation(this, R.anim.start_alpha);
+        splashText.startAnimation(start_text_ani);
+
+        /*
         StartImage_ma = (ImageView)findViewById(R.id.start_ma_image);
         StartImage_flag1 = (ImageView)findViewById(R.id.start_flag1_image);
         StartImage_zi = (ImageView)findViewById(R.id.start_zi_image);
@@ -68,7 +74,7 @@ public class SplashActivity extends Activity {
         StartImage_flag1.startAnimation(start_flag_ani_1);
         StartImage_zi.startAnimation(start_text_ani);
         StartImage_flag2.startAnimation(start_flag_ani_2);
-
+*/
         is_network_check = false;
 
         checkNetworkState();

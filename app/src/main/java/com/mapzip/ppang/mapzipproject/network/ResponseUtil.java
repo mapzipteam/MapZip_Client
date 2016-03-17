@@ -25,4 +25,5 @@ public class ResponseUtil {
     public final static int PROCESS_REVIEW_UPDATE = 18;
     public final static int PROCESS_REVIEW_MAKE_IMG_DIR = 19;
     public final static int PROCESS_REVIEW_IMAGE_SEND = 20;
+    public final static int PROCESS_REVIEW_DETAIL = 21;
 }

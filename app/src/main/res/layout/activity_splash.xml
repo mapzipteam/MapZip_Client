@@ -4,7 +4,7 @@
 
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/mainOrange"
+    android:background="@drawable/splashbg"
     tools:context="com.mapzip.ppang.mapzipproject.main.SplashActivity">
 
     <RelativeLayout
@@ -14,31 +14,12 @@
         android:layout_marginRight="15dp">
 
         <ImageView
-            android:id="@+id/start_ma_image"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/loading_ma"/>
-        <ImageView
-            android:id="@+id/start_flag1_image"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_alignParentTop="true"
-            android:layout_toRightOf="@id/start_ma_image"
-            android:src="@drawable/loading_p"/>
-        <ImageView
-            android:id="@+id/start_zi_image"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@id/start_flag1_image"
-            android:src="@drawable/loading_zi"/>
-        <ImageView
-            android:id="@+id/start_flag2_image"
-            android:layout_width="90dp"
-            android:layout_height="90dp"
-            android:layout_toRightOf="@id/start_zi_image"
-            android:src="@drawable/loading_p"/>
+            android:id="@+id/splash_text"
+            android:layout_width="250dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="100dp"
+            android:layout_centerHorizontal="true"
+            android:src ="@drawable/splashtxt"/>
 
     </RelativeLayout>
 

@@ -209,6 +209,12 @@ public class MapzipResponse{
                     } else {
                         return false;
                     }
+                case ResponseUtil.PROCESS_REVIEW_DETAIL:
+                    if (mFields.getInt("state") == SystemMain.CLIENT_REVIEW_DETAIL_DOWN_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 default:
                     MapzipApplication.doLogging(TAG, "getState default logic..");
             }
