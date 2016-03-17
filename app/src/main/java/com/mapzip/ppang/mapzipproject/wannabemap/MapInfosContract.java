@@ -14,6 +14,7 @@ public interface MapInfosContract {
     interface View {
         interface Activity {
             void showLocationMarker(List<Object> locationInfos);
+            void showDetailReview();
         }
 
         interface InfosList {

@@ -4,6 +4,7 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.BottomSheetDialog;
 import android.support.v7.app.AppCompatCallback;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.view.ActionMode;
@@ -97,7 +98,6 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
     public void showLocationMarker(List<Object> objects) {
         NMapPOIdata poiData = new NMapPOIdata(objects.size(), mMapViewerResourceProvider);
 
-
         poiData.beginPOIdata(objects.size());
         for (Object object : objects) {
             LocationInfo locationInfo = (LocationInfo) object;
@@ -107,6 +107,13 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
 
         mPoiDataOverlay = mMapOverlayManager.createPOIdataOverlay(poiData, null);
         mPoiDataOverlay.showAllPOIdata(0);
+    }
+
+    @Override
+    public void showDetailReview() {
+        BottomSheetDialog dialog = new BottomSheetDialog(this);
+        dialog.setContentView(R.layout.layout_detailreview);
+        dialog.show();
     }
 
     public MapInfosContract.UserActionListener getActionsListener() {

@@ -58,6 +58,6 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
     @Override
     public void openUserReview(@NonNull View view) {
         checkNotNull(view, "requestedInfo cannot be null!");
-        mInfosFragment.showUserReview(view);
+        mInfosActivity.showDetailReview();
     }
 }
