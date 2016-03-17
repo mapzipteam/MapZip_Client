@@ -2,24 +2,32 @@ package com.mapzip.ppang.mapzipproject.wannabemap;
 
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
-import android.support.design.widget.BottomSheetDialog;
 import android.support.design.widget.CoordinatorLayout;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatCallback;
 import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.graphics.Palette;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.map.NMapPOIflagType;
 import com.mapzip.ppang.mapzipproject.map.NMapViewerResourceProvider;
 import com.mapzip.ppang.mapzipproject.model.LocationInfo;
 import com.nhn.android.maps.NMapActivity;
-import com.nhn.android.maps.NMapController;
 import com.nhn.android.maps.NMapView;
 import com.nhn.android.maps.maplib.NGeoPoint;
 import com.nhn.android.maps.nmapmodel.NMapError;
@@ -38,12 +46,36 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
     private FragmentTransaction mFragmentTransaction;
 
     private NMapView mMapView;
-    private NMapController mMapController;
     private NMapViewerResourceProvider mMapViewerResourceProvider;
     private NMapOverlayManager mMapOverlayManager;
     private NMapPOIdataOverlay mPoiDataOverlay;
 
+    private BottomSheetBehavior mBehavior;
+    private ImageView mUpImage;
+    private RelativeLayout mNameTagLayout;
+    private TextView mNameText;
+    private TextView mTagsText;
+    private TextView mGoodReviewText;
+    private TextView mBadReviewText;
+    private TextView mCustomReviewText;
+    private TextView mAddressText;
+    private TextView mContactText;
+    private FloatingActionButton mDeleteFab;
+
     private MapInfosContract.UserActionListener mActionsListener;
+
+    private Palette.PaletteAsyncListener paletteAsyncListener = new Palette.PaletteAsyncListener() {
+        @Override
+        public void onGenerated(Palette palette) {
+            mNameTagLayout.setBackgroundColor(palette.getMutedColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary)));
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +92,30 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
         initToolbar();
         initNaverMap();
         initInfosFragment();
+        initDetailReview();
+    }
+
+    private void initDetailReview() {
+        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.map_infos_coordinatorlayout);
+        View bottomsheet = coordinatorLayout.findViewById(R.id.map_infos_bottomsheet);
+        mBehavior = BottomSheetBehavior.from(bottomsheet);
+
+        mUpImage = (ImageView) findViewById(R.id.detailreview_image);
+        mNameTagLayout = (RelativeLayout) findViewById(R.id.detailreview_name_tag_space);
+        mNameText = (TextView) findViewById(R.id.detailreview_name);
+        mTagsText = (TextView) findViewById(R.id.detailreview_tags);
+        mGoodReviewText = (TextView) findViewById(R.id.detailreview_goodreview);
+        mBadReviewText = (TextView) findViewById(R.id.detailreview_badreview);
+        mCustomReviewText = (TextView) findViewById(R.id.detailreview_customreview);
+        mAddressText = (TextView) findViewById(R.id.detailreview_address);
+        mContactText = (TextView) findViewById(R.id.detailreview_contact);
+        mDeleteFab = (FloatingActionButton) findViewById(R.id.detailreview_delete_button);
+        findViewById(R.id.detailreview_exit_button).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+            }
+        });
     }
 
     private void initInfosFragment() {
@@ -85,7 +141,7 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
         mMapView.setOnMapViewTouchEventListener(onMapViewTouchEventListener);
         mMapView.setOnMapStateChangeListener(onMapStateChangeListener);
 
-        mMapController = mMapView.getMapController();
+        mMapView.getMapController();
         mMapViewerResourceProvider = new NMapViewerResourceProvider(this);
         mMapOverlayManager = new NMapOverlayManager(this, mMapView, mMapViewerResourceProvider);
     }
@@ -113,11 +169,25 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
     }
 
     @Override
-    public void showDetailReview() {
-        CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.map_infos_coordinatorlayout);
-        View bottomsheet = coordinatorLayout.findViewById(R.id.map_infos_bottomsheet);
-        BottomSheetBehavior behavior = BottomSheetBehavior.from(bottomsheet);
-        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    public void showDetailReview(LocationInfo locationData) {
+        mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        setLayoutColor();
+        mNameText.setText(locationData.getLocationName());
+        mTagsText.setText(locationData.getTags());
+        mGoodReviewText.setText(locationData.getGoodReview());
+        mBadReviewText.setText(locationData.getBadReview());
+        mCustomReviewText.setText(locationData.getCustumReview());
+        mAddressText.setText(locationData.getLocationAddress());
+        mContactText.setText(locationData.getContact());
+    }
+
+    private void setLayoutColor() {
+        mUpImage.buildDrawingCache();
+        Bitmap bitmap = mUpImage.getDrawingCache();
+        if (bitmap != null && !bitmap.isRecycled()) {
+            Palette.from(bitmap).generate(paletteAsyncListener);
+        }
     }
 
     public MapInfosContract.UserActionListener getActionsListener() {

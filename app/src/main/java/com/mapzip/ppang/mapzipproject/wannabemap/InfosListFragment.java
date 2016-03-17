@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,7 +35,7 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     InfoItemListener mItemListener = new InfoItemListener() {
         @Override
         public void onInfoClick(View view) {
-            mActionsListener.openUserReview(view);
+            mActionsListener.openUserReview();
         }
     };
 
@@ -85,10 +86,6 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     public void showLocationInfos(List<Object> infos) {
         mInfosAdapter.replaceData(infos);
         mActionsListener.setUpLocationMarkers(infos);
-    }
-
-    @Override
-    public void showUserReview(View view) {
     }
 
     private class InfosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

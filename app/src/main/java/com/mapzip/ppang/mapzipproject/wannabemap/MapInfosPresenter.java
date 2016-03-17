@@ -4,6 +4,7 @@ import android.support.annotation.NonNull;
 import android.view.View;
 
 import com.mapzip.ppang.mapzipproject.model.LocationInfo;
+import com.mapzip.ppang.mapzipproject.model.ReviewData;
 import com.nhn.android.maps.maplib.NGeoPoint;
 
 import java.util.ArrayList;
@@ -21,6 +22,7 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
 
     private MapInfosContract.View.Activity mInfosActivity;
     private MapInfosContract.View.InfosList mInfosFragment;
+    private List dummyDatas;
 
     public MapInfosPresenter(@NonNull MapInfosContract.View.Activity infosActivity) {
         mInfosActivity = checkNotNull(infosActivity, "InfosActivity cannot be null!!");
@@ -41,23 +43,23 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
     public void loadLocationInfos(boolean forceUpdate) {
         //EspressoIdlingResource.increment(); // App is busy until further notice
 
-        List<Object> dummyDatas = new ArrayList<>(3);
-        dummyDatas.add(new LocationInfo(0, "상도곱창", "서울특별시 동작구 상도동 127-7", new NGeoPoint(37.496815, 126.953565)));
-        dummyDatas.add(new LocationInfo(1, "현선이네", "서울특별시 동작구 상도동 128-7", new NGeoPoint(37.495183, 126.956716)));
-        dummyDatas.add(new LocationInfo(2, "피자헤븐", "서울특별시 동작구 상도동 125-7", new NGeoPoint(37.494955, 126.958133)));
-        dummyDatas.add(new LocationInfo(3, "상도곱창", "서울특별시 동작구 상도동 127-7", new NGeoPoint(37.496815, 126.953565)));
-        dummyDatas.add(new LocationInfo(4, "현선이네", "서울특별시 동작구 상도동 128-7", new NGeoPoint(37.495183, 126.956716)));
-        dummyDatas.add(new LocationInfo(5, "피자헤븐", "서울특별시 동작구 상도동 125-7", new NGeoPoint(37.494955, 126.958133)));
-        dummyDatas.add(new LocationInfo(6, "상도곱창", "서울특별시 동작구 상도동 127-7", new NGeoPoint(37.496815, 126.953565)));
-        dummyDatas.add(new LocationInfo(7, "현선이네", "서울특별시 동작구 상도동 128-7", new NGeoPoint(37.495183, 126.956716)));
-        dummyDatas.add(new LocationInfo(8, "피자헤븐", "서울특별시 동작구 상도동 125-7", new NGeoPoint(37.494955, 126.958133)));
+        dummyDatas = new ArrayList<>();
+        dummyDatas.add(new LocationInfo(0, "상도곱창", "서울특별시 동작구 상도동 127-7", new NGeoPoint(37.496815, 126.953565), "#음식점 #좋은장소", "아주 좋아요", "분위기가 별로에요", "다시 가고 싶진 않을듯", "010-2343-2323"));
+        dummyDatas.add(new LocationInfo(1, "현선이네", "서울특별시 동작구 상도동 128-7", new NGeoPoint(37.495183, 126.956716), "#음식점 #좋은장소", "아주 좋아요", "분위기가 별로에요", "다시 가고 싶진 않을듯", "010-2343-2323"));
+        dummyDatas.add(new LocationInfo(2, "피자헤븐", "서울특별시 동작구 상도동 125-7", new NGeoPoint(37.494955, 126.958133), "#음식점 #좋은장소", "아주 좋아요", "분위기가 별로에요", "다시 가고 싶진 않을듯", "010-2343-2323"));
+        dummyDatas.add(new LocationInfo(3, "상도곱창", "서울특별시 동작구 상도동 127-7", new NGeoPoint(37.496815, 126.953565), "#음식점 #좋은장소", "아주 좋아요", "분위기가 별로에요", "다시 가고 싶진 않을듯", "010-2343-2323"));
+        dummyDatas.add(new LocationInfo(4, "현선이네", "서울특별시 동작구 상도동 128-7", new NGeoPoint(37.495183, 126.956716), "#음식점 #좋은장소", "아주 좋아요", "분위기가 별로에요", "다시 가고 싶진 않을듯", "010-2343-2323"));
+        dummyDatas.add(new LocationInfo(5, "피자헤븐", "서울특별시 동작구 상도동 125-7", new NGeoPoint(37.494955, 126.958133), "#음식점 #좋은장소", "아주 좋아요", "분위기가 별로에요", "다시 가고 싶진 않을듯", "010-2343-2323"));
+        dummyDatas.add(new LocationInfo(6, "상도곱창", "서울특별시 동작구 상도동 127-7", new NGeoPoint(37.496815, 126.953565), "#음식점 #좋은장소", "아주 좋아요", "분위기가 별로에요", "다시 가고 싶진 않을듯", "010-2343-2323"));
+        dummyDatas.add(new LocationInfo(7, "현선이네", "서울특별시 동작구 상도동 128-7", new NGeoPoint(37.495183, 126.956716), "#음식점 #좋은장소", "아주 좋아요", "분위기가 별로에요", "다시 가고 싶진 않을듯", "010-2343-2323"));
+        dummyDatas.add(new LocationInfo(8, "피자헤븐", "서울특별시 동작구 상도동 125-7", new NGeoPoint(37.494955, 126.958133), "#음식점 #좋은장소", "아주 좋아요", "분위기가 별로에요", "다시 가고 싶진 않을듯", "010-2343-2323"));
 
         mInfosFragment.showLocationInfos(dummyDatas);
     }
 
     @Override
-    public void openUserReview(@NonNull View view) {
-        checkNotNull(view, "requestedInfo cannot be null!");
-        mInfosActivity.showDetailReview();
+    public void openUserReview() {
+        LocationInfo data = (LocationInfo) dummyDatas.get(0);
+        mInfosActivity.showDetailReview(data);
     }
 }
