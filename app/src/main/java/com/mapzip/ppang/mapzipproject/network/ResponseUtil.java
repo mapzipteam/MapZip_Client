@@ -17,4 +17,7 @@ public class ResponseUtil {
     public final static int PROCESS_SETTING_NOTICE = 10;
     public final static int PROCESS_FRIEND_SEARCH_BY_NAME = 11;
     public final static int PROCESS_FRIEND_ADD = 12;
+    public final static int PROCESS_MAP_SETTING = 13;
+    public final static int PROCESS_MAP_RESET = 14;
+    public final static int PROCESS_SUGGEST = 15;
 }

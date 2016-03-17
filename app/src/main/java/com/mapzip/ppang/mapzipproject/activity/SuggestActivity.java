@@ -2,9 +2,6 @@ package com.mapzip.ppang.mapzipproject.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.content.Context;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +21,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -35,6 +36,7 @@ import java.util.ArrayList;
  * Created by ppangg on 2015-12-29.
  */
 public class SuggestActivity extends Activity {
+    private final String TAG = "SuggestActivity";
 
     // userData
     public UserData user;
@@ -45,7 +47,6 @@ public class SuggestActivity extends Activity {
 
     // suggest catecory
     private Spinner sugspinner;
-    private ArrayList<String> sugsppinerList;
     private ArrayAdapter sugadapter;
 
     // suggest contents
@@ -108,38 +109,22 @@ public class SuggestActivity extends Activity {
             return;
         }
 
-        ConnectivityManager manager = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo mobile = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-        NetworkInfo wifi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-        if(!(mobile.isConnected() || wifi.isConnected()))
-        {
-            // toast
-            text_toast.setText("인터넷 연결이 필요합니다.");
-            Toast toast = new Toast(getApplicationContext());
-            toast.setDuration(Toast.LENGTH_LONG);
-            toast.setView(layout_toast);
-            toast.show();
-
-            return;
-        }
-
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
-
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            obj.put("userid", user.getUserID());
-            obj.put("username", user.getUserName());
-            obj.put("category",sugspinner.getSelectedItem());
-            obj.put("contents",contents.getText().toString());
-            Log.v("제이손 보내기", obj.toString());
+            builder = new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+            builder.setCustomAttribute(NetworkUtil.USER_NAME, user.getUserName());
+            builder.setCustomAttribute(NetworkUtil.CATEGORY, sugspinner.getSelectedItem());
+            builder.setCustomAttribute(NetworkUtil.CONTENTS, contents.getText().toString());
+            builder.showInside();
         } catch (JSONException e) {
-            Log.v("제이손", "에러");
+            Log.e(TAG, "제이손 에러");
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_SUGGEST_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener(),
                 createMyReqErrorListener());
 
@@ -153,7 +138,9 @@ public class SuggestActivity extends Activity {
                 Log.v("제이손", response.toString());
 
                 try {
-                    if (response.getInt("state") == SystemMain.USER_SOUND_INSERT_SUCCESS) { // 1001
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_SUGGEST)) { // 1001
                         // toast
                         text_toast.setText(user.getUserName() + "님의 소중한 의견 감사합니다.");
                         Toast toast = new Toast(getApplicationContext());
@@ -162,7 +149,7 @@ public class SuggestActivity extends Activity {
                         toast.show();
 
                         finish();
-                    } else if(response.getInt("state") == SystemMain.USER_SOUND_INSERT_FAIL){ // 1002
+                    } else { // 1002
                         // toast
                         text_toast.setText("전송실패. 다시 시도해주세요.");
                         Toast toast = new Toast(getApplicationContext());
@@ -171,7 +158,7 @@ public class SuggestActivity extends Activity {
                         toast.show();
                     }
                 }catch (JSONException e){
-                    Log.e("제이손","에러");
+                    Log.e(TAG,"제이손 에러");
                 }
             }
         };
@@ -189,9 +176,9 @@ public class SuggestActivity extends Activity {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("SuggestActivity", error.getMessage());
+                    Log.e(TAG, error.getMessage());
                 } catch (NullPointerException ex) {
-                    Log.e("SuggestActivity", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
             }
         };

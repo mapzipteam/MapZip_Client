@@ -60,6 +60,9 @@ public class SystemMain {
     public static final int MAP_SEARCH_NO_MORE = 502;
     public static final int MAP_SEARCH_FAIL = 503;
 
+    public static final int MAP_SETTING_SUCCESS = 511; // 	사용자의 지도가 새로운 내용으로 셋팅 완료
+    public static final int MAP_SETTING_FAIL = 512; // 	사용자의 지도가 새로운 내용으로 셋팅 완료
+
     // state define 600~ : about client_data
     public static final int CLIENT_REVIEW_DATA_ENROLL_SUCCESS = 601; // text data enroll success
     public static final int CLIENT_REVIEW_IMAGE_MKDIR_SUCCESS = 602; // image data dir create success
@@ -68,6 +71,9 @@ public class SystemMain {
     public static final int CLIENT_REVIEW_IMAGE_RMDIR_SUCCESS = 605; // 리뷰 삭제 이미지 데이터 및 디렉토리 삭제 성공
     public static final int CLIENT_REVIEW_IMAGE_RMDIR_NONE	 = 606; // 리뷰 삭제 이미지 디렉토리가 애초에 없음(이미지없음)
     public static final int CLIENT_REVIEW_DATA_UPDATE_SUCCESS = 607; // 리뷰 갱신 텍스트 데이터 갱신 성공
+
+    public static final int CLIENT_MAP_ONE_CLEAR_SUCCESS = 608; // 사용자의 지도 하나를 초기화 성공
+    public static final int CLIENT_MAP_ONE_CLEAR_FAIL = 651; // 사용자의 지도 하나를 초기화 실패
 
     public static final int CLIENT_REVIEW_DATA_ENROLL_FAIL = 611; // text data enroll fail
     public static final int CLIENT_REVIEW_DATA_ENROLL_EXIST = 612; // review is overlapped

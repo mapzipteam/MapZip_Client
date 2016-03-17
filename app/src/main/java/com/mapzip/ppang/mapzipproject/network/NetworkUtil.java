@@ -17,7 +17,7 @@ public class NetworkUtil {
     public static final String MAP_ID = "map_id";
     public static final String GU_ENROLL_NUM = "gu_enroll_num";
     public static final String MAP_TITLE = "title";
-    public static final String MAP_CATEGORY = "category";
+    public static final String CATEGORY = "category";
     public static final String MAP_HASH_TAG = "hash_tag";
     public static final String REVIEW_META = "map_meta"; // review flags data
     public static final String SEARCH_TARGET = "target";
@@ -32,7 +32,7 @@ public class NetworkUtil {
     public static final String TOTAL_REVIEW = "total_review";
     public static final String STATE = "state";
     public static final String NOTICE_VERSION = "version";
-    public static final String NOTICE_CONTENTS = "contents";
+    public static final String CONTENTS = "contents";
 
     public static final int TYPE_WIFI = 1;
     public static final int TYPE_MOBILE = 2;

@@ -265,7 +265,7 @@ public class SettingsFragment extends Fragment {
 
                         noticeString = "버전: " + mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING,NetworkUtil.NOTICE_VERSION)+"\n\n";
 
-                        noticeString += mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING,NetworkUtil.NOTICE_CONTENTS) + "\n\n";
+                        noticeString += mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING,NetworkUtil.CONTENTS) + "\n\n";
                         noticeString += "@이 창은 공지사항탭에서 다시 확인할 수 있습니다.";
 
                         AlertDialog.Builder ab = new AlertDialog.Builder(getActivity());

@@ -18,7 +18,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -246,7 +245,7 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
                     }
 
                     // category select (SEOUL)
-                    if (Integer.parseInt(mapmeta.get(NetworkUtil.MAP_CATEGORY).toString()) == SystemMain.SEOUL_MAP_NUM) {
+                    if (Integer.parseInt(mapmeta.get(NetworkUtil.CATEGORY).toString()) == SystemMain.SEOUL_MAP_NUM) {
                         seoulBtnVisibility("visible", mapid);
                     }
                 } catch (JSONException ex) {

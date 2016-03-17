@@ -219,7 +219,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
                     JSONObject mapmeta = null;
                     mapmeta = user.getMapmetaArray().getJSONObject(position);
                     mapcurname = sppinerList.get(position);
-                    mapkindnum = mapmeta.get(NetworkUtil.MAP_CATEGORY).toString();
+                    mapkindnum = mapmeta.get(NetworkUtil.CATEGORY).toString();
                     mapid = mapmeta.get(NetworkUtil.MAP_ID).toString();
 
                     Bitmap result = user.getResult(Integer.parseInt(mapid));
@@ -255,7 +255,7 @@ public class HomeFragment extends Fragment implements View.OnClickListener {
 
 
                     // category select (SEOUL)
-                    if (Integer.parseInt(mapmeta.get(NetworkUtil.MAP_CATEGORY).toString()) == SystemMain.SEOUL_MAP_NUM) {
+                    if (Integer.parseInt(mapmeta.get(NetworkUtil.CATEGORY).toString()) == SystemMain.SEOUL_MAP_NUM) {
                         seoulBtnVisibility("visible", mapid);
                     }
                 } catch (JSONException ex) {

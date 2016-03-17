@@ -9,10 +9,12 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.Collection;
+
 /**
  * Created by myZZUNG on 2016. 3. 5..
  */
-public class MapzipResponse {
+public class MapzipResponse{
 
     private final String TAG = "MapzipResponse";
 
@@ -85,6 +87,26 @@ public class MapzipResponse {
         }
     }
 
+    public boolean getFieldsBoolean(String name) throws JSONException {
+        return mFields.getBoolean(name);
+    }
+
+    public String getFieldsString(String name) throws JSONException {
+        return mFields.getString(name);
+    }
+
+    public JSONArray getFieldsJSONArray(String name) throws JSONException {
+        return mFields.getJSONArray(name);
+    }
+
+    public JSONObject getFieldsJSONObject(String name) throws JSONException {
+        return mFields.getJSONObject(name);
+    }
+
+    public int getFieldsInt(String name) throws JSONException {
+        return mFields.getInt(name);
+    }
+
     public boolean getState(int process_type) throws JSONException {
         if ((mBuildVersion >= SystemMain.Build.GARNET) && (mBuildVersion < SystemMain.Build.GARNET_END)) {
             switch (process_type) {
@@ -154,6 +176,24 @@ public class MapzipResponse {
                     } else {
                         return false;
                     }
+                case ResponseUtil.PROCESS_MAP_SETTING:
+                    if (mFields.getInt("state") == SystemMain.MAP_SETTING_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case ResponseUtil.PROCESS_MAP_RESET:
+                    if (mFields.getInt("state") == SystemMain.CLIENT_MAP_ONE_CLEAR_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case ResponseUtil.PROCESS_SUGGEST:
+                    if (mFields.getInt("state") == SystemMain.USER_SOUND_INSERT_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 default:
                     MapzipApplication.doLogging(TAG, "getState default logic..");
             }
@@ -162,9 +202,6 @@ public class MapzipResponse {
 
     }
 
-    /*
-        LoginFragment
-     */
     public JSONArray setMapMetaOrder() throws JSONException { // MapMeta 지도 순서 맞추기
         if ((SystemMain.Build.GARNET <= mBuildVersion) && (mBuildVersion < SystemMain.Build.GARNET_END)) {
             int mapCount = mFields.getJSONArray(NetworkUtil.MAP_META_INFO).length(); // 지도 갯수
@@ -211,7 +248,6 @@ public class MapzipResponse {
                             user.setReviewCount(mapnum, gunumber, reviewnum);
                         else
                             fuser.setReviewCount(mapnum, gunumber, reviewnum);
-
                     }
                 } else {
                     for (int gunumber = 1; gunumber <= SystemMain.SeoulGuCount; gunumber++) {

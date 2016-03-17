@@ -3,14 +3,8 @@ package com.mapzip.ppang.mapzipproject.activity;
 import android.app.ActionBar;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.drawable.BitmapDrawable;
-import android.graphics.drawable.Drawable;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -33,14 +26,13 @@ import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
 import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import io.fabric.sdk.android.services.network.NetworkUtils;
 
 /**
  * Created by ppangg on 2015-08-13.
@@ -69,7 +61,7 @@ public class MapSettingActivity extends Activity {
         setContentView(R.layout.activity_mapsetting);
         user = UserData.getInstance();
 
-        ActionBar actionBar =getActionBar();
+        ActionBar actionBar = getActionBar();
         actionBar.setTitle("    지도 설정");
         actionBar.setDisplayShowHomeEnabled(false);
 
@@ -145,7 +137,7 @@ public class MapSettingActivity extends Activity {
     View.OnFocusChangeListener ofcl = new View.OnFocusChangeListener() {
         @Override
         public void onFocusChange(View v, boolean hasFocus) {
-            if(hasFocus)
+            if (hasFocus)
                 v.setBackgroundResource(R.drawable.editback2);
             else
                 v.setBackgroundResource(R.drawable.editback);
@@ -153,7 +145,7 @@ public class MapSettingActivity extends Activity {
     };
 
     public void saveOnclick(View v) {
-        if(NetworkUtil.getConnectivityStatus(getApplicationContext()) == NetworkUtil.TYPE_NOT_CONNECTED){
+        if (NetworkUtil.getConnectivityStatus(getApplicationContext()) == NetworkUtil.TYPE_NOT_CONNECTED) {
             // toast
             text_toast.setText("인터넷 연결이 필요합니다.");
             Toast toast = new Toast(getApplicationContext());
@@ -192,7 +184,7 @@ public class MapSettingActivity extends Activity {
         this.finish();
     }
 
-    public void resetOnClick(View v){ // 초기화
+    public void resetOnClick(View v) { // 초기화
         AlertDialog.Builder alert_confirm = new AlertDialog.Builder(this);
         alert_confirm.setMessage("초기화시 그 동안 작성한 지도와 리뷰정보가 모두 소멸됩니다.\n정말 초기화하시겠습니까?\n").setCancelable(false).setPositiveButton("확인",
                 new DialogInterface.OnClickListener() {
@@ -204,7 +196,7 @@ public class MapSettingActivity extends Activity {
 
                         MapzipRequestBuilder builder = null;
                         try {
-                            builder= new MapzipRequestBuilder();
+                            builder = new MapzipRequestBuilder();
                             builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
                             builder.setCustomAttribute(NetworkUtil.MAP_ID, mapid);
                             builder.showInside();
@@ -237,10 +229,10 @@ public class MapSettingActivity extends Activity {
 
         MapzipRequestBuilder builder = null;
         try {
-            builder= new MapzipRequestBuilder();
+            builder = new MapzipRequestBuilder();
             builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
             builder.setCustomAttribute(NetworkUtil.MAP_HASH_TAG, hashtag_send);
-            builder.setCustomAttribute(NetworkUtil.MAP_CATEGORY, mapkindnum);
+            builder.setCustomAttribute(NetworkUtil.CATEGORY, mapkindnum);
             builder.setCustomAttribute(NetworkUtil.MAP_ID, mapid);
             builder.setCustomAttribute(NetworkUtil.MAP_TITLE, mapname.getText().toString());
             builder.showInside();
@@ -262,25 +254,35 @@ public class MapSettingActivity extends Activity {
             @Override
             public void onResponse(JSONObject response) {
 
-                for (int gunumber = 1; gunumber <= SystemMain.SeoulGuCount; gunumber++)
-                    user.setReviewCount(Integer.parseInt(mapid), gunumber, 0);
+                try {
 
-                user.setMapforpinNum(Integer.parseInt(mapid), 2); // no review
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_MAP_RESET)) {
 
-                Resources res = getResources();
-                user.setMapImage(Integer.parseInt(mapid),res);
+                        for (int gunumber = 1; gunumber <= SystemMain.SeoulGuCount; gunumber++)
+                            user.setReviewCount(Integer.parseInt(mapid), gunumber, 0);
 
-                hashtag1.setText("해");
-                hashtag2.setText("쉬");
-                hashtag3.setText("태");
-                hashtag4.setText("그");
-                hashtag5.setText("맛집");
+                        user.setMapforpinNum(Integer.parseInt(mapid), 2); // no review
 
-                hashtag_send = "#해#쉬#태#그#맛집";
-                mapname.setText("나만의 지도"+mapid);
-                mapkindnum = SystemMain.SEOUL_MAP_NUM;
+                        Resources res = getResources();
+                        user.setMapImage(Integer.parseInt(mapid), res);
 
-                DoMapset();
+                        hashtag1.setText("해");
+                        hashtag2.setText("쉬");
+                        hashtag3.setText("태");
+                        hashtag4.setText("그");
+                        hashtag5.setText("맛집");
+
+                        hashtag_send = "#해#쉬#태#그#맛집";
+                        mapname.setText("나만의 지도" + mapid);
+                        mapkindnum = SystemMain.SEOUL_MAP_NUM;
+
+                        DoMapset();
+                    }
+                } catch(JSONException e){
+                    Log.e(TAG, "제이손 에러");
+                }
             }
         };
     }
@@ -289,42 +291,38 @@ public class MapSettingActivity extends Activity {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
-                Log.v("mapsetting 받기", response.toString());
-
                 try {
-                    int mapcount = response.getJSONArray("mapmeta_info").length();
 
-                    // 지도 순서 맞추기
-                    int metaorder[] = new int[mapcount+1];
-                    metaorder[0] = -1;
-                    for(int i=0; i<mapcount; i++){
-                        metaorder[Integer.parseInt(response.getJSONArray("mapmeta_info").getJSONObject(i).getString("map_id"))] = i;
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_MAP_SETTING)) {
+
+                        // 지도 순서 맞추기
+                        user.setMapmetaArray(mapzipResponse.setMapMetaOrder());
+
+                        //HomeFragment hf = (HomeFragment) getFragmentManager().findFragmentByTag("home_fragment");
+                        //hf.refresh();
+
+                        user.setMapmetaNum(1);
+
+                        text_toast.setText("저장되었습니다.");
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
+
+                        finish();
+                    }else {
+                        // toast
+                        text_toast.setText("다시 시도해주세요");
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
                     }
-
-                    JSONArray newmetaarr = new JSONArray();
-                    for(int j=1; j<metaorder.length; j++){
-                        newmetaarr.put(response.getJSONArray("mapmeta_info").getJSONObject(metaorder[j]));
-                    }
-
-                    user.setMapmetaArray(newmetaarr);
-                    Log.v("맵메타",String.valueOf(user.getMapmetaArray()));
-                } catch (JSONException ex) {
-
+                } catch (JSONException e) {
+                    Log.e(TAG, "제이손 에러");
                 }
-
-                //HomeFragment hf = (HomeFragment) getFragmentManager().findFragmentByTag("home_fragment");
-                //hf.refresh();
-
-                user.setMapmetaNum(1);
-
-                text_toast.setText("저장되었습니다.");
-                Toast toast = new Toast(getApplicationContext());
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setView(layout_toast);
-                toast.show();
-
-                finish();
             }
         };
     }
@@ -345,7 +343,7 @@ public class MapSettingActivity extends Activity {
                     toast.show();
 
                     Log.e(TAG, error.getMessage());
-                }catch (NullPointerException ex){
+                } catch (NullPointerException ex) {
                     // toast
                     Log.e(TAG, "nullpointexception");
                 }
