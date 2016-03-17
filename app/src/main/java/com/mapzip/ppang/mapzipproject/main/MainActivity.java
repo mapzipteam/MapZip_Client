@@ -171,12 +171,12 @@ public class MainActivity extends FragmentActivity {
                     MapzipResponse mapzipResponse = new MapzipResponse(response);
                     mapzipResponse.showAllContents();
                     if (mapzipResponse.getState(ResponseUtil.PROCESS_SETTING_NOTICE)) {
-                        if (mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING,NetworkUtil.NOTICE_VERSION).equals(pref.getString("notice_version", "0"))) {
+                        if (mapzipResponse.getFieldsString(NetworkUtil.NOTICE_VERSION).equals(pref.getString("notice_version", "0"))) {
 
                         } else {
-                            noticeString = "버전: " + mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING, NetworkUtil.NOTICE_VERSION)+"\n\n";
+                            noticeString = "버전: " + mapzipResponse.getFieldsString(NetworkUtil.NOTICE_VERSION)+"\n\n";
 
-                            noticeString += mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING, NetworkUtil.CONTENTS) + "\n\n";
+                            noticeString += mapzipResponse.getFieldsString(NetworkUtil.CONTENTS) + "\n\n";
                             noticeString += "@이 창은 공지사항탭에서 다시 확인할 수 있습니다.";
 
                             AlertDialog.Builder ab = new AlertDialog.Builder(MainActivity.this);
@@ -185,7 +185,7 @@ public class MainActivity extends FragmentActivity {
                             ab.setPositiveButton("확인", null);
 
                             SharedPreferences.Editor editor = pref.edit();
-                            editor.putString("notice_version", (String)mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING, NetworkUtil.NOTICE_VERSION));
+                            editor.putString("notice_version",mapzipResponse.getFieldsString(NetworkUtil.NOTICE_VERSION));
                             editor.commit();
 
                             ab.show();

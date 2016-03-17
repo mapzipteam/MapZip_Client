@@ -221,9 +221,9 @@ public class LoginFragment extends Fragment {
                         user.LoginOK();
                         user.inputID(inputID.getText().toString());
                         user.inputPW(inputPW.getText().toString());
-                        user.inputName((String) mapzipResponse.getFieldsMember(mapzipResponse.TYPE_STRING, NetworkUtil.USER_NAME));
+                        user.inputName(mapzipResponse.getFieldsString(NetworkUtil.USER_NAME));
 
-                        mapCount = ((JSONArray)mapzipResponse.getFieldsMember(mapzipResponse.TYPE_JSON_ARRAY,NetworkUtil.MAP_META_INFO)).length();
+                        mapCount = mapzipResponse.getFieldsJSONArray(NetworkUtil.MAP_META_INFO).length();
 
                         // 지도 순서 맞추기
                         user.setMapmetaArray(mapzipResponse.setMapMetaOrder());

@@ -72,21 +72,6 @@ public class MapzipResponse{
         }
     }
 
-    public Object getFieldsMember(int type, String name) throws JSONException {
-        switch (type) {
-            case TYPE_STRING:
-                return mFields.getString(name);
-            case TYPE_INT:
-                return mFields.getInt(name);
-            case TYPE_JSON_OBJECT:
-                return mFields.getJSONObject(name);
-            case TYPE_JSON_ARRAY:
-                return mFields.getJSONArray(name);
-            default:
-                return null;
-        }
-    }
-
     public boolean getFieldsBoolean(String name) throws JSONException {
         return mFields.getBoolean(name);
     }

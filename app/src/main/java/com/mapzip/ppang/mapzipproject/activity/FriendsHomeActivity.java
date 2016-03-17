@@ -770,7 +770,7 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
                     mapzipResponse.showAllContents();
                     if (mapzipResponse.getState(ResponseUtil.PROCESS_HOME_GET_REVIEW_META)) { // 701
                         fuser.setMapforpinNum(Integer.parseInt(mapid), 1);
-                        JSONArray reviewMeta = (JSONArray)mapzipResponse.getFieldsMember(mapzipResponse.TYPE_JSON_ARRAY,NetworkUtil.REVIEW_META);
+                        JSONArray reviewMeta = mapzipResponse.getFieldsJSONArray(NetworkUtil.REVIEW_META);
                         fuser.setMapforpinArray(reviewMeta, reviewMeta.getJSONObject(0).getInt(NetworkUtil.MAP_ID));
 
                         Log.v(TAG, "맵인텐트");
@@ -908,7 +908,7 @@ public class FriendsHomeActivity extends Activity implements View.OnClickListene
                     MapzipResponse mapzipResponse = new MapzipResponse(response);
                     mapzipResponse.showAllContents();
                     if (mapzipResponse.getState(ResponseUtil.PROCESS_FRIEND_SEARCH_BY_NAME)) {
-                        if (mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING,NetworkUtil.IS_FRIEND).equals("true")) {
+                        if (mapzipResponse.getFieldsBoolean(NetworkUtil.IS_FRIEND) == true) {
                             mapsetting.setVisibility(View.INVISIBLE);
                             mapsetting.setEnabled(false);
                             mapsetting.setBackgroundResource(R.drawable.addfriend);

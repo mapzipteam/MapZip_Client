@@ -360,7 +360,7 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
                     MapzipResponse mapzipResponse = new MapzipResponse(response);
                     mapzipResponse.showAllContents();
                     if (mapzipResponse.getState(ResponseUtil.PROCESS_SEARCH_MAP)) {
-                        getArray = (JSONArray)mapzipResponse.getFieldsMember(MapzipResponse.TYPE_JSON_ARRAY,NetworkUtil.SEARCH_MAP);
+                        getArray = mapzipResponse.getFieldsJSONArray(NetworkUtil.SEARCH_MAP);
                         seq++;
 
                         addItems(6);
@@ -448,7 +448,7 @@ public class SearchFragment extends Fragment implements AbsListView.OnScrollList
                     MapzipResponse mapzipResponse = new MapzipResponse(response);
                     mapzipResponse.showAllContents();
                     if (mapzipResponse.getState(ResponseUtil.PROCESS_FRIEND_GET_REVIEW_META)) {
-                        mapCount = ((JSONArray)mapzipResponse.getFieldsMember(mapzipResponse.TYPE_JSON_ARRAY,NetworkUtil.MAP_META_INFO)).length();
+                        mapCount = mapzipResponse.getFieldsJSONArray(NetworkUtil.MAP_META_INFO).length();
 
                         // 지도 순서 맞추기
                         fuser.setMapmetaArray(mapzipResponse.setMapMetaOrder());

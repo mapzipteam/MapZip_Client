@@ -149,7 +149,7 @@ public class AddFriendsActivity extends Activity {
                     MapzipResponse mapzipResponse = new MapzipResponse(response);
                     mapzipResponse.showAllContents();
                     if (mapzipResponse.getState(ResponseUtil.PROCESS_FRIEND_SEARCH_BY_NAME)) {
-                        if(mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING,NetworkUtil.TOTAL_REVIEW).equals("null")){
+                        if(mapzipResponse.getFieldsString(NetworkUtil.TOTAL_REVIEW).equals("null")){
                             // toast
                             text_toast.setText("존재하지 않는 사용자입니다.");
                             Toast toast = new Toast(getApplicationContext());
@@ -163,10 +163,10 @@ public class AddFriendsActivity extends Activity {
                         friendinfo.setVisibility(View.GONE);
                         friendadd.setVisibility(View.GONE);
 
-                        friendinfo.setText(mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING, NetworkUtil.FRIEND_NAME) + " (" + friendID + ")\n" +
-                                "리뷰수: " + mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING, NetworkUtil.TOTAL_REVIEW));
+                        friendinfo.setText(mapzipResponse.getFieldsString(NetworkUtil.FRIEND_NAME) + " (" + friendID + ")\n" +
+                                "리뷰수: " + mapzipResponse.getFieldsString(NetworkUtil.TOTAL_REVIEW));
 
-                        if (mapzipResponse.getFieldsMember(MapzipResponse.TYPE_STRING,NetworkUtil.IS_FRIEND).equals("true")) {
+                        if (mapzipResponse.getFieldsBoolean(NetworkUtil.IS_FRIEND) == true) {
                             friendadd.setBackgroundResource(R.drawable.friend_add2);
                             friendadd.setEnabled(false);
                         } else {
