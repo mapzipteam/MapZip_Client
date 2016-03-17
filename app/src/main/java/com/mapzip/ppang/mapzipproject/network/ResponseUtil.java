@@ -20,4 +20,9 @@ public class ResponseUtil {
     public final static int PROCESS_MAP_SETTING = 13;
     public final static int PROCESS_MAP_RESET = 14;
     public final static int PROCESS_SUGGEST = 15;
+    public final static int PROCESS_REVIEW_DELETE = 16;
+    public final static int PROCESS_REVIEW_ENROLL = 17;
+    public final static int PROCESS_REVIEW_UPDATE = 18;
+    public final static int PROCESS_REVIEW_MAKE_IMG_DIR = 19;
+    public final static int PROCESS_REVIEW_IMAGE_SEND = 20;
 }

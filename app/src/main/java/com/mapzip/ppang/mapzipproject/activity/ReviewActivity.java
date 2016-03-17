@@ -27,7 +27,11 @@ import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -38,6 +42,8 @@ import org.json.JSONObject;
  * Created by Song  Ji won on 2015-07-31.
  */
 public class ReviewActivity extends Activity {
+    private final String TAG = "ReviewActivity";
+
     // toast
     private View layout_toast;
     private TextView text_toast;
@@ -137,12 +143,12 @@ public class ReviewActivity extends Activity {
         // get hashtag from userData.mapmetaArray
         try {
             if (userlock == false) { // mine
-                hashtag.setText(user.getMapmetaArray().getJSONObject(Integer.parseInt(reviewData.getMapid())-1).getString("hash_tag"));
+                hashtag.setText(user.getMapmetaArray().getJSONObject(Integer.parseInt(reviewData.getMapid())-1).getString(NetworkUtil.MAP_HASH_TAG));
             } else { // friend's
-                hashtag.setText(fuser.getMapmetaArray().getJSONObject(Integer.parseInt(reviewData.getMapid())-1).getString("hash_tag"));
+                hashtag.setText(fuser.getMapmetaArray().getJSONObject(Integer.parseInt(reviewData.getMapid())-1).getString(NetworkUtil.MAP_HASH_TAG));
             }
         }catch (JSONException ex){
-            Log.e("JSONEX","get hash in reviewActivity");
+            Log.e(TAG,"JSONEX get hash in reviewActivity");
         }
 
         // set Emotion Image
@@ -198,20 +204,20 @@ public class ReviewActivity extends Activity {
                     public void onClick(DialogInterface dialog, int which) {
                         RequestQueue queue = MyVolley.getInstance(ReviewActivity.this).getRequestQueue();
 
-                        JSONObject obj = new JSONObject();
+                        MapzipRequestBuilder builder = null;
                         try {
-                            obj.put("user_id", user.getUserID());
-                            obj.put("map_id", reviewData.getMapid());
-                            obj.put("store_id", reviewData.getStore_id());
-
-                            Log.v("ReviewActivity 보내기", obj.toString());
+                            builder= new MapzipRequestBuilder();
+                            builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+                            builder.setCustomAttribute(NetworkUtil.MAP_ID, reviewData.getMapid());
+                            builder.setCustomAttribute(NetworkUtil.STORE_ID, reviewData.getStore_id());
+                            builder.showInside();
                         } catch (JSONException e) {
-                            Log.v("제이손", "에러");
+                            e.printStackTrace();
                         }
 
                         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                                 SystemMain.SERVER_REVIEWDELETE_URL,
-                                obj,
+                                builder.build(),
                                 createMyReqSuccessListener(),
                                 createMyReqErrorListener()) {
                         };
@@ -238,11 +244,10 @@ public class ReviewActivity extends Activity {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-
-                Log.v("ReviewActivity 받기", response.toString());
-
                 try {
-                    if(response.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_DELETE_SUCCESS){ // 604
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_DELETE)) { // 604
                         // toast
                         text_toast.setText("리뷰가 삭제되었습니다.");
                         Toast toast = new Toast(getApplicationContext());
@@ -276,7 +281,7 @@ public class ReviewActivity extends Activity {
                         // for map activity(pin) refresh
                         JSONArray narray = user.getMapforpinArray(mapid);
                         for(int i=0; i<narray.length(); i++){
-                            if(narray.getJSONObject(i).getString("store_id").equals(reviewData.getStore_id()) == true){
+                            if(narray.getJSONObject(i).getString(NetworkUtil.STORE_ID).equals(reviewData.getStore_id()) == true){
                                 narray = removeJsonObjectAtJsonArrayIndex(narray,i);
                             }
                         }
@@ -284,9 +289,16 @@ public class ReviewActivity extends Activity {
                         user.setMapRefreshLock(false);
 
                         finish();
+                    } else {
+                        // toast
+                        text_toast.setText("다시 시도해주세요.");
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
                     }
                 } catch (JSONException ex) {
-                    Log.v("제이손", "에러");
+                    Log.e(TAG, "제이손 에러");
                 }
             }
         };
@@ -304,9 +316,9 @@ public class ReviewActivity extends Activity {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("ReviewActivity", error.getMessage());
+                    Log.e(TAG, error.getMessage());
                 }catch (NullPointerException ex) {
-                    Log.e("ReviewActivity", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
             }
         };
@@ -324,51 +336,4 @@ public class ReviewActivity extends Activity {
         }
         return copy;
     }
-
-    /*
-     *  Loading
-
-    protected class LoadingTask extends AsyncTask<Void, Void, Void> {
-        @Override
-        protected void onPreExecute() {
-            asyncDialog = new ProgressDialog(ReviewActivity.this);
-            asyncDialog.setProgressStyle(ProgressDialog.STYLE_SPINNER);
-            asyncDialog.setMessage("로딩중입니다..");
-            asyncDialog.setCanceledOnTouchOutside(false);
-            asyncDialog.show();
-            super.onPreExecute();
-        }
-
-        @Override
-        protected Void doInBackground(Void... arg0) {
-
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-
-            Log.v("loading", "success");
-            return null;
-        }
-
-        @Override
-        protected void onPostExecute(Void result) {
-            if (asyncDialog != null) {
-                asyncDialog.dismiss();
-            }
-            Log.d("loading", "finish");
-
-            // toast
-            text_toast.setText("리뷰가 등록되었습니다.");
-            Toast toast = new Toast(getApplicationContext());
-            toast.setDuration(Toast.LENGTH_SHORT);
-            toast.setView(layout_toast);
-            toast.show();
-            finish();
-
-            super.onPostExecute(result);
-        }
-    }
-    */
 }

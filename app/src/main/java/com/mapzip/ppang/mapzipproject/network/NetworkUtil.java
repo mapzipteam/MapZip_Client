@@ -33,6 +33,20 @@ public class NetworkUtil {
     public static final String STATE = "state";
     public static final String NOTICE_VERSION = "version";
     public static final String CONTENTS = "contents";
+    public static final String STORE_ID = "store_id";
+    public static final String REVIEW_DATA_STORE_X = "store_x";
+    public static final String REVIEW_DATA_STORE_Y = "store_y";
+    public static final String REVIEW_DATA_STORE_NAME = "store_name";
+    public static final String REVIEW_DATA_STORE_ADDRESS = "store_address";
+    public static final String REVIEW_DATA_STORE_CONTACT = "store_contact";
+    public static final String REVIEW_DATA_EMOTION = "review_emotion";
+    public static final String REVIEW_DATA_TEXT = "review_text";
+    public static final String REVIEW_DATA_IMAGE_NUM = "image_num";
+    public static final String REVIEW_DATA_GU_NUM = "gu_num";
+    public static final String REVIEW_DATA_POSITIVE_TEXT = "positive_text";
+    public static final String REVIEW_DATA_NEGATIVE_TEXT = "negative_text";
+    public static final String REVIEW_DATA_IMAGE_STRING = "image_string";
+    public static final String REVIEW_DATA_IMAGE_NAME = "image_name";
 
     public static final int TYPE_WIFI = 1;
     public static final int TYPE_MOBILE = 2;

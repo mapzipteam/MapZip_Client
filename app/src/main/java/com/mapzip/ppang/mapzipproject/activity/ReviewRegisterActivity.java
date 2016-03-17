@@ -46,7 +46,11 @@ import com.mapzip.ppang.mapzipproject.adapter.ImageAdapter;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -62,6 +66,7 @@ import java.util.List;
  * Created by ppangg on 2015-08-22.
  */
 public class ReviewRegisterActivity extends Activity {
+    private final String TAG = "ReviewRegisterActivity";
 
     private final int GOODTEXT = 1;
     private final int BADTEXT = 2;
@@ -90,7 +95,6 @@ public class ReviewRegisterActivity extends Activity {
     private Bitmap[] bitarr; // Image array, oPerlishArray.toArray(bitarr)
     private ImageAdapter imageadapter;
     private Bitmap noimage;
-    private Bitmap[] backupbitarr;
 
     // Image Select
     final int REQ_CODE_SELECT_IMAGE = 100;
@@ -171,13 +175,10 @@ public class ReviewRegisterActivity extends Activity {
             try {
                 reviewData = user.getReviewData().clone();
             } catch (Exception ex) {
-                Log.v("ReviewData", "clone ex");
+                Log.e(TAG, "clone ex");
             }
 
-            backupbitarr = user.getGalImages().clone();
-
             primap_id = reviewData.getMapid();
-            Log.v("mapid", reviewData.getMapid());
         } else
             state = 0;
 
@@ -235,10 +236,10 @@ public class ReviewRegisterActivity extends Activity {
         mapsppinerList = new ArrayList<String>();
         try {
             for (int i = 0; i < user.getMapmetaArray().length(); i++) {
-                mapsppinerList.add(user.getMapmetaArray().getJSONObject(i).getString("title"));
+                mapsppinerList.add(user.getMapmetaArray().getJSONObject(i).getString(NetworkUtil.MAP_TITLE));
             }
         } catch (JSONException ex) {
-            Log.v("제이손 에러", "review_regi_mapspinner");
+            Log.v(TAG, "JSON ex review_regi_mapspinner");
         }
 
         // set map spinner
@@ -257,10 +258,9 @@ public class ReviewRegisterActivity extends Activity {
                     // get map id to send
                     JSONObject mapmeta = null;
                     mapmeta = user.getMapmetaArray().getJSONObject(position);
-                    reviewData.setMapid(mapmeta.get("map_id").toString());
-                    Log.v("mappid", reviewData.getMapid());
+                    reviewData.setMapid(mapmeta.get(NetworkUtil.MAP_ID).toString());
                 } catch (JSONException ex) {
-                    Log.v("제이손 에러", "review_regi_mapspinner2");
+                    Log.v(TAG, "JSON ex review_regi_mapspinner2");
                 }
             }
 
@@ -351,8 +351,6 @@ public class ReviewRegisterActivity extends Activity {
     //  onResult - findImageonClick
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        Log.v("resultCode", String.valueOf(resultCode));
-
         if (requestCode == REQ_CODE_SELECT_IMAGE) {
             if (resultCode == Activity.RESULT_OK) {
                 try {
@@ -391,19 +389,15 @@ public class ReviewRegisterActivity extends Activity {
                     // save Image in user Data
                     if (state == 1) // in modify
                     {
-                        Log.v("image modify", "ok");
-                        Log.v("image_length1", String.valueOf(user.getGalImages().length));
                         if ((reviewData.getImage_num() + afterimagenum) == 0)
                             user.inputGalImages(bitarr);
                         else
                             user.addGalImages(bitarr);
 
                         modifyedcheck = true;
-                        Log.v("image_length2", String.valueOf(user.getGalImages().length));
                     } else {
                         user.inputGalImages(bitarr);
                     }
-
 
                     afterimagenum++;
                     serverchoice = 2;
@@ -425,44 +419,45 @@ public class ReviewRegisterActivity extends Activity {
 
     // in enroll Btn
     public void DoReviewset(View v) {
+
+        if (direct_text.getVisibility() == View.INVISIBLE) {
+            reviewData.setReview_text("");
+        } else {
+            reviewData.setReview_text(direct_text.getText().toString());
+        }
+        reviewData.setGood_text(good_text.getText().toString());
+        reviewData.setBad_text(bad_text.getText().toString());
+
+        if (serverchoice == 2)
+            reviewData.setImage_num(user.getGalImages().length);
+
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
-
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            if (direct_text.getVisibility() == View.INVISIBLE) {
-                reviewData.setReview_text("");
-            }else {
-                reviewData.setReview_text(direct_text.getText().toString());
-            }
-            reviewData.setGood_text(good_text.getText().toString());
-            reviewData.setBad_text(bad_text.getText().toString());
+            builder = new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+            builder.setCustomAttribute(NetworkUtil.MAP_ID, reviewData.getMapid());
+            builder.setCustomAttribute(NetworkUtil.USER_NAME, user.getUserName());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_STORE_X, reviewData.getStore_x());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_STORE_Y, reviewData.getStore_y());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_STORE_NAME, reviewData.getStore_name());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_STORE_ADDRESS, reviewData.getStore_address());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_STORE_CONTACT, reviewData.getStore_contact());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_EMOTION, reviewData.getReview_emotion());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_TEXT, reviewData.getReview_text());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_IMAGE_NUM, reviewData.getImage_num());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_GU_NUM, reviewData.getGu_num());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_POSITIVE_TEXT, reviewData.getGood_text());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_NEGATIVE_TEXT, reviewData.getBad_text());
+            builder.showInside();
 
-            if (serverchoice == 2)
-                reviewData.setImage_num(user.getGalImages().length);
-
-            obj.put("userid", user.getUserID());
-            obj.put("map_id", reviewData.getMapid());
-            obj.put("store_x", reviewData.getStore_x());
-            obj.put("store_y", reviewData.getStore_y());
-            obj.put("store_name", reviewData.getStore_name());
-            obj.put("store_address", reviewData.getStore_address());
-            obj.put("store_contact", reviewData.getStore_contact());
-            obj.put("review_emotion", reviewData.getReview_emotion());
-            obj.put("review_text", reviewData.getReview_text());
-            obj.put("image_num", reviewData.getImage_num());
-            obj.put("gu_num", reviewData.getGu_num());
-            obj.put("positive_text", reviewData.getGood_text());
-            obj.put("negative_text", reviewData.getBad_text());
-            obj.put("user_name", user.getUserName());
-
-            Log.v("review 등록 보내기", obj.toString());
         } catch (JSONException e) {
-            Log.v("제이손", "에러");
+            Log.e(TAG, "제이손 에러");
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_REVIEWENROLL_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener(),
                 createMyReqErrorListener()) {
         };
@@ -470,23 +465,23 @@ public class ReviewRegisterActivity extends Activity {
     }
 
     // in enroll Btn -> response, 이미지 있을때
-    public void DoReviewset2() {
+    public void MakeImageDir() {
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
-
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            obj.put("userid", user.getUserID());
-            obj.put("map_id", reviewData.getMapid());
-            obj.put("store_id", reviewData.getStore_id());
+            builder = new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+            builder.setCustomAttribute(NetworkUtil.MAP_ID, reviewData.getMapid());
+            builder.setCustomAttribute(NetworkUtil.STORE_ID, reviewData.getStore_id());
+            builder.showInside();
 
-            Log.v("review 등록2 보내기", obj.toString());
         } catch (JSONException e) {
-            Log.v("제이손", "에러");
+            Log.e(TAG, "제이손 에러");
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_REVIEWENROLL2_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener(),
                 createMyReqErrorListener()) {
         };
@@ -495,37 +490,37 @@ public class ReviewRegisterActivity extends Activity {
 
     // in modify Btn
     public void DoModifyset(View v) {
+        if (direct_text.getVisibility() == View.INVISIBLE) {
+            reviewData.setReview_text("");
+        } else {
+            reviewData.setReview_text(direct_text.getText().toString());
+        }
+        reviewData.setGood_text(good_text.getText().toString());
+        reviewData.setBad_text(bad_text.getText().toString());
+
+        reviewData.setImage_num(reviewData.getImage_num() + afterimagenum);
+
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
-
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            if (direct_text.getVisibility() == View.INVISIBLE) {
-                reviewData.setReview_text("");
-            }else {
-                reviewData.setReview_text(direct_text.getText().toString());
-            }
-            reviewData.setGood_text(good_text.getText().toString());
-            reviewData.setBad_text(bad_text.getText().toString());
+            builder = new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+            builder.setCustomAttribute(NetworkUtil.MAP_ID, reviewData.getMapid());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_EMOTION, reviewData.getReview_emotion());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_TEXT, reviewData.getReview_text());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_POSITIVE_TEXT, reviewData.getGood_text());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_NEGATIVE_TEXT, reviewData.getBad_text());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_IMAGE_NUM, reviewData.getImage_num());
+            builder.setCustomAttribute(NetworkUtil.STORE_ID, getIntent().getStringExtra("store_id"));
+            builder.showInside();
 
-            reviewData.setImage_num(reviewData.getImage_num() + afterimagenum);
-            obj.put("user_id", user.getUserID());
-            obj.put("map_id", reviewData.getMapid());
-            obj.put("review_emotion", reviewData.getReview_emotion());
-            obj.put("review_text", reviewData.getReview_text());
-            obj.put("positive_text", reviewData.getGood_text());
-            obj.put("negative_text", reviewData.getBad_text());
-            obj.put("store_id", getIntent().getStringExtra("store_id"));
-            obj.put("image_num", reviewData.getImage_num());
-            Log.v("image_num", String.valueOf(reviewData.getImage_num()));
-
-            Log.v("review 수정 보내기", obj.toString());
         } catch (JSONException e) {
-            Log.v("제이손", "에러");
+            Log.e(TAG, "제이손 에러");
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_REVIEWMODIFY_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener_modify(),
                 createMyReqErrorListener()) {
         };
@@ -535,21 +530,21 @@ public class ReviewRegisterActivity extends Activity {
     // in modify Btn -> response, 이미지 있을때 (in noimage)
     public void DoModifyset2() {
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
-
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            obj.put("userid", user.getUserID());
-            obj.put("map_id", reviewData.getMapid());
-            obj.put("store_id", reviewData.getStore_id());
+            builder = new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+            builder.setCustomAttribute(NetworkUtil.MAP_ID, reviewData.getMapid());
+            builder.setCustomAttribute(NetworkUtil.STORE_ID, reviewData.getStore_id());
+            builder.showInside();
 
-            Log.v("review 등록2 보내기", obj.toString());
         } catch (JSONException e) {
-            Log.v("제이손", "에러");
+            Log.e(TAG, "제이손 에러");
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_REVIEWENROLL2_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener_modify(),
                 createMyReqErrorListener()) {
         };
@@ -561,15 +556,16 @@ public class ReviewRegisterActivity extends Activity {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.v("review_modify 받기", response.toString());
                 try {
-                    if (response.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_UPDATE_SUCCESS) { // 607
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_UPDATE)) { // 607
                         // if Map Id modified (지도 변경시)
                         if (primap_id.equals(reviewData.getMapid()) == false) {
                             int pmap_id = Integer.parseInt(primap_id); // 수정 전
                             int nmap_id = Integer.parseInt(reviewData.getMapid()); // 수정 후 map_id
                             int gu_num = reviewData.getGu_num();
-                            int nmapnocheck = 0; // 0: 리뷰있음 1: no review
+                            int noReviewCheck = 0; // 0: 리뷰있음 1: no review
 
                             if (user.getPingCount(nmap_id, gu_num) == 0) { // no review check in now map
                                 int checknonzero = 0;
@@ -580,7 +576,7 @@ public class ReviewRegisterActivity extends Activity {
                                     }
                                 }
                                 if (checknonzero == 0)
-                                    nmapnocheck = 1;
+                                    noReviewCheck = 1;
                             }
 
                             // mapforpinNum, PingCount modify, if review count is 0
@@ -614,21 +610,17 @@ public class ReviewRegisterActivity extends Activity {
                                 }
                             }
                             user.setMapforpinArray(farray, pmap_id);
-                            Log.v("moveobj", moveobj.toString());
 
-                            if (nmapnocheck == 1) { // 옮길 지도에 리뷰 정보가 없었을때
+                            if (noReviewCheck == 1) { // 옮길 지도에 리뷰 정보가 없었을때
                                 JSONArray sarray = new JSONArray();
                                 sarray.put(sarray.length(), moveobj);
                                 user.setMapforpinArray(sarray, nmap_id);
                                 user.setMapforpinNum(nmap_id, 1);
-                                Log.v("1 sarray", sarray.toString());
                             } else { // 리뷰 정보가 있었을때
                                 if (user.getMapforpinNum(nmap_id) != 0) {
                                     JSONArray sarray = user.getMapforpinArray(nmap_id);
-                                    Log.v("0_1 sarray", sarray.toString());
                                     sarray.put(sarray.length(), moveobj);
                                     user.setMapforpinArray(sarray, nmap_id);
-                                    Log.v("0 sarray", sarray.toString());
                                 }
                             }
                             user.setMapRefreshLock(false);
@@ -653,13 +645,13 @@ public class ReviewRegisterActivity extends Activity {
 
                             finish();
                         }
-                    } else if ((response.getInt("state") == SystemMain.CLIENT_REVIEW_IMAGE_MKDIR_SUCCESS) || (response.getInt("state") == SystemMain.CLIENT_REVIEW_IMAGE_MKDIR_EXIST)) { // 602 || 621
+                    } else if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_MAKE_IMG_DIR)) { // 602 || 621
                         serverchoice = 2;
                         loading.execute();
                         // 2번째통신 이미지갯수만큼 반복
                     }
                 } catch (JSONException e) {
-                    Log.e("제이손", "에러");
+                    Log.e(TAG,"제이손 에러");
                 }
             }
         };
@@ -670,27 +662,20 @@ public class ReviewRegisterActivity extends Activity {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.v("review_regi 받기", response.toString());
-
                 try {
-                    if (response.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_ENROLL_SUCCESS) { // 601
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_ENROLL)) { // 601
                         // 1번째 통신 성공
                         Log.v("리뷰저장", "OK");
-                        reviewData.setStore_id(response.getString("store_id"));
+                        reviewData.setStore_id(mapzipResponse.getFieldsString(NetworkUtil.STORE_ID));
                         if (reviewData.getImage_num() != 0)
-                            DoReviewset2(); // 이미지 있으면 2번째 통신 시작
+                            MakeImageDir(); // 이미지 있으면 2번째 통신 시작
                         else {
                             serverchoice = 1; // no image
                             loading.execute();
                         }
-                    } else if ((response.getInt("state") == SystemMain.CLIENT_REVIEW_IMAGE_MKDIR_SUCCESS) || (response.getInt("state") == SystemMain.CLIENT_REVIEW_IMAGE_MKDIR_EXIST)) { // 602 || 621
-                        // 2번째통신 성공
-                        Log.v("리뷰저장2", "OK");
-                        serverchoice = 2;
-                        loading.execute();
-                        // 3번째통신 이미지갯수만큼 반복
-                    }
-                    if (response.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_ENROLL_EXIST) { // 612
+                    } else if (!mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_ENROLL)) { // 612
                         //1번째 통신에서 중복가게 걸러내기
                         // toast
                         text_toast.setText("이미 등록 된 가게입니다.");
@@ -698,9 +683,22 @@ public class ReviewRegisterActivity extends Activity {
                         toast.setDuration(Toast.LENGTH_SHORT);
                         toast.setView(layout_toast);
                         toast.show();
+                    } else if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_MAKE_IMG_DIR)) { // 602 || 621
+                        // 2번째통신 성공
+                        Log.v("리뷰저장2", "OK");
+                        serverchoice = 2;
+                        loading.execute();
+                        // 3번째통신 이미지갯수만큼 반복
+                    } else{
+                        // toast
+                        text_toast.setText("다시 시도해주세요.");
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.setView(layout_toast);
+                        toast.show();
                     }
                 } catch (JSONException ex) {
-                    Log.e("제이손", "에러");
+                    Log.e(TAG, "제이손 에러");
                 }
             }
         };
@@ -718,10 +716,10 @@ public class ReviewRegisterActivity extends Activity {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("review_register", error.getMessage());
+                    Log.e(TAG, error.getMessage());
                 } catch (NullPointerException ex) {
                     // toast
-                    Log.e("review_register", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
             }
         };
@@ -753,130 +751,51 @@ public class ReviewRegisterActivity extends Activity {
 
     // image upload
     public void DoUpload(final int i) {
-        Log.v("에러치크", "2");
+        String image = getStringImage(user.getGalImages()[i]);
 
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
-
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            Log.v("길이길이", String.valueOf(user.getGalImages().length));
-            String image = getStringImage(user.getGalImages()[i]);
-            Log.v("image string", image);
-            Log.v("image 길이", String.valueOf(image.length()));
-
-            obj.put("image_string", image);
-            obj.put("userid", user.getUserID());
-            obj.put("map_id", reviewData.getMapid());
-            obj.put("store_id", reviewData.getStore_id());
-            obj.put("image_name", "image" + String.valueOf(imagenum));
+            builder = new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+            builder.setCustomAttribute(NetworkUtil.MAP_ID, reviewData.getMapid());
+            builder.setCustomAttribute(NetworkUtil.STORE_ID, reviewData.getStore_id());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_IMAGE_STRING, image);
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_IMAGE_NAME,"image" + String.valueOf(imagenum));
+            builder.showInside();
             imagenum++;
-
-            Log.v("param", obj.toString());
-
-            Log.v("에러치크", "1");
-
         } catch (JSONException e) {
-            Log.v("제이손", "에러");
+            Log.e(TAG, "제이손 에러");
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_REVIEWENROLL3_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener_image(),
                 createMyReqErrorListener_image()) {
         };
         queue.add(myReq);
-
-   /*
-        StringRequest stringRequest = new StringRequest(Request.Method.POST, SystemMain.SERVER_REVIEWENROLL3_URL,
-                new Response.Listener<String>() {
-                    @Override
-                    public void onResponse(String s) {
-                        //Showing toast message of the response
-                        Log.v("이미지 업로드",s);
-                    }
-                },
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError volleyError) {
-                        //Showing toast
-                        Log.v("이미지 업로드 에러", String.valueOf(volleyError));
-                    }
-                }){
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                //Converting Bitmap to String
-                Log.v("길이길이",String.valueOf(user.getGalImages().length));
-                String image = getStringImage(user.getGalImages()[i]);
-                Log.v("image string",image);
-                Log.v("image 길이", String.valueOf(image.length()));
-
-                Map<String, String> params = new Hashtable<String, String>();
-                params.put("image_string",image);
-                params.put("userid", user.getUserID());
-                params.put("map_id", reviewData.getMapid());
-                params.put("store_id", reviewData.getStore_id());
-                params.put("image_name", "image" + String.valueOf(imagenum));
-                imagenum++;
-
-                Log.v("param",params.toString());
-
-                Log.v("에러치크","1");
-
-                //returning parameters
-                return params;
-            }
-        };
-
-        //Creating a Request Queue
-        RequestQueue requestQueue = Volley.newRequestQueue(this);
-
-        //Adding request to the queue
-        requestQueue.add(stringRequest);
-        */
-
-        /*
-        mfile = getImageFile(uriarray[i]);
-        if (mfile == null) {
-            Toast.makeText(getApplicationContext(), "이미지가 선택되지 않았습니다", Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        Map<String, String> params = new HashMap<String, String>();
-        params.put("userid", user.getUserID());
-        params.put("map_id", reviewData.getMapid());
-        params.put("store_id", reviewData.getStore_id());
-        params.put("image_name", "image" + String.valueOf(imagenum));
-        imagenum++;
-
-        RequestQueue queue = MyVolley.getInstance(getApplicationContext()).getRequestQueue();
-        MultipartRequest mRequest = new MultipartRequest(SystemMain.SERVER_REVIEWENROLL3_URL,
-                new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        // toast
-                        text_toast.setText("인터넷 연결이 필요합니다.");
-                        Toast toast = new Toast(getApplicationContext());
-                        toast.setDuration(Toast.LENGTH_LONG);
-                        toast.setView(layout_toast);
-                        toast.show();
-                    }
-                }, new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                Log.d("volley", response);
-            }
-        }, mfile, params);
-        Log.v("사진 보내기", mRequest.toString());
-        queue.add(mRequest);
-        */
     }
 
     private Response.Listener<JSONObject> createMyReqSuccessListener_image() {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
-                Log.v("이미지 업로드", response.toString());
+                try {
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_IMAGE_SEND)) {
+                    } else{
+                        // toast
+                        text_toast.setText("다시 시도해주세요.");
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
+                    }
+                }catch (JSONException e){
+                    Log.e(TAG,"제이손 에러");
+                }
             }
         };
     }
@@ -886,10 +805,17 @@ public class ReviewRegisterActivity extends Activity {
             @Override
             public void onErrorResponse(VolleyError error) {
                 try {
-                    Log.e("이미지 업로드", error.getMessage());
+                    // toast
+                    text_toast.setText("인터넷 연결이 필요합니다.");
+                    Toast toast = new Toast(getApplicationContext());
+                    toast.setDuration(Toast.LENGTH_LONG);
+                    toast.setView(layout_toast);
+                    toast.show();
+
+                    Log.e(TAG, error.getMessage());
                 } catch (NullPointerException ex) {
                     // toast
-                    Log.e("review_register", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
             }
         };
@@ -922,9 +848,7 @@ public class ReviewRegisterActivity extends Activity {
         options.outWidth = maxWidth;
         options.outHeight = maxHeight;
 
-
         Bitmap bitmap_resized = BitmapFactory.decodeFile(imagePath, options);
-
 
         return bitmap_resized;
 
@@ -945,7 +869,6 @@ public class ReviewRegisterActivity extends Activity {
         int width = srcBmp.getWidth();
         int height = srcBmp.getHeight();
 
-        Log.d("dSJW", "아여기보시게" + degree);
         Matrix matrix = new Matrix();
         matrix.postRotate(degree);
 
@@ -955,13 +878,7 @@ public class ReviewRegisterActivity extends Activity {
     }
 
     // get Image encoding
-    public String getStringImage(Bitmap bmp) {/*
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        bmp.compress(Bitmap.CompressFormat.JPEG, 50, baos);
-        byte[] imageBytes = baos.toByteArray();
-        String encodedImage = Base64.encodeToString(imageBytes, Base64.NO_WRAP);
-        */
-
+    public String getStringImage(Bitmap bmp) {
         ByteArrayOutputStream stream = new ByteArrayOutputStream();
         // Must compress the Image to reduce image size to make upload easy
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, stream);
@@ -969,21 +886,6 @@ public class ReviewRegisterActivity extends Activity {
         // Encode Image to String
         String encodedImage = Base64.encodeToString(byte_arr, 0);
 
-        /*
-        String encodedImage="";
-        try {
-
-            ByteArrayOutputStream stream = new ByteArrayOutputStream();
-            // Must compress the Image to reduce image size to make upload easy
-            bmp.compress(Bitmap.CompressFormat.JPEG, 50, stream);
-            byte[] byte_arr = stream.toByteArray();
-            // Encode Image to String
-            encodedImage = new String(byte_arr,"UTF-8");
-
-        }catch (Exception ex){
-            Log.v("에러","utf-8");
-        }
-        */
         return encodedImage;
     }
 
@@ -1123,7 +1025,7 @@ public class ReviewRegisterActivity extends Activity {
                 e.printStackTrace();
             }
 
-            Log.v("loading", "success");
+            Log.v(TAG, "loading success");
             return null;
         }
 
@@ -1132,7 +1034,7 @@ public class ReviewRegisterActivity extends Activity {
             if (asyncDialog != null) {
                 asyncDialog.dismiss();
             }
-            Log.d("loading", "finish");
+            Log.v(TAG, "loading finish");
 
             if (state == 0) {
                 // toast
@@ -1343,7 +1245,7 @@ public class ReviewRegisterActivity extends Activity {
             mGoodCheckBoxs = new CheckBox[]{(CheckBox) innerView.findViewById(R.id.checkbox1), (CheckBox) innerView.findViewById(R.id.checkbox2), (CheckBox) innerView.findViewById(R.id.checkbox3), (CheckBox) innerView.findViewById(R.id.checkbox4), (CheckBox) innerView.findViewById(R.id.checkbox5)
                     , (CheckBox) innerView.findViewById(R.id.checkbox6), (CheckBox) innerView.findViewById(R.id.checkbox7), (CheckBox) innerView.findViewById(R.id.checkbox8), (CheckBox) innerView.findViewById(R.id.checkbox9), (CheckBox) innerView.findViewById(R.id.checkbox10),
                     (CheckBox) innerView.findViewById(R.id.checkbox11), (CheckBox) innerView.findViewById(R.id.checkbox12), (CheckBox) innerView.findViewById(R.id.checkbox13), (CheckBox) innerView.findViewById(R.id.checkbox14), (CheckBox) innerView.findViewById(R.id.checkbox15),
-                    (CheckBox) innerView.findViewById(R.id.checkbox16),(CheckBox) innerView.findViewById(R.id.checkbox17),(CheckBox) innerView.findViewById(R.id.checkbox18)};
+                    (CheckBox) innerView.findViewById(R.id.checkbox16), (CheckBox) innerView.findViewById(R.id.checkbox17), (CheckBox) innerView.findViewById(R.id.checkbox18)};
 
             // checkbox 내용 입력
             for (int i = 0; i < mGoodCheckBoxs.length; i++) {
@@ -1357,7 +1259,7 @@ public class ReviewRegisterActivity extends Activity {
             mBadCheckBoxs = new CheckBox[]{(CheckBox) innerView.findViewById(R.id.checkbox1), (CheckBox) innerView.findViewById(R.id.checkbox2), (CheckBox) innerView.findViewById(R.id.checkbox3), (CheckBox) innerView.findViewById(R.id.checkbox4), (CheckBox) innerView.findViewById(R.id.checkbox5)
                     , (CheckBox) innerView.findViewById(R.id.checkbox6), (CheckBox) innerView.findViewById(R.id.checkbox7), (CheckBox) innerView.findViewById(R.id.checkbox8), (CheckBox) innerView.findViewById(R.id.checkbox9), (CheckBox) innerView.findViewById(R.id.checkbox10),
                     (CheckBox) innerView.findViewById(R.id.checkbox11), (CheckBox) innerView.findViewById(R.id.checkbox12), (CheckBox) innerView.findViewById(R.id.checkbox13), (CheckBox) innerView.findViewById(R.id.checkbox14), (CheckBox) innerView.findViewById(R.id.checkbox15),
-                    (CheckBox) innerView.findViewById(R.id.checkbox16),(CheckBox) innerView.findViewById(R.id.checkbox17),(CheckBox) innerView.findViewById(R.id.checkbox18) };
+                    (CheckBox) innerView.findViewById(R.id.checkbox16), (CheckBox) innerView.findViewById(R.id.checkbox17), (CheckBox) innerView.findViewById(R.id.checkbox18)};
 
             // checkbox 내용 입력
             for (int i = 0; i < mBadCheckBoxs.length; i++) {

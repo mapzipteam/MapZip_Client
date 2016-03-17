@@ -179,6 +179,36 @@ public class MapzipResponse{
                     } else {
                         return false;
                     }
+                case ResponseUtil.PROCESS_REVIEW_DELETE:
+                    if (mFields.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_DELETE_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case ResponseUtil.PROCESS_REVIEW_ENROLL:
+                    if (mFields.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_ENROLL_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case ResponseUtil.PROCESS_REVIEW_UPDATE:
+                    if (mFields.getInt("state") == SystemMain.CLIENT_REVIEW_DATA_UPDATE_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case ResponseUtil.PROCESS_REVIEW_MAKE_IMG_DIR:
+                    if ((mFields.getInt("state") == SystemMain.CLIENT_REVIEW_IMAGE_MKDIR_SUCCESS)||(mFields.getInt("state") == SystemMain.CLIENT_REVIEW_IMAGE_MKDIR_EXIST)) {
+                        return true;
+                    } else {
+                        return false;
+                    }
+                case ResponseUtil.PROCESS_REVIEW_IMAGE_SEND:
+                    if (mFields.getInt("state") == SystemMain.CLIENT_REVIEW_IMAGE_ENROLL_SUCCESS) {
+                        return true;
+                    } else {
+                        return false;
+                    }
                 default:
                     MapzipApplication.doLogging(TAG, "getState default logic..");
             }
