@@ -3,8 +3,6 @@ package com.mapzip.ppang.mapzipproject.wannabemap;
 import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
@@ -16,7 +14,6 @@ import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.graphics.Palette;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
@@ -26,7 +23,7 @@ import android.widget.TextView;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.map.NMapPOIflagType;
 import com.mapzip.ppang.mapzipproject.map.NMapViewerResourceProvider;
-import com.mapzip.ppang.mapzipproject.model.LocationInfo;
+import com.mapzip.ppang.mapzipproject.model.ReviewData;
 import com.nhn.android.maps.NMapActivity;
 import com.nhn.android.maps.NMapView;
 import com.nhn.android.maps.maplib.NGeoPoint;
@@ -70,12 +67,6 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
             mNameTagLayout.setBackgroundColor(palette.getMutedColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary)));
         }
     };
-
-    @Override
-    protected void onStart() {
-        super.onStart();
-
-    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -159,7 +150,7 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
 
         poiData.beginPOIdata(objects.size());
         for (Object object : objects) {
-            LocationInfo locationInfo = (LocationInfo) object;
+            ReviewData locationInfo = (ReviewData) object;
             poiData.addPOIitem(locationInfo.getLocationLatLng().getLatitude(), locationInfo.getLocationLatLng().getLongitude(), locationInfo.getLocationName(), NMapPOIflagType.PIN, locationInfo.getLocationID());
         }
         poiData.endPOIdata();
@@ -169,7 +160,7 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
     }
 
     @Override
-    public void showDetailReview(LocationInfo locationData) {
+    public void showDetailReview(ReviewData locationData) {
         mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         setLayoutColor();

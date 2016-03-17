@@ -7,14 +7,12 @@ import android.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.mapzip.ppang.mapzipproject.R;
-import com.mapzip.ppang.mapzipproject.model.LocationInfo;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
 import com.mapzip.ppang.mapzipproject.ui.DividerItemDecoration;
 
@@ -91,7 +89,6 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     private class InfosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
 
         private static final int ITEM_LOCATION_INFORMATION = 0;
-        private static final int ITEM_REVIEW = 1;
 
         private List<Object> mInfos;
         private InfoItemListener mItemListener;
@@ -110,9 +107,6 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
                 case ITEM_LOCATION_INFORMATION:
                     View infoView = inflater.inflate(R.layout.item_locationinfo, parent, false);
                     return new LocationInfoViewHolder(infoView, mItemListener);
-                case ITEM_REVIEW:
-                    View reviewView = inflater.inflate(R.layout.item_review, parent, false);
-                    return new ReviewViewHolder(reviewView);
                 default:
                     try {
                         throw new Exception("Cannot find right item view");
@@ -130,22 +124,12 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
             switch (holder.getItemViewType()) {
                 case ITEM_LOCATION_INFORMATION:
 
-                    LocationInfo info = (LocationInfo) object;
+                    ReviewData info = (ReviewData) object;
 
                     LocationInfoViewHolder locationInfoViewHolder = (LocationInfoViewHolder) holder;
                     locationInfoViewHolder.nameText.setText(info.getLocationName());
                     locationInfoViewHolder.addressText.setText(info.getLocationAddress());
 
-                    break;
-
-                case ITEM_REVIEW:
-
-                    ReviewData review = (ReviewData) object;
-
-                    ReviewViewHolder reviewViewHolder = (ReviewViewHolder) holder;
-                    reviewViewHolder.authorText.setText(review.getAuthor());
-                    reviewViewHolder.dateText.setText(review.getDate());
-                    reviewViewHolder.reviewText.setText(review.getReview());
                     break;
             }
         }
@@ -161,11 +145,10 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
 
         @Override
         public int getItemViewType(int position) {
-            if (mInfos.get(position).getClass().equals(LocationInfo.class)) {
+            if (mInfos.get(position).getClass().equals(ReviewData.class)) {
                 return ITEM_LOCATION_INFORMATION;
-            } else {
-                return ITEM_REVIEW;
             }
+            return -1;
         }
 
         @Override
@@ -195,20 +178,6 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
             @Override
             public void onClick(View view) {
                 mItemListener.onInfoClick(view);
-            }
-        }
-
-        public class ReviewViewHolder extends RecyclerView.ViewHolder {
-
-            public TextView authorText;
-            public TextView dateText;
-            public TextView reviewText;
-
-            public ReviewViewHolder(View itemView) {
-                super(itemView);
-                authorText = (TextView) itemView.findViewById(R.id.item_review_author);
-                dateText = (TextView) itemView.findViewById(R.id.item_review_date);
-                reviewText = (TextView) itemView.findViewById(R.id.item_review_review);
             }
         }
     }

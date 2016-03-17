@@ -1,8 +1,6 @@
 package com.mapzip.ppang.mapzipproject.wannabemap;
 
 
-import com.mapzip.ppang.mapzipproject.map.Location;
-import com.mapzip.ppang.mapzipproject.model.LocationInfo;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
 
 import java.util.List;
@@ -19,7 +17,7 @@ public interface MapInfosContract {
         interface Activity {
             void showLocationMarker(List<Object> locationInfos);
 
-            void showDetailReview(LocationInfo locationinfo);
+            void showDetailReview(ReviewData locationinfo);
         }
 
         interface InfosList {
