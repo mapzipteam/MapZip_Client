@@ -13,7 +13,13 @@ android:
         - extra-android-m2repository
 
         # Running Image
-        - sys-img-armeabi-v7a-android-21
+        - sys-img-armeabi-v7a-android-22
+script:
+    - ./gradlew build
 
-    script:
-        - ./gradlew build
+env:
+    global:
+        - ADB_INSTALL_TIMEOUT=8
+
+before_script:
+    - android-wait-for-emulator
