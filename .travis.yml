@@ -1,10 +1,18 @@
 language: android
 android:
     components:
+        # Update Android SDK Tools
         - tools
         - build-tools-23.0.2
         - android-23
+
+        # SUpport Library
+        - extra-google-google_play_services
+        - extra-google-m2repository
+        - extra-android-support
         - extra-android-m2repository
+
+        # Running Image
         - sys-img-armeabi-v7a-android-21
 
     script:
