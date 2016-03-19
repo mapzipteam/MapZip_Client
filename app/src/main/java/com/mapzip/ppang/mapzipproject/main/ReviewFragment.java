@@ -47,15 +47,12 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
     private Button review_search;
     private Button review_regi_self;
 
-    //2016.01.10송지원이 고침
-    //private EditText searchedit;
     private EditText searchedName;
     private EditText searchedLocation;
 
     private String storeToSerch;
     private String storeName;
     private String storeLocation;
-
 
     private RestaurantResult restaurants;
     private Context context;
@@ -75,8 +72,6 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
 
     private boolean mLockListView;
     private boolean mLockBtn;
-    private boolean mSendLock;
-    private boolean mBtnLockr_mapview;
 
     private Handler handler;
 
@@ -84,8 +79,6 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
     private int selectNum;
 
     public ReviewFragment(){}
-	
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -113,15 +106,11 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
         // 스크롤 리스너 등록
         mListView.setOnScrollListener(this);
 
-
-
         marItem = new ArrayList<MyItem>();
 
         user.setReviewListlock(false);
         mLockListView = false;
         mLockBtn = true;
-        mSendLock = false;
-        mBtnLockr_mapview = true;
 
         // 푸터를 등록. setAdapter 이전에 해야함.
         mInflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -175,21 +164,6 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
 
                 InputMethodManager imm = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
                 imm.hideSoftInputFromWindow(review_search.getWindowToken(), 0);
-                ConnectivityManager manager = (ConnectivityManager) getActivity().getSystemService(Context.CONNECTIVITY_SERVICE);
-                NetworkInfo mobile = manager.getNetworkInfo(ConnectivityManager.TYPE_MOBILE);
-                NetworkInfo wifi = manager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
-                if(!(mobile.isConnected() || wifi.isConnected()))
-                {
-                    // toast
-                    text_toast.setText("인터넷 연결이 필요합니다.");
-                    Toast toast = new Toast(getActivity());
-                    toast.setDuration(Toast.LENGTH_LONG);
-                    toast.setView(layout_toast);
-                    toast.show();
-
-                    return;
-                }
 
                 //query = searchedit.getText().toString();
                 query = storeToSerch;
@@ -203,7 +177,6 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
                 mListView.setAdapter(mMyAdapte);
                 mMyAdapte.notifyDataSetChanged();
 
-
                 mLockBtn = false;
 
                 reviewBtnChange(false);
@@ -215,10 +188,6 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
             @Override
             public void onClick(View v) {
                 InputMethodManager inputMethodManager = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
-//                inputMethodManager.hideSoftInputFromWindow(searchedit.getWindowToken(), 0);
-//                searchedit.clearFocus();
-//                searchedit.setSelectAllOnFocus(false);
-
                 inputMethodManager.hideSoftInputFromWindow(searchedName.getWindowToken(), 0);
                 searchedName.clearFocus();
                 searchedName.setSelectAllOnFocus(false);
@@ -245,7 +214,6 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
 //        });
 
         review_regi_self.setClickable(true);
-
 
         // 리뷰작성버튼 로직
         review_regi = (Button) v.findViewById(R.id.registerBtn_review);
@@ -411,7 +379,6 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
 
                 convertView.setTag(holder);
 
-
             }else{
                 holder = (StoreListHolder)convertView.getTag();
                 nameText = holder.m_storeName;
@@ -520,7 +487,6 @@ public class ReviewFragment extends Fragment implements AbsListView.OnScrollList
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id)
         {
-            mBtnLockr_mapview = false;
             selectNum = position;
 
             // 리뷰버튼 활성화

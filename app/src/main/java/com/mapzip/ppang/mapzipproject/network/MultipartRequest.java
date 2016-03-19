@@ -20,7 +20,10 @@ import java.io.UnsupportedEncodingException;
 import java.util.Map;
 
 /**
+ *
  * Created by ljs93kr on 2015-08-22.
+ * 멀티파트 이미지 업로드 때문에 잠시 사용되었던 클래스 입니다
+ * 더이상 사용되지 않는 클래스입니다
  */
 public class MultipartRequest extends Request<String> {
 

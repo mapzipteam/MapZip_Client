@@ -1,11 +1,8 @@
 package com.mapzip.ppang.mapzipproject.main;
 
-import android.annotation.SuppressLint;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageInfo;
-import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -28,12 +25,15 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.crashlytics.android.answers.Answers;
-import com.crashlytics.android.answers.ContentViewEvent;
 import com.crashlytics.android.answers.LoginEvent;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -44,14 +44,16 @@ import org.json.JSONObject;
  */
 public class LoginFragment extends Fragment {
 
-    private boolean lockBtn;
+    private final String TAG = "LoginFragment";
+
+    private boolean lockBtn=false;
     private LoadingTask Loading;
     private Resources res;
     private EditText inputID;
     private EditText inputPW;
     private Button LoginBtn;
     public UserData user;
-    public int map;
+    public int mapCount = 0;
     public ProgressDialog  asyncDialog;
 
     // head
@@ -168,7 +170,6 @@ public class LoginFragment extends Fragment {
         return rootView;
     }
 
-    @SuppressLint("LongLogTag")
     public void DoLogin(View v) {
         RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
 
@@ -184,19 +185,20 @@ public class LoginFragment extends Fragment {
             InputMethodManager imm2 = (InputMethodManager)getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
             imm.hideSoftInputFromWindow(inputID.getWindowToken(), 0);
 
-            JSONObject obj = new JSONObject();
+            MapzipRequestBuilder builder = null;
             try {
-                obj.put("userid", userid);
-                obj.put("userpw", userpw);
-                obj.put("gcm_key", gcm_key);
-                Log.v("제이손 보내기", obj.toString());
+                builder= new MapzipRequestBuilder();
+                builder.setCustomAttribute(NetworkUtil.USER_ID, userid);
+                builder.setCustomAttribute(NetworkUtil.USER_PW, userpw);
+                builder.setCustomAttribute(NetworkUtil.GCM_KEY, gcm_key);
+                builder.showInside();
             } catch (JSONException e) {
                 Log.v("제이손", "에러");
             }
 
             JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                     SystemMain.SERVER_LOGIN_URL,
-                    obj,
+                    builder.build(),
                     createMyReqSuccessListener(),
                     createMyReqErrorListener());
 
@@ -209,70 +211,27 @@ public class LoginFragment extends Fragment {
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.v("제이손", response.toString());
-
                 try {
-                    if (response.get("state").toString().equals("200")) {
+                    lockBtn =false;
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
 
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_LOGIN)) {
 
                         user.LoginOK();
                         user.inputID(inputID.getText().toString());
                         user.inputPW(inputPW.getText().toString());
-                        user.inputName(response.get("username").toString());
+                        user.inputName(mapzipResponse.getFieldsString(NetworkUtil.USER_NAME));
 
-                        Log.v("테스트 아이디", user.getUserID());
-                        Log.v("테스트 로그인", String.valueOf(user.getLoginPermission()));
-                        Log.v("테스트 이름", user.getUserName());
-
-                        int mapcount = response.getJSONArray("mapmeta_info").length();
-                        map = mapcount;
+                        mapCount = mapzipResponse.getFieldsJSONArray(NetworkUtil.MAP_META_INFO).length();
 
                         // 지도 순서 맞추기
-                        int metaorder[] = new int[mapcount+1];
-                        metaorder[0] = -1;
-                        for(int i=0; i<mapcount; i++){
-                            metaorder[Integer.parseInt(response.getJSONArray("mapmeta_info").getJSONObject(i).getString("map_id"))] = i;
-                        }
+                        user.setMapmetaArray(mapzipResponse.setMapMetaOrder());
 
-                        JSONArray newmetaarr = new JSONArray();
-                        for(int j=1; j<metaorder.length; j++){
-                            newmetaarr.put(response.getJSONArray("mapmeta_info").getJSONObject(metaorder[j]));
-                        }
+                        // 구별 리뷰 갯수 저장하기
+                        mapzipResponse.setMapReviewCount(SystemMain.TYPE_USER);
 
-                        user.setMapmetaArray(newmetaarr);
-                        Log.v("맵메타",String.valueOf(user.getMapmetaArray()));
-
-                        JSONObject jar = response.getJSONObject("gu_enroll_num");
-                        Log.v("구넘버", String.valueOf(jar));
-
-                        Log.v("구넘버", "진입");
-
-                        for (int mapnum = 1; mapnum <= mapcount; mapnum++) {
-                            if (jar.has(String.valueOf(mapnum))) {
-                                JSONObject tmp = jar.getJSONObject(String.valueOf(mapnum));
-                                int gunumber = 1;
-                                int reviewnum = 0;
-                                for (gunumber = 1; gunumber <= SystemMain.SeoulGuCount; gunumber++) {
-                                    if (tmp.has(String.valueOf(gunumber))) {
-                                        reviewnum = tmp.getInt(String.valueOf(gunumber));
-                                        Log.v("구넘버o", tmp.get(String.valueOf(gunumber)).toString());
-                                        //배열에 추가
-                                    } else {
-                                        reviewnum = 0;
-                                        Log.v("구넘버x", String.valueOf(gunumber));
-                                        //배열에 0 추가
-                                    }
-                                    user.setReviewCount(mapnum, gunumber, reviewnum);
-                                }
-                            } else {
-                                for (int gunumber = 1; gunumber <= SystemMain.SeoulGuCount; gunumber++)
-                                    user.setReviewCount(mapnum, gunumber, 0);
-                            }
-                        }
-
-                           Loading.execute();
-
-
+                        Loading.execute();
 
                         // toast
                         text_toast.setText("환영합니다!");
@@ -284,7 +243,7 @@ public class LoginFragment extends Fragment {
                         // fabric-Login
                         sendLoginSuccessToAnswers();
 
-                    } else if(response.get("state").toString().equals("201")) {
+                    } else{
                         // toast
                         text_toast.setText("존재하지 않는 계정정보입니다.");
                         Toast toast = new Toast(getActivity());
@@ -293,31 +252,24 @@ public class LoginFragment extends Fragment {
                         toast.show();
                     }
                 } catch (JSONException e) {
-                    Log.v("에러", "제이손");
+                    Log.v(TAG, "JSON ERROR");
                 }
-
-                lockBtn =false;
             }
         };
     }
 
     private void sendLoginSuccessToAnswers() {
-        int app_version = -1;
-        try {
-            PackageInfo packageInfo = getContext().getPackageManager().getPackageInfo(getContext().getPackageName(), 0);
-            app_version = packageInfo.versionCode;
-        } catch (PackageManager.NameNotFoundException e) {
-            e.printStackTrace();
-        }
         Answers.getInstance().logLogin(new LoginEvent()
         .putSuccess(true)
-        .putCustomAttribute("Version Code", app_version));
+        .putCustomAttribute("Version Code", user.getBuild_version()));
     }
 
     private Response.ErrorListener createMyReqErrorListener() {
         return new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
+                lockBtn =false;
+
                 try {
                     // toast
                     text_toast.setText("인터넷 연결이 필요합니다.");
@@ -326,13 +278,11 @@ public class LoginFragment extends Fragment {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("LoginFragment", error.getMessage());
+                    Log.e(TAG, error.getMessage());
                 } catch (NullPointerException ex) {
                     // toast
-                    Log.e("LoginFragment", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
-
-                lockBtn =false;
             }
         };
     }
@@ -352,8 +302,8 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            for (int mapnum = 1; mapnum <= map; mapnum++)
-            user.setMapImage(mapnum, res);
+            for (int mapNum = 1; mapNum <= mapCount; mapNum++)
+                user.setMapImage(mapNum, res);
          return null;
         }
 

@@ -81,6 +81,6 @@
         android:layout_height="wrap_content"
         android:text="임시버튼"
         android:id="@+id/testBtn"
-        android:visibility="gone"/>
+        android:visibility="visible"/>
 
 </LinearLayout>

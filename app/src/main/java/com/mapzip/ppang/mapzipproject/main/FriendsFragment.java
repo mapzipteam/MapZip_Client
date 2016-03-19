@@ -33,7 +33,11 @@ import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.activity.AddFriendsActivity;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +46,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 
 public class FriendsFragment extends Fragment implements AbsListView.OnScrollListener {
+    private final String TAG = "FriendsFragment";
 
     private boolean selectlock;
 
@@ -70,7 +75,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
 
     // 친구삭제
     private Button delfriend_btn;
-    private boolean delfriend_flag=false;
+    private boolean delfriend_flag = false;
 
     private boolean mLockBtn;
     private boolean mSendLock;
@@ -80,8 +85,8 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
     private Handler handler;
 
     private Resources res;
-    public int map;
-    public ProgressDialog  asyncDialog;
+    public int mapCount = 0;
+    public ProgressDialog asyncDialog;
     private LoadingTask Loading;
 
     public FriendsFragment() {
@@ -123,10 +128,10 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
         delfriend_btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(delfriend_flag)
-                    delfriend_flag=false;
+                if (delfriend_flag)
+                    delfriend_flag = false;
                 else
-                    delfriend_flag=true;
+                    delfriend_flag = true;
 
                 Log.v("delflag", String.valueOf(delfriend_flag));
 
@@ -152,7 +157,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
         mListView.setOnScrollListener(this);
 
         marItem.clear();
-        mMyAdapte = new MyListAdapter(getActivity(),R.layout.v_list_f_friend , marItem);
+        mMyAdapte = new MyListAdapter(getActivity(), R.layout.v_list_f_friend, marItem);
         mListView.addFooterView(footer);
         mListView.setAdapter(mMyAdapte);
         mMyAdapte.notifyDataSetChanged();
@@ -215,11 +220,17 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
             return position;
         }
 
-        public String getID(int position) {return alSrc.get(position).id_s;}
+        public String getID(int position) {
+            return alSrc.get(position).id_s;
+        }
 
-        public String getName(int position) {return alSrc.get(position).name_s;}
+        public String getName(int position) {
+            return alSrc.get(position).name_s;
+        }
 
-        public String getReviewCount(int position) {return alSrc.get(position).reviewcount_s;}
+        public String getReviewCount(int position) {
+            return alSrc.get(position).reviewcount_s;
+        }
 
         // 각 뷰의 항목 생성
         @Override
@@ -230,7 +241,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
             }
 
             delmapmark = (Button) convertView.findViewById(R.id.btn_delete_mapmark_f_friend);
-            if(delfriend_flag)
+            if (delfriend_flag)
                 delmapmark.setVisibility(View.VISIBLE);
             else
                 delmapmark.setVisibility(View.GONE);
@@ -240,25 +251,26 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
                 @Override
                 public void onClick(View v) {
                     AlertDialog.Builder alert_confirm = new AlertDialog.Builder(getActivity());
-                    alert_confirm.setMessage(mMyAdapte.getName(position)+"님을 맵갈피에서 삭제하시겠습니까?\n").setCancelable(false).setPositiveButton("확인",
+                    alert_confirm.setMessage(mMyAdapte.getName(position) + "님을 맵갈피에서 삭제하시겠습니까?\n").setCancelable(false).setPositiveButton("확인",
                             new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     // 'YES' target_id,
                                     RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
 
-                                    JSONObject obj = new JSONObject();
+                                    MapzipRequestBuilder builder = null;
                                     try {
-                                        obj.put("user_id", user.getUserID());
-                                        obj.put("target_id", mMyAdapte.getID(position));
-                                        Log.v("mapmark 보내기", obj.toString());
+                                        builder= new MapzipRequestBuilder();
+                                        builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+                                        builder.setCustomAttribute(NetworkUtil.TARGET_ID, mMyAdapte.getID(position));
+                                        builder.showInside();
                                     } catch (JSONException e) {
                                         Log.v("제이손", "에러");
                                     }
 
                                     JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                                             SystemMain.SERVER_REMOVEMAPMARK_URL,
-                                            obj,
+                                            builder.build(),
                                             createMyReqSuccessListener_remove(position),
                                             createMyReqErrorListener()) {
                                     };
@@ -297,11 +309,23 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
                 @Override
                 public void onResponse(JSONObject response) {
 
-                    Log.v("mapmark 받기", response.toString());
-
-                    marItem.remove(position);
-                    mMyAdapte.notifyDataSetChanged();
-
+                    try {
+                        MapzipResponse mapzipResponse = new MapzipResponse(response);
+                        mapzipResponse.showAllContents();
+                        if (mapzipResponse.getState(ResponseUtil.PROCESS_FRIEND_DELETE)) {
+                            marItem.remove(position);
+                            mMyAdapte.notifyDataSetChanged();
+                        }else {
+                            // toast
+                            text_toast.setText("다시 시도해주세요.");
+                            Toast toast = new Toast(getActivity());
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setView(layout_toast);
+                            toast.show();
+                        }
+                    }catch (JSONException e){
+                        Log.e(TAG,"제이손 에러");
+                    }
                 }
             };
         }
@@ -317,7 +341,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
                 if (mLockBtn == false) {
                     try {
                         for (int i = 0; i < size; i++) {
-                            items = new MyItem(String.valueOf(i), getArray.getJSONObject(i).getString("user_name"), getArray.getJSONObject(i).getString("user_id"), getArray.getJSONObject(i).getString("total_review"));
+                            items = new MyItem(String.valueOf(i), getArray.getJSONObject(i).getString(NetworkUtil.USER_NAME), getArray.getJSONObject(i).getString(NetworkUtil.USER_ID), getArray.getJSONObject(i).getString(NetworkUtil.TOTAL_REVIEW));
                             marItem.add(items);
                         }
                     } catch (JSONException e) {
@@ -364,18 +388,19 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
 
             RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
 
-            JSONObject obj = new JSONObject();
+            MapzipRequestBuilder builder = null;
             try {
-                obj.put("userid", user.getUserID());
-                obj.put("more", seq);
-                Log.v("searchmap 보내기", obj.toString());
+                builder= new MapzipRequestBuilder();
+                builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+                builder.setCustomAttribute(NetworkUtil.SEARCH_SEQ_NUM, seq);
+                builder.showInside();
             } catch (JSONException e) {
                 Log.v("제이손", "에러");
             }
 
             JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                     SystemMain.SERVER_FRIENDLIST_URL,
-                    obj,
+                    builder.build(),
                     createMyReqSuccessListener(),
                     createMyReqErrorListener()) {
             };
@@ -383,32 +408,27 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
         }
     }
 
-
     private Response.Listener<JSONObject> createMyReqSuccessListener() {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
 
-
-                Log.v("friendlist 받기", response.toString());
-
                 try {
-                    int state = response.getInt("state");
-                    if (state == SystemMain.FRIEND_ITEM_SHOW_SUCCESS) { // 901
-                        getArray = response.getJSONArray("friend_list");
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_FRIEND_LIST)) {
+                        getArray = mapzipResponse.getFieldsJSONArray(NetworkUtil.FRIEND_LIST);
                         seq++;
 
                         addItems(6);
-
-                    } else if (state == SystemMain.FRIEND_ITEM_SHOW_EMPTY) { // 902, 친구 없을 때
+                    }else {
                         mLockBtn = true;
                         mListView.removeFooterView(footer);
-
                     }
-
-                } catch (JSONException e) {
-
+                }catch (JSONException e){
+                    Log.e(TAG,"제이손 에러");
                 }
+
                 mSendLock = false;
             }
         };
@@ -426,10 +446,10 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("friendlist", error.getMessage());
+                    Log.e(TAG, error.getMessage());
                 } catch (NullPointerException ex) {
                     // toast
-                    Log.e("friendlist", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
             }
         };
@@ -439,7 +459,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-            if(selectlock == false) {
+            if (selectlock == false) {
                 selectlock = true;
 
                 fuser.initReviewData();
@@ -453,8 +473,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
                 fuser.inputName(mMyAdapte.getName(position));
 
                 GoFriendHome(view, mMyAdapte.getID(position));
-            }
-            else
+            } else
                 return;
         }
     }
@@ -462,17 +481,18 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
     public void GoFriendHome(View v, String fid) {
         RequestQueue queue = MyVolley.getInstance(getActivity()).getRequestQueue();
 
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            obj.put("target_id", fid);
-            Log.v("friendlist_friend 보내기", obj.toString());
+            builder= new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.TARGET_ID, fid);
+            builder.showInside();
         } catch (JSONException e) {
             Log.v("제이손", "에러");
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_FRIENDHOME_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener_friend(),
                 createMyReqErrorListener()) {
         };
@@ -484,58 +504,20 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.v("friendlist_friend 받기", response.toString());
                 try {
-                    if (response.getInt("state") == SystemMain.FRIEND_HOME_SUCCESS) { // 801
-
-                        int mapcount = response.getJSONArray("mapmeta_info").length();
-                        map = mapcount;
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_FRIEND_GET_REVIEW_META)) {
+                        mapCount = mapzipResponse.getFieldsJSONArray(NetworkUtil.MAP_META_INFO).length();
 
                         // 지도 순서 맞추기
-                        int metaorder[] = new int[mapcount+1];
-                        metaorder[0] = -1;
-                        for(int i=0; i<mapcount; i++){
-                            metaorder[Integer.parseInt(response.getJSONArray("mapmeta_info").getJSONObject(i).getString("map_id"))] = i;
-                        }
+                        fuser.setMapmetaArray(mapzipResponse.setMapMetaOrder());
 
-                        JSONArray newmetaarr = new JSONArray();
-                        for(int j=1; j<metaorder.length; j++){
-                            newmetaarr.put(response.getJSONArray("mapmeta_info").getJSONObject(metaorder[j]));
-                        }
-
-                        fuser.setMapmetaArray(newmetaarr);
-                        Log.v("맵메타",String.valueOf(user.getMapmetaArray()));
-
-
-                        JSONObject jar = response.getJSONObject("gu_enroll_num");
-                        Log.v("구넘버", String.valueOf(jar));
-
-                        Log.v("구넘버", "진입");
-                        for (int mapnum = 1; mapnum <= mapcount; mapnum++) {
-                            if (jar.has(String.valueOf(mapnum))) {
-                                JSONObject tmp = jar.getJSONObject(String.valueOf(mapnum));
-                                int gunumber = 1;
-                                int reviewnum = 0;
-                                for (gunumber = 1; gunumber <= 25; gunumber++) {
-                                    if (tmp.has(String.valueOf(gunumber))) {
-                                        reviewnum = tmp.getInt(String.valueOf(gunumber));
-                                        Log.v("구넘버o", tmp.get(String.valueOf(gunumber)).toString());
-                                        //배열에 추가
-                                    } else {
-                                        reviewnum = 0;
-                                        Log.v("구넘버x", String.valueOf(gunumber));
-                                        //배열에 0 추가
-                                    }
-                                    fuser.setReviewCount(mapnum, gunumber, reviewnum);
-                                }
-                            } else {
-                                for (int gunumber = 1; gunumber <= 25; gunumber++)
-                                    fuser.setReviewCount(mapnum, gunumber, 0);
-                            }
-                        }
+                        // 구별 리뷰 갯수 저장하기
+                        mapzipResponse.setMapReviewCount(SystemMain.TYPE_FRIEND);
 
                         Loading.execute();
-                    } else{
+                    } else {
                         // toast
                         text_toast.setText("다시 시도해주세요.");
                         Toast toast = new Toast(getActivity());
@@ -569,8 +551,8 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            for (int mapnum = 1; mapnum <= map; mapnum++)
-                fuser.setMapImage(mapnum, res);
+            for (int mapNum = 1; mapNum <= mapCount; mapNum++)
+                fuser.setMapImage(mapNum, res);
             return null;
         }
 
@@ -580,7 +562,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
             if (asyncDialog != null) {
                 asyncDialog.dismiss();
 
-                Intent intent = new Intent(getActivity(),FriendsHomeActivity.class);
+                Intent intent = new Intent(getActivity(), FriendsHomeActivity.class);
                 startActivity(intent);
             }
 
@@ -592,7 +574,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnScrollLis
     public void onResume() {
         super.onResume();
 
-        if(user.getfriendlock() == false) {
+        if (user.getfriendlock() == false) {
             marItem.clear();
             mMyAdapte = new MyListAdapter(getActivity(), R.layout.v_list_f_friend, marItem);
             mListView.addFooterView(footer);

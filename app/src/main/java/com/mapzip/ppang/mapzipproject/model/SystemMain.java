@@ -60,6 +60,9 @@ public class SystemMain {
     public static final int MAP_SEARCH_NO_MORE = 502;
     public static final int MAP_SEARCH_FAIL = 503;
 
+    public static final int MAP_SETTING_SUCCESS = 511; // 	사용자의 지도가 새로운 내용으로 셋팅 완료
+    public static final int MAP_SETTING_FAIL = 512; // 	사용자의 지도가 새로운 내용으로 셋팅 완료
+
     // state define 600~ : about client_data
     public static final int CLIENT_REVIEW_DATA_ENROLL_SUCCESS = 601; // text data enroll success
     public static final int CLIENT_REVIEW_IMAGE_MKDIR_SUCCESS = 602; // image data dir create success
@@ -68,6 +71,9 @@ public class SystemMain {
     public static final int CLIENT_REVIEW_IMAGE_RMDIR_SUCCESS = 605; // 리뷰 삭제 이미지 데이터 및 디렉토리 삭제 성공
     public static final int CLIENT_REVIEW_IMAGE_RMDIR_NONE	 = 606; // 리뷰 삭제 이미지 디렉토리가 애초에 없음(이미지없음)
     public static final int CLIENT_REVIEW_DATA_UPDATE_SUCCESS = 607; // 리뷰 갱신 텍스트 데이터 갱신 성공
+
+    public static final int CLIENT_MAP_ONE_CLEAR_SUCCESS = 608; // 사용자의 지도 하나를 초기화 성공
+    public static final int CLIENT_MAP_ONE_CLEAR_FAIL = 651; // 사용자의 지도 하나를 초기화 실패
 
     public static final int CLIENT_REVIEW_DATA_ENROLL_FAIL = 611; // text data enroll fail
     public static final int CLIENT_REVIEW_DATA_ENROLL_EXIST = 612; // review is overlapped
@@ -87,9 +93,21 @@ public class SystemMain {
     public static final int FRIEND_ITEM_SHOW_SUCCESS = 901; // success to show user's friend list
     public static final int FRIEND_ITEM_SHOW_EMPTY = 902; // if user's friend list is empty..
 
+    public static final int FRIEND_ITEM_DELETE_SUCCESS = 911; // 맵갈피 삭제 성공
+    public static final int FRIEND_ITEM_DELETE_FAIL = 912; // 맵갈피 삭제 실패
+
+    public static final int FRIEND_ITEM_ENROLL_SUCCESS = 921; // 사용자의 맵갈피 정보 하나 등록 성공
+    public static final int FRIEND_ITEM_ENROLL_FAIL = 922; // 사용자의 맵갈피 정보 하나 등록 실패
+
+    public static final int FRIEND_SEARCH_SUCCESS = 931; // 사용자의 맵갈피 정보 찾기 성공
+
     // state define 1000~ : about interact with users
     public static final int USER_SOUND_INSERT_SUCCESS = 1001; // success to insert in user sound to mz_user_sound table
     public static final int USER_SOUND_INSERT_FAIL = 1002; // fail it
+
+    public static final int USER_GCM_UPDATE_FAIL = 1101; // 로그인할때, 유저 GCM테이블에 업데이트가 실패
+
+    public static final int PATCH_NOTE_GET_SUCCESS = 1201; //	MapZip 공지사항을 정상적으로 전달함
 
 
     /*
@@ -107,8 +125,8 @@ public class SystemMain {
     public static final int MAP_YELLOW_NUM = 1;
 
     // for imageadapter
-    public static final int justuser = 1;
-    public static final int justfuser = 2;
+    public static final int TYPE_USER = 1;
+    public static final int TYPE_FRIEND = 2;
     public static final int MAXIMAGENUM = 10;
 
     // GU number DEFAULT
@@ -138,5 +156,11 @@ public class SystemMain {
     public static final int SeoCho = 23;
     public static final int GangNam = 24;
     public static final int SongPa = 25;
+
+    // Build Version Code
+    public class Build{
+        public static final int GARNET = 5; // 가넷, 1월의 탄생석 // versionCode 5, versionName "1.5"
+        public static final int GARNET_END = 100;
+    }
 
 }

@@ -9,7 +9,7 @@
         android:layout_height="wrap_content"
         android:layout_margin="15dp"
         android:gravity="center_horizontal"
-        android:text="가장 어울리는 칭찬의 말을 선택해주세요! (0~5개)" />
+        android:text="가장 어울리는 말을 선택해주세요! (0~5개)" />
 
     <ScrollView
         android:layout_width="match_parent"

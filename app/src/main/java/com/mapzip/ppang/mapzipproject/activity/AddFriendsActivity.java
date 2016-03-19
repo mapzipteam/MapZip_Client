@@ -22,7 +22,11 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
+import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
+import com.mapzip.ppang.mapzipproject.network.MapzipResponse;
 import com.mapzip.ppang.mapzipproject.network.MyVolley;
+import com.mapzip.ppang.mapzipproject.network.NetworkUtil;
+import com.mapzip.ppang.mapzipproject.network.ResponseUtil;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -31,6 +35,8 @@ import org.json.JSONObject;
  * Created by ppangg on 2015-08-30.
  */
 public class AddFriendsActivity extends Activity {
+    private final String TAG = "AddFriendsActivity";
+
     private UserData user;
 
     // toast
@@ -85,20 +91,19 @@ public class AddFriendsActivity extends Activity {
 
 
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
-
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            obj.put("user_id", user.getUserID());
-            obj.put("friend_id",searchText.getText().toString());
-
-            Log.v("addfriend_search 보내기", obj.toString());
+            builder= new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+            builder.setCustomAttribute(NetworkUtil.FRIEND_ID, searchText.getText().toString());
+            builder.showInside();
         } catch (JSONException e) {
-            Log.v("제이손", "에러");
+            e.printStackTrace();
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_ADDFRIENDSEARCH_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener_search(),
                 createMyReqErrorListener()) {
         };
@@ -113,21 +118,20 @@ public class AddFriendsActivity extends Activity {
         imm2.hideSoftInputFromWindow(friendinfo.getWindowToken(), 0);
 
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
-
-        JSONObject obj = new JSONObject();
+        MapzipRequestBuilder builder = null;
         try {
-            obj.put("user_id", user.getUserID());
-            obj.put("friend_id",friendID);
-            obj.put("user_name",user.getUserName());
-
-            Log.v("addfriend_enroll 보내기", obj.toString());
+            builder= new MapzipRequestBuilder();
+            builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
+            builder.setCustomAttribute(NetworkUtil.FRIEND_ID,friendID);
+            builder.setCustomAttribute(NetworkUtil.USER_NAME,user.getUserName());
+            builder.showInside();
         } catch (JSONException e) {
-            Log.v("제이손", "에러");
+            e.printStackTrace();
         }
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_ADDFRIENDENROLL_URL,
-                obj,
+                builder.build(),
                 createMyReqSuccessListener_enroll(),
                 createMyReqErrorListener()) {
         };
@@ -139,37 +143,50 @@ public class AddFriendsActivity extends Activity {
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.v("addfriend_search", response.toString());
                 friendID = searchText.getText().toString();
 
                 try {
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_FRIEND_SEARCH_BY_NAME)) {
+                        if(mapzipResponse.getFieldsString(NetworkUtil.TOTAL_REVIEW).equals("null")){
+                            // toast
+                            text_toast.setText("존재하지 않는 사용자입니다.");
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setDuration(Toast.LENGTH_LONG);
+                            toast.setView(layout_toast);
+                            toast.show();
 
-                    friendinfo.setVisibility(View.GONE);
-                    friendadd.setVisibility(View.GONE);
+                            return;
+                        }
 
-                    friendinfo.setText(response.getString("friend_name") + " (" + friendID + ")\n리뷰수: " + response.get("total_review").toString());
-                    if(response.getInt("is_friend")==1){
-                        friendadd.setBackgroundResource(R.drawable.friend_add2);
-                        friendadd.setEnabled(false);
-                    }else if(response.getString("total_review").equals("null")){
+                        friendinfo.setVisibility(View.GONE);
+                        friendadd.setVisibility(View.GONE);
+
+                        friendinfo.setText(mapzipResponse.getFieldsString(NetworkUtil.FRIEND_NAME) + " (" + friendID + ")\n" +
+                                "리뷰수: " + mapzipResponse.getFieldsString(NetworkUtil.TOTAL_REVIEW));
+
+                        if (mapzipResponse.getFieldsBoolean(NetworkUtil.IS_FRIEND) == true) {
+                            friendadd.setBackgroundResource(R.drawable.friend_add2);
+                            friendadd.setEnabled(false);
+                        } else {
+                            friendadd.setBackgroundResource(R.drawable.friend_add);
+                            friendadd.setEnabled(true);
+                        }
+
+                        friendinfo.setVisibility(View.VISIBLE);
+                        friendadd.setVisibility(View.VISIBLE);
+                    } else{
                         // toast
-                        text_toast.setText("존재하지 않는 사용자입니다.");
+                        text_toast.setText("다시 시도해주세요.");
                         Toast toast = new Toast(getApplicationContext());
                         toast.setDuration(Toast.LENGTH_LONG);
                         toast.setView(layout_toast);
                         toast.show();
-
-                        return;
                     }
-                    else {
-                        friendadd.setBackgroundResource(R.drawable.friend_add);
-                        friendadd.setEnabled(true);
-                    }
-                    friendinfo.setVisibility(View.VISIBLE);
-                    friendadd.setVisibility(View.VISIBLE);
 
                 }catch (JSONException ex){
-                    Log.e("제이손","에러");
+                    Log.e(TAG,"제이손 에러");
                 }
 
             }
@@ -181,19 +198,33 @@ public class AddFriendsActivity extends Activity {
             @Override
             public void onResponse(JSONObject response) {
 
-                Log.v("addfriend_enroll", response.toString());
+                try {
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_FRIEND_ADD)) {
 
-                friendadd.setVisibility(View.INVISIBLE);
-                friendadd.setBackgroundResource(R.drawable.friend_add2);
-                friendadd.setEnabled(false);
-                friendadd.setVisibility(View.VISIBLE);
+                        friendadd.setVisibility(View.INVISIBLE);
+                        friendadd.setBackgroundResource(R.drawable.friend_add2);
+                        friendadd.setEnabled(false);
+                        friendadd.setVisibility(View.VISIBLE);
 
-                // toast
-                text_toast.setText(friendID+"님을 맵갈피에 추가하였습니다.");
-                Toast toast = new Toast(getApplicationContext());
-                toast.setDuration(Toast.LENGTH_LONG);
-                toast.setView(layout_toast);
-                toast.show();
+                        // toast
+                        text_toast.setText(friendID + "님을 맵갈피에 추가하였습니다.");
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
+                    } else {
+                        // toast
+                        text_toast.setText("다시 시도해주세요.");
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_LONG);
+                        toast.setView(layout_toast);
+                        toast.show();
+                    }
+                }catch (JSONException e){
+                    Log.e(TAG,"제이손 에러");
+                }
 
             }
         };
@@ -211,10 +242,10 @@ public class AddFriendsActivity extends Activity {
                     toast.setView(layout_toast);
                     toast.show();
 
-                    Log.e("AddFriendsActivity", error.getMessage());
+                    Log.e(TAG, error.getMessage());
                 }catch (NullPointerException ex){
                     // toast
-                    Log.e("AddFriendsActivity", "nullpointexception");
+                    Log.e(TAG, "nullpointexception");
                 }
             }
         };

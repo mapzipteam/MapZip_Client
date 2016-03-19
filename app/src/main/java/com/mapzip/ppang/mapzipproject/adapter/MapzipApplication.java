@@ -7,18 +7,24 @@ package com.mapzip.ppang.mapzipproject.adapter;
 import android.app.Application;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.util.Log;
 
 import com.crashlytics.android.Crashlytics;
 import com.mapzip.ppang.mapzipproject.main.MainActivity;
+import com.mapzip.ppang.mapzipproject.model.SystemMain;
+import com.mapzip.ppang.mapzipproject.model.UserData;
 
 import io.fabric.sdk.android.Fabric;
 import java.lang.reflect.Field;
 
 public class MapzipApplication extends Application {
 
-    private static boolean mDebugMode;
+    private final String TAG = "MapzipApplication";
+
+    public static boolean mDebugMode;
 
     @Override
     public void onCreate() {
@@ -44,13 +50,20 @@ public class MapzipApplication extends Application {
     private void initMapzip(boolean debugmode){
         this.mDebugMode = debugmode;
 
+        UserData user = UserData.getInstance();
+        int app_version = -1;
+        try {
+            PackageInfo packageInfo = getApplicationContext().getPackageManager().getPackageInfo(getApplicationContext().getPackageName(), 0);
+            app_version = packageInfo.versionCode;
+
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+        user.setBuild_version(app_version);
+        MapzipApplication.doLogging(TAG, "userdata_app_version : "+user.getBuild_version());
+
     }
 
-    /**
-     * Fabric을 애플리케이션 실행시에 초기화 시키는 루틴입니다.
-     * debuggable의 true 인자는 Play Store에 배포시에 false로 변경해야합니다.
-     *
-     */
     private void initFabric() {
         final Fabric fabric = new Fabric.Builder(this)
                 .kits(new Crashlytics())
@@ -94,5 +107,8 @@ public class MapzipApplication extends Application {
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+
     }
+
+
 }
