@@ -482,7 +482,7 @@ public class ReviewRegisterActivity extends Activity {
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_REVIEWENROLL2_URL,
                 builder.build(),
-                createMyReqSuccessListener(),
+                createMyReqSuccessListener_makeDir(),
                 createMyReqErrorListener()) {
         };
         queue.add(myReq);
@@ -520,30 +520,6 @@ public class ReviewRegisterActivity extends Activity {
 
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_REVIEWMODIFY_URL,
-                builder.build(),
-                createMyReqSuccessListener_modify(),
-                createMyReqErrorListener()) {
-        };
-        queue.add(myReq);
-    }
-
-    // in modify Btn -> response, 이미지 있을때 (in noimage)
-    public void DoModifyset2() {
-        RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
-        MapzipRequestBuilder builder = null;
-        try {
-            builder = new MapzipRequestBuilder();
-            builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
-            builder.setCustomAttribute(NetworkUtil.MAP_ID, reviewData.getMapid());
-            builder.setCustomAttribute(NetworkUtil.STORE_ID, reviewData.getStore_id());
-            builder.showInside();
-
-        } catch (JSONException e) {
-            Log.e(TAG, "제이손 에러");
-        }
-
-        JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
-                SystemMain.SERVER_REVIEWENROLL2_URL,
                 builder.build(),
                 createMyReqSuccessListener_modify(),
                 createMyReqErrorListener()) {
@@ -629,7 +605,7 @@ public class ReviewRegisterActivity extends Activity {
                         if (modifyedcheck == true) {
                             Log.v("리뷰수정", "OK");
                             if ((reviewData.getImage_num() - afterimagenum) == 0)
-                                DoModifyset2();
+                                MakeImageDir();
                             else {
                                 serverchoice = 2;
                                 loading.execute();
@@ -645,10 +621,6 @@ public class ReviewRegisterActivity extends Activity {
 
                             finish();
                         }
-                    } else if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_MAKE_IMG_DIR)) { // 602 || 621
-                        serverchoice = 2;
-                        loading.execute();
-                        // 2번째통신 이미지갯수만큼 반복
                     }
                 } catch (JSONException e) {
                     Log.e(TAG,"제이손 에러");
@@ -684,6 +656,36 @@ public class ReviewRegisterActivity extends Activity {
                         toast.setView(layout_toast);
                         toast.show();
                     } else if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_MAKE_IMG_DIR)) { // 602 || 621
+                        // 2번째통신 성공
+                        Log.v("리뷰저장2", "OK");
+                        serverchoice = 2;
+                        loading.execute();
+                        // 3번째통신 이미지갯수만큼 반복
+                    } else{
+                        // toast
+                        text_toast.setText("다시 시도해주세요.");
+                        Toast toast = new Toast(getApplicationContext());
+                        toast.setDuration(Toast.LENGTH_SHORT);
+                        toast.setView(layout_toast);
+                        toast.show();
+                    }
+                } catch (JSONException ex) {
+                    Log.e(TAG, "제이손 에러");
+                }
+            }
+        };
+    }
+
+
+    // for enroll response
+    private Response.Listener<JSONObject> createMyReqSuccessListener_makeDir() {
+        return new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    MapzipResponse mapzipResponse = new MapzipResponse(response);
+                    mapzipResponse.showAllContents();
+                    if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_MAKE_IMG_DIR)) { // 602 || 621
                         // 2번째통신 성공
                         Log.v("리뷰저장2", "OK");
                         serverchoice = 2;
