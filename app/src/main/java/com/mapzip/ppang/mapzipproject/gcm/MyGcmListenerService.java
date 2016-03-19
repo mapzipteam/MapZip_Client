@@ -12,6 +12,7 @@ import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.mapzip.ppang.mapzipproject.R;
+import com.mapzip.ppang.mapzipproject.adapter.MapzipApplication;
 import com.mapzip.ppang.mapzipproject.main.SplashActivity;
 
 import org.json.JSONException;
@@ -33,6 +34,8 @@ public class MyGcmListenerService extends GcmListenerService {
     public void onMessageReceived(String from, Bundle data) {
         String title = data.getString("title");
         String message = data.getString("message");
+        String notification_type = data.getString("notification_type"); // 보낼때는 Boolean 을 기대하지만, 보내지는 값은 string 입니다
+        MapzipApplication.doLogging(TAG, data.toString());
         JSONObject json_extra=null;
         try {
             json_extra = new JSONObject(data.getString("extra"));
@@ -40,13 +43,14 @@ public class MyGcmListenerService extends GcmListenerService {
             Log.d(TAG, "Title: " + title);
             Log.d(TAG, "Message: " + message);
             Log.d(TAG, "extra : "+json_extra.toString());
-            Log.d(TAG, "extra : notification_type : " + json_extra.getBoolean("notification_type"));
-            if(json_extra.getBoolean("notification_type")){
+            if(notification_type.equals("true")){
                 sendNotification(title, message);
             }else{
                 // no not notification
             }
         } catch (JSONException e) {
+            e.printStackTrace();
+        }catch (NullPointerException e){
             e.printStackTrace();
         }
 
