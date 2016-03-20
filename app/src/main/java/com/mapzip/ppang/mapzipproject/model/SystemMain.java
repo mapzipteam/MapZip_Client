@@ -159,7 +159,7 @@ public class SystemMain {
 
     // Build Version Code
     public class Build{
-        public static final int GARNET = 5; // 가넷, 1월의 탄생석 // versionCode 5, versionName "1.5"
+        public static final int GARNET = 6; // 가넷, 1월의 탄생석 // versionCode 6, versionName "1.6"
         public static final int GARNET_END = 100;
     }
 
