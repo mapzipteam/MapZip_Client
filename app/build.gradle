@@ -74,18 +74,19 @@ dependencies {
     compile "com.android.support:appcompat-v7:$rootProject.supportLibraryVersion"
     compile "com.android.support.test.espresso:espresso-idling-resource:$rootProject.ext.espressoVersion"
     compile "com.google.android.gms:play-services-gcm:$rootProject.playServicesVersion"
+    compile "com.google.android.gms:play-services-maps:$rootProject.playServicesVersion"
     compile "com.google.guava:guava:$rootProject.guavaVersion"
     compile "com.google.code.gson:gson:$rootProject.gsonVersion"
     compile "com.mcxiaoke.volley:library:$rootProject.volleyVersion"
     compile 'com.naver.maps.open:naver-map-api:2.1.1@aar'
-    compile('org.apache.httpcomponents:httpmime:4.3.6')
-            {
-                exclude module: 'httpclient'
-            }
+    compile('org.apache.httpcomponents:httpmime:4.3.6') {
+        exclude module: 'httpclient'
+    }
     compile 'org.apache.httpcomponents:httpcore:4.4.4'
     compile("com.crashlytics.sdk.android:crashlytics:$rootProject.crashlyticsVersion@aar") {
         transitive = true;
     }
+
     // Dependencies for local unit tests
     testCompile "junit:junit:$rootProject.ext.junitVersion"
     testCompile "org.mockito:mockito-all:$rootProject.ext.mockitoVersion"

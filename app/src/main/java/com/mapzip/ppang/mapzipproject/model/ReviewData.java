@@ -2,7 +2,7 @@ package com.mapzip.ppang.mapzipproject.model;
 
 import android.support.annotation.Nullable;
 
-import com.nhn.android.maps.maplib.NGeoPoint;
+import com.google.android.gms.maps.model.LatLng;
 
 /**
  * Created by acekim on 16. 2. 25.
@@ -14,7 +14,7 @@ public class ReviewData {
     @Nullable
     private String locationAddress;
     @Nullable
-    private NGeoPoint locationLatLng;
+    private LatLng latLng;
     @Nullable
     private String tags;
     @Nullable
@@ -26,11 +26,11 @@ public class ReviewData {
     @Nullable
     private String contact;
 
-    public ReviewData(int locationID, String locationName, String locationAddress, NGeoPoint locationLatLng, String tags, String goodReview, String badReview, String custumReview, String contact) {
+    public ReviewData(int locationID, String locationName, String locationAddress, LatLng latLng, String tags, String goodReview, String badReview, String custumReview, String contact) {
         this.locationID = locationID;
         this.locationName = locationName;
         this.locationAddress = locationAddress;
-        this.locationLatLng = locationLatLng;
+        this.latLng = latLng;
         this.tags = tags;
         this.goodReview = goodReview;
         this.badReview = badReview;
@@ -107,11 +107,12 @@ public class ReviewData {
         this.locationAddress = locationAddress;
     }
 
-    public NGeoPoint getLocationLatLng() {
-        return locationLatLng;
+    @Nullable
+    public LatLng getLatLng() {
+        return latLng;
     }
 
-    public void setLocationLatLng(NGeoPoint locationLatLng) {
-        this.locationLatLng = locationLatLng;
+    public void setLatLng(@Nullable LatLng latLng) {
+        this.latLng = latLng;
     }
 }

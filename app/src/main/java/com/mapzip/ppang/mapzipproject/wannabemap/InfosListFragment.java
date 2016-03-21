@@ -83,7 +83,6 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     @Override
     public void showLocationInfos(List<ReviewData> datas) {
         mInfosAdapter.replaceData(datas);
-        mActionsListener.setUpLocationMarkers(datas);
     }
 
     private class InfosAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {

@@ -28,7 +28,7 @@ public interface MapInfosContract {
     interface UserActionListener {
         void setInfosListFragment(MapInfosContract.View.InfosList fragment);
 
-        void setUpLocationMarkers(List<ReviewData> datas);
+        void setUpLocationMarkers();
 
         void loadLocationInfos(boolean forceUpdate);
 

@@ -4,48 +4,41 @@ import android.app.FragmentManager;
 import android.app.FragmentTransaction;
 import android.graphics.Bitmap;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.design.widget.BottomSheetBehavior;
 import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.content.ContextCompat;
-import android.support.v7.app.AppCompatCallback;
-import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
-import android.support.v7.view.ActionMode;
 import android.support.v7.widget.Toolbar;
-import android.view.MotionEvent;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.mapzip.ppang.mapzipproject.R;
-import com.mapzip.ppang.mapzipproject.map.NMapPOIflagType;
-import com.mapzip.ppang.mapzipproject.map.NMapViewerResourceProvider;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
-import com.nhn.android.maps.NMapActivity;
-import com.nhn.android.maps.NMapView;
-import com.nhn.android.maps.maplib.NGeoPoint;
-import com.nhn.android.maps.nmapmodel.NMapError;
-import com.nhn.android.maps.overlay.NMapPOIdata;
-import com.nhn.android.mapviewer.overlay.NMapOverlayManager;
-import com.nhn.android.mapviewer.overlay.NMapPOIdataOverlay;
 
+import java.util.HashMap;
 import java.util.List;
 
-public class MapInfosActivity extends NMapActivity implements AppCompatCallback, MapInfosContract.View.Activity {
+public class MapInfosActivity extends AppCompatActivity implements MapInfosContract.View.Activity, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = "MapInfosActivity";
+    private HashMap<Marker, Integer> mLocationHashMap = new HashMap<Marker, Integer>();
 
-    private AppCompatDelegate mDelegate;
     private FragmentManager mFragmentManager;
     private FragmentTransaction mFragmentTransaction;
 
-    private NMapView mMapView;
-    private NMapViewerResourceProvider mMapViewerResourceProvider;
-    private NMapOverlayManager mMapOverlayManager;
-    private NMapPOIdataOverlay mPoiDataOverlay;
+    private GoogleMap mMap;
 
     private BottomSheetBehavior mBehavior;
     private ImageView mUpImage;
@@ -71,17 +64,14 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        mDelegate = AppCompatDelegate.create(this, this);
-        mDelegate.onCreate(savedInstanceState);
-        mDelegate.setContentView(R.layout.activity_map_infos);
+        setContentView(R.layout.activity_map_infos);
 
         mActionsListener = new MapInfosPresenter(this);
 
         mFragmentManager = getFragmentManager();
 
         initToolbar();
-        initNaverMap();
+        initMap();
         initInfosFragment();
         initDetailReview();
     }
@@ -117,24 +107,12 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
 
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.map_infos_toolbar);
-        mDelegate.setSupportActionBar(toolbar);
+        setSupportActionBar(toolbar);
     }
 
-    private void initNaverMap() {
-        mMapView = (NMapView) findViewById(R.id.map_infos_nmap);
-        mMapView.setClientId(getString(R.string.naver_map_client_key));
-        mMapView.setEnabled(true);
-        mMapView.setClickable(true);
-        mMapView.setFocusable(true);
-        mMapView.setFocusableInTouchMode(true);
-        mMapView.requestFocus();
-        mMapView.setBuiltInZoomControls(true, null);
-        mMapView.setOnMapViewTouchEventListener(onMapViewTouchEventListener);
-        mMapView.setOnMapStateChangeListener(onMapStateChangeListener);
-
-        mMapView.getMapController();
-        mMapViewerResourceProvider = new NMapViewerResourceProvider(this);
-        mMapOverlayManager = new NMapOverlayManager(this, mMapView, mMapViewerResourceProvider);
+    private void initMap() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     /**
@@ -146,16 +124,16 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
      */
     @Override
     public void showLocationMarker(List<ReviewData> datas) {
-        NMapPOIdata poiData = new NMapPOIdata(datas.size(), mMapViewerResourceProvider);
-
-        poiData.beginPOIdata(datas.size());
+        LatLngBounds.Builder boundBuilder = new LatLngBounds.Builder();
         for (ReviewData data : datas) {
-            poiData.addPOIitem(data.getLocationLatLng().getLatitude(), data.getLocationLatLng().getLongitude(), data.getLocationName(), NMapPOIflagType.PIN, data.getLocationID());
-        }
-        poiData.endPOIdata();
+            Marker marker = mMap.addMarker(new MarkerOptions()
+                    .position(data.getLatLng())
+                    .title(data.getLocationName()));
 
-        mPoiDataOverlay = mMapOverlayManager.createPOIdataOverlay(poiData, null);
-        mPoiDataOverlay.showAllPOIdata(0);
+            mLocationHashMap.put(marker, data.getLocationID());
+            boundBuilder.include(data.getLatLng());
+        }
+        mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundBuilder.build(), 100));
     }
 
     @Override
@@ -184,66 +162,21 @@ public class MapInfosActivity extends NMapActivity implements AppCompatCallback,
         return mActionsListener;
     }
 
-    private final NMapView.OnMapStateChangeListener onMapStateChangeListener = new NMapView.OnMapStateChangeListener() {
-        @Override
-        public void onMapInitHandler(NMapView nMapView, NMapError nMapError) {
-        }
-
-        @Override
-        public void onMapCenterChange(NMapView nMapView, NGeoPoint nGeoPoint) {
-        }
-
-        @Override
-        public void onMapCenterChangeFine(NMapView nMapView) {
-        }
-
-        @Override
-        public void onZoomLevelChange(NMapView nMapView, int i) {
-        }
-
-        @Override
-        public void onAnimationStateChange(NMapView nMapView, int i, int i1) {
-        }
-    };
-
-    /*NMapView 객체에서 발생하는 티치이벤트에 대한 콜백 인터페이스*/
-    private final NMapView.OnMapViewTouchEventListener onMapViewTouchEventListener = new NMapView.OnMapViewTouchEventListener() {
-        @Override
-        public void onLongPress(NMapView nMapView, MotionEvent motionEvent) {
-        }
-
-        @Override
-        public void onLongPressCanceled(NMapView nMapView) {
-        }
-
-        @Override
-        public void onTouchDown(NMapView nMapView, MotionEvent motionEvent) {
-        }
-
-        @Override
-        public void onTouchUp(NMapView nMapView, MotionEvent motionEvent) {
-        }
-
-        @Override
-        public void onScroll(NMapView nMapView, MotionEvent motionEvent, MotionEvent motionEvent1) {
-        }
-
-        @Override
-        public void onSingleTapUp(NMapView nMapView, MotionEvent motionEvent) {
-        }
-    };
-
     @Override
-    public void onSupportActionModeStarted(ActionMode mode) {
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+        mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
+            @Override
+            public void onMapLoaded() {
+                mActionsListener.setUpLocationMarkers();
+            }
+        });
     }
 
     @Override
-    public void onSupportActionModeFinished(ActionMode mode) {
-    }
-
-    @Nullable
-    @Override
-    public ActionMode onWindowStartingSupportActionMode(ActionMode.Callback callback) {
-        return null;
+    public boolean onMarkerClick(Marker marker) {
+        int locationID = mLocationHashMap.get(marker);
+        Log.i(TAG, "onMarkerClick: " + locationID);
+        return false;
     }
 }
