@@ -33,6 +33,7 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
 
     private static final String TAG = "MapInfosActivity";
     private HashMap<Marker, Integer> mLocationHashMap = new HashMap<>();
+    private boolean isDetailReviewShowing = false;
 
     private FragmentManager mFragmentManager;
     private FragmentTransaction mFragmentTransaction;
@@ -95,9 +96,14 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
         findViewById(R.id.detailreview_exit_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+                closeDetailReview();
             }
         });
+    }
+
+    private void closeDetailReview() {
+        mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        isDetailReviewShowing = false;
     }
 
     private void initInfosFragment() {
@@ -144,6 +150,7 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
             mBottomsheet.setVisibility(View.VISIBLE);
         }
         mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+        isDetailReviewShowing = true;
 
         mMap.animateCamera(CameraUpdateFactory.newLatLng(data.getLatLng()));
 
@@ -186,5 +193,14 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
         int locationID = mLocationHashMap.get(marker);
         mActionsListener.openUserReview(locationID);
         return true;
+    }
+
+    @Override
+    public void onBackPressed() {
+        if (isDetailReviewShowing) {
+            closeDetailReview();
+            return;
+        }
+        super.onBackPressed();
     }
 }
