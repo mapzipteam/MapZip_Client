@@ -1,6 +1,8 @@
 package com.mapzip.ppang.mapzipproject.wannabemap;
 
 
+import android.support.annotation.Nullable;
+
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
 
 import java.util.List;
@@ -32,6 +34,6 @@ public interface MapInfosContract {
 
         void loadLocationInfos(boolean forceUpdate);
 
-        void openUserReview();
+        void openUserReview(@Nullable int locationID);
     }
 }

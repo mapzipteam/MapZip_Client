@@ -11,7 +11,6 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.graphics.Palette;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -177,7 +176,7 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
     @Override
     public boolean onMarkerClick(Marker marker) {
         int locationID = mLocationHashMap.get(marker);
-        Log.i(TAG, "onMarkerClick: " + locationID);
+        mActionsListener.openUserReview(locationID);
         return true;
     }
 }

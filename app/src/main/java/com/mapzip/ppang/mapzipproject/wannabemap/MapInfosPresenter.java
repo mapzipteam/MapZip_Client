@@ -1,6 +1,7 @@
 package com.mapzip.ppang.mapzipproject.wannabemap;
 
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 
 import com.google.android.gms.maps.model.LatLng;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
@@ -33,7 +34,7 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
 
     @Override
     public void setUpLocationMarkers() {
-        if (dummyDatas!=null){
+        if (dummyDatas != null) {
             mInfosActivity.showLocationMarker(dummyDatas);
         }
     }
@@ -57,8 +58,7 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
     }
 
     @Override
-    public void openUserReview() {
-        ReviewData data = dummyDatas.get(0);
-        mInfosActivity.showDetailReview(data);
+    public void openUserReview(int locationID) {
+        mInfosActivity.showDetailReview(dummyDatas.get(locationID));
     }
 }

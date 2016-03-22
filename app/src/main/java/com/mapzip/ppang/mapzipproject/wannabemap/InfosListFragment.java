@@ -30,13 +30,6 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     private InfosAdapter mInfosAdapter;
     private MapInfosContract.UserActionListener mActionsListener;
 
-    InfoItemListener mItemListener = new InfoItemListener() {
-        @Override
-        public void onInfoClick(View view) {
-            mActionsListener.openUserReview();
-        }
-    };
-
     public InfosListFragment() {
         // Requires empty public constructor
     }
@@ -48,7 +41,7 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mInfosAdapter = new InfosAdapter(new ArrayList<ReviewData>(0), mItemListener);
+        mInfosAdapter = new InfosAdapter(new ArrayList<ReviewData>(0));
     }
 
     @Override
@@ -90,11 +83,9 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
         private static final int ITEM_LOCATION_INFORMATION = 0;
 
         private List<ReviewData> mDatas;
-        private InfoItemListener mItemListener;
 
-        public InfosAdapter(List<ReviewData> datas, InfoItemListener itemListener) {
+        public InfosAdapter(List<ReviewData> datas) {
             setList(datas);
-            mItemListener = itemListener;
         }
 
         @Override
@@ -105,7 +96,7 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
             switch (viewType) {
                 case ITEM_LOCATION_INFORMATION:
                     View infoView = inflater.inflate(R.layout.item_locationinfo, parent, false);
-                    return new LocationInfoViewHolder(infoView, mItemListener);
+                    return new LocationInfoViewHolder(infoView);
                 default:
                     try {
                         throw new Exception("Cannot find right item view");
@@ -158,29 +149,16 @@ public class InfosListFragment extends Fragment implements MapInfosContract.View
             return mDatas.get(position);
         }
 
-        public class LocationInfoViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public class LocationInfoViewHolder extends RecyclerView.ViewHolder {
 
             public TextView nameText;
             public TextView addressText;
 
-            private InfoItemListener mItemListener;
-
-            public LocationInfoViewHolder(View itemView, InfoItemListener listener) {
+            public LocationInfoViewHolder(View itemView) {
                 super(itemView);
-                mItemListener = listener;
                 nameText = (TextView) itemView.findViewById(R.id.item_locationinfo_name);
                 addressText = (TextView) itemView.findViewById(R.id.item_locationinfo_address);
-                itemView.setOnClickListener(this);
-            }
-
-            @Override
-            public void onClick(View view) {
-                mItemListener.onInfoClick(view);
             }
         }
-    }
-
-    public interface InfoItemListener {
-        void onInfoClick(View view);
     }
 }
