@@ -32,7 +32,7 @@ import java.util.List;
 public class MapInfosActivity extends AppCompatActivity implements MapInfosContract.View.Activity, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = "MapInfosActivity";
-    private HashMap<Marker, Integer> mLocationHashMap = new HashMap<Marker, Integer>();
+    private HashMap<Marker, Integer> mLocationHashMap = new HashMap<>();
 
     private FragmentManager mFragmentManager;
     private FragmentTransaction mFragmentTransaction;
@@ -40,6 +40,7 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
     private GoogleMap mMap;
 
     private BottomSheetBehavior mBehavior;
+    private View mBottomsheet;
     private ImageView mUpImage;
     private RelativeLayout mNameTagLayout;
     private TextView mNameText;
@@ -77,8 +78,9 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
 
     private void initDetailReview() {
         CoordinatorLayout coordinatorLayout = (CoordinatorLayout) findViewById(R.id.map_infos_coordinatorlayout);
-        View bottomsheet = coordinatorLayout.findViewById(R.id.map_infos_bottomsheet);
-        mBehavior = BottomSheetBehavior.from(bottomsheet);
+        mBottomsheet = coordinatorLayout.findViewById(R.id.map_infos_bottomsheet);
+        mBottomsheet.setVisibility(View.GONE);
+        mBehavior = (BottomSheetBehavior) BottomSheetBehavior.from(mBottomsheet);
 
         mUpImage = (ImageView) findViewById(R.id.detailreview_image);
         mNameTagLayout = (RelativeLayout) findViewById(R.id.detailreview_name_tag_space);
@@ -123,6 +125,7 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
      */
     @Override
     public void showLocationMarker(List<ReviewData> datas) {
+        mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
         LatLngBounds.Builder boundBuilder = new LatLngBounds.Builder();
         for (ReviewData data : datas) {
             Marker marker = mMap.addMarker(new MarkerOptions()
@@ -137,7 +140,12 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
 
     @Override
     public void showDetailReview(ReviewData data) {
+        if (mBottomsheet.getVisibility() == View.GONE) {
+            mBottomsheet.setVisibility(View.VISIBLE);
+        }
         mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLng(data.getLatLng()));
 
         setLayoutColor();
         mNameText.setText(data.getLocationName());
