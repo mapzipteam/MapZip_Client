@@ -14,7 +14,7 @@
         android:layout_height="200dp"
         android:clickable="true"
         android:scaleType="centerCrop"
-        android:src="@drawable/backwall1" />
+        android:src="@drawable/example" />
 
     <RelativeLayout
         android:id="@+id/detailreview_name_tag_space"

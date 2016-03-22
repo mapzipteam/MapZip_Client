@@ -26,13 +26,11 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
 
-import java.util.HashMap;
 import java.util.List;
 
 public class MapInfosActivity extends AppCompatActivity implements MapInfosContract.View.Activity, OnMapReadyCallback, GoogleMap.OnMarkerClickListener {
 
     private static final String TAG = "MapInfosActivity";
-    private HashMap<Marker, Integer> mLocationHashMap = new HashMap<>();
     private boolean isDetailReviewShowing = false;
 
     private FragmentManager mFragmentManager;
@@ -59,7 +57,10 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
     private Palette.PaletteAsyncListener paletteAsyncListener = new Palette.PaletteAsyncListener() {
         @Override
         public void onGenerated(Palette palette) {
-            mNameTagLayout.setBackgroundColor(palette.getMutedColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary)));
+            Palette.Swatch swatch = palette.getVibrantSwatch();
+            mNameTagLayout.setBackgroundColor(palette.getVibrantColor(ContextCompat.getColor(getBaseContext(), R.color.colorPrimary)));
+            mNameText.setTextColor(swatch.getBodyTextColor());
+            mTagsText.setTextColor(swatch.getTitleTextColor());
         }
     };
 
@@ -164,10 +165,10 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
         if (mBottomsheet.getVisibility() == View.GONE) {
             mBottomsheet.setVisibility(View.VISIBLE);
         }
-        mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         isDetailReviewShowing = true;
         isClickedMarker = marker;
         isClickedMarker.showInfoWindow();
+        mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
 
         mMap.animateCamera(CameraUpdateFactory.newLatLng(data.getLatLng()));
 

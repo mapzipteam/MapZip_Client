@@ -35,7 +35,7 @@ public interface MapInfosContract {
 
         void loadLocationInfos(boolean forceUpdate);
 
-        void openUserReview(@Nullable int locationID);
+        void openUserReview(int locationID);
 
         void putMarkerToMap(Marker marker, int locationID);
 

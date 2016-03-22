@@ -24,7 +24,6 @@ public class MapInfosPresenter implements MapInfosContract.UserActionListener {
     private MapInfosContract.View.InfosList mInfosFragment;
     private List<ReviewData> mDummyDatas;
     private HashMap<Marker, Integer> mLocationHashMap = new HashMap<>();
-    private Object markerFromLocationID;
 
     public MapInfosPresenter(@NonNull MapInfosContract.View.Activity infosActivity) {
         mInfosActivity = checkNotNull(infosActivity, "InfosActivity cannot be null!!");
