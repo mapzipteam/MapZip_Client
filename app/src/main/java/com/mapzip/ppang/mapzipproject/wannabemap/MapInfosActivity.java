@@ -93,6 +93,12 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
         mAddressText = (TextView) findViewById(R.id.detailreview_address);
         mContactText = (TextView) findViewById(R.id.detailreview_contact);
         mDeleteFab = (FloatingActionButton) findViewById(R.id.detailreview_delete_button);
+        mDeleteFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
         findViewById(R.id.detailreview_exit_button).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
