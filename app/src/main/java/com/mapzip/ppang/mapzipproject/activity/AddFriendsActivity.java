@@ -80,6 +80,7 @@ public class AddFriendsActivity extends Activity {
             toast.setDuration(Toast.LENGTH_LONG);
             toast.setView(layout_toast);
             toast.show();
+           // Log.v("error","error");
 
             return;
         }
