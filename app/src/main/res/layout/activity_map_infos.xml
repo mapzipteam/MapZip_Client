@@ -14,7 +14,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorPrimary"
-            android:title="지도보기" />
+            android:title="지도보기"
+            app:navigationIcon="@drawable/ic_arrow_back_black_24dp" />
 
         <android.support.percent.PercentRelativeLayout
             android:layout_width="match_parent"

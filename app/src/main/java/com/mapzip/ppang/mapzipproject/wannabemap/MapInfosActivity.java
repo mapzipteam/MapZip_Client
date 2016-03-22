@@ -115,6 +115,13 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
     private void initToolbar() {
         Toolbar toolbar = (Toolbar) findViewById(R.id.map_infos_toolbar);
         setSupportActionBar(toolbar);
+
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                finish();
+            }
+        });
     }
 
     private void initMap() {
