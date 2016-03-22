@@ -165,6 +165,7 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        mMap.setOnMarkerClickListener(this);
         mMap.setOnMapLoadedCallback(new GoogleMap.OnMapLoadedCallback() {
             @Override
             public void onMapLoaded() {
@@ -177,6 +178,6 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
     public boolean onMarkerClick(Marker marker) {
         int locationID = mLocationHashMap.get(marker);
         Log.i(TAG, "onMarkerClick: " + locationID);
-        return false;
+        return true;
     }
 }
