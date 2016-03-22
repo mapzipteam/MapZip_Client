@@ -346,6 +346,12 @@ public class ReviewRegisterActivity extends Activity {
                 textReviewBtn.setBackgroundResource(R.drawable.btn_remove_circle);
             }
         }
+
+        /*
+         *  Dialog
+         */
+        mBadTextDialog = createDialog(BADTEXT);
+        mGoodTextDialog = createDialog(GOODTEXT);
     }
 
     //  onResult - findImageonClick
@@ -425,8 +431,18 @@ public class ReviewRegisterActivity extends Activity {
         } else {
             reviewData.setReview_text(direct_text.getText().toString());
         }
-        reviewData.setGood_text(good_text.getText().toString());
-        reviewData.setBad_text(bad_text.getText().toString());
+
+        if (mGoodCheckBoxs[0].isChecked()) {
+            reviewData.setGood_text("");
+        } else {
+            reviewData.setGood_text(good_text.getText().toString());
+        }
+
+        if (mBadCheckBoxs[0].isChecked()) {
+            reviewData.setBad_text("");
+        } else {
+            reviewData.setBad_text(bad_text.getText().toString());
+        }
 
         if (serverchoice == 2)
             reviewData.setImage_num(user.getGalImages().length);
@@ -495,8 +511,18 @@ public class ReviewRegisterActivity extends Activity {
         } else {
             reviewData.setReview_text(direct_text.getText().toString());
         }
-        reviewData.setGood_text(good_text.getText().toString());
-        reviewData.setBad_text(bad_text.getText().toString());
+
+        if (mGoodCheckBoxs[0].isChecked()) {
+            reviewData.setGood_text("");
+        } else {
+            reviewData.setGood_text(good_text.getText().toString());
+        }
+
+        if (mBadCheckBoxs[0].isChecked()) {
+            reviewData.setBad_text("");
+        } else {
+            reviewData.setBad_text(bad_text.getText().toString());
+        }
 
         reviewData.setImage_num(reviewData.getImage_num() + afterimagenum);
 
@@ -623,7 +649,7 @@ public class ReviewRegisterActivity extends Activity {
                         }
                     }
                 } catch (JSONException e) {
-                    Log.e(TAG,"제이손 에러");
+                    Log.e(TAG, "제이손 에러");
                 }
             }
         };
@@ -661,7 +687,7 @@ public class ReviewRegisterActivity extends Activity {
                         serverchoice = 2;
                         loading.execute();
                         // 3번째통신 이미지갯수만큼 반복
-                    } else{
+                    } else {
                         // toast
                         text_toast.setText("다시 시도해주세요.");
                         Toast toast = new Toast(getApplicationContext());
@@ -691,7 +717,7 @@ public class ReviewRegisterActivity extends Activity {
                         serverchoice = 2;
                         loading.execute();
                         // 3번째통신 이미지갯수만큼 반복
-                    } else{
+                    } else {
                         // toast
                         text_toast.setText("다시 시도해주세요.");
                         Toast toast = new Toast(getApplicationContext());
@@ -763,7 +789,7 @@ public class ReviewRegisterActivity extends Activity {
             builder.setCustomAttribute(NetworkUtil.MAP_ID, reviewData.getMapid());
             builder.setCustomAttribute(NetworkUtil.STORE_ID, reviewData.getStore_id());
             builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_IMAGE_STRING, image);
-            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_IMAGE_NAME,"image" + String.valueOf(imagenum));
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_IMAGE_NAME, "image" + String.valueOf(imagenum));
             builder.showInside();
             imagenum++;
         } catch (JSONException e) {
@@ -787,7 +813,7 @@ public class ReviewRegisterActivity extends Activity {
                     MapzipResponse mapzipResponse = new MapzipResponse(response);
                     mapzipResponse.showAllContents();
                     if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_IMAGE_SEND)) {
-                    } else{
+                    } else {
                         // toast
                         text_toast.setText("다시 시도해주세요.");
                         Toast toast = new Toast(getApplicationContext());
@@ -795,8 +821,8 @@ public class ReviewRegisterActivity extends Activity {
                         toast.setView(layout_toast);
                         toast.show();
                     }
-                }catch (JSONException e){
-                    Log.e(TAG,"제이손 에러");
+                } catch (JSONException e) {
+                    Log.e(TAG, "제이손 에러");
                 }
             }
         };
@@ -973,7 +999,7 @@ public class ReviewRegisterActivity extends Activity {
             toast.show();
 
             return -1;
-        } else if (good_text.getText().toString().trim().isEmpty() && bad_text.getText().toString().trim().isEmpty() && (direct_text.getText().toString().trim().isEmpty() || (direct_text.getVisibility() == View.INVISIBLE))) { // review text not selected
+        } else if ((good_text.getText().toString().trim().isEmpty() || mGoodCheckBoxs[0].isChecked()) && (bad_text.getText().toString().trim().isEmpty() || mBadCheckBoxs[0].isChecked()) && (direct_text.getText().toString().trim().isEmpty() || (direct_text.getVisibility() == View.INVISIBLE))) { // review text not selected
             // toast
             text_toast.setText("리뷰를 작성해주세요.");
             Toast toast = new Toast(getApplicationContext());
@@ -1151,87 +1177,87 @@ public class ReviewRegisterActivity extends Activity {
 
     // 좋은말 리뷰 더하기 버튼
     public void goodtextClick_review_regi(View v) {
-        if (mGoodTextD_Created == false) {
-            mGoodTextDialog = createDialog(GOODTEXT);
-            mGoodTextD_Created = true;
-            mGoodTextDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(final DialogInterface dialog) {
-                    Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
-                    positiveButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            String goodtext_complete = "";
-                            int checkedNum = 0;
+        mGoodTextDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(final DialogInterface dialog) {
+                Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String goodtext_complete = "";
+                        int checkedNum = 0;
 
-                            for (int i = 0; i < mGoodCheckBoxs.length; i++) {
-                                if (mGoodCheckBoxs[i].isChecked()) {
-                                    checkedNum++;
-                                    goodtext_complete += (" " + mGoodCheckBoxs[i].getText());
-                                }
+                        for (int i = 0; i < mGoodCheckBoxs.length; i++) {
+                            if (mGoodCheckBoxs[i].isChecked()) {
+                                checkedNum++;
+                                goodtext_complete += (" " + mGoodCheckBoxs[i].getText());
                             }
-
-                            if (checkedNum > 5) {
-                                // toast
-                                text_toast.setText("5개까지 선택할 수 있습니다.");
-                                Toast toast = new Toast(getApplicationContext());
-                                toast.setDuration(Toast.LENGTH_SHORT);
-                                toast.setView(layout_toast);
-                                toast.show();
-                                return;
-                            }
-
-                            good_text.setText(goodtext_complete);
-                            dialog.dismiss();
                         }
-                    });
-                }
-            });
-        }
 
+                        if (checkedNum > 5) {
+                            // toast
+                            text_toast.setText("5개까지 선택할 수 있습니다.");
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setDuration(Toast.LENGTH_SHORT);
+                            toast.setView(layout_toast);
+                            toast.show();
+                            return;
+                        }
+
+                        if (mGoodCheckBoxs[0].isChecked()) {
+                            good_text.setText("선택안함");
+                        } else {
+                            good_text.setText(goodtext_complete);
+                        }
+
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
         mGoodTextDialog.show();
     }
 
     // 나쁜말 리뷰 더하기 버튼
     public void badtextClick_review_regi(View v) {
-        if (mBadTextD_Created == false) {
-            mBadTextDialog = createDialog(BADTEXT);
-            mBadTextD_Created = true;
-            mBadTextDialog.setOnShowListener(new DialogInterface.OnShowListener() {
-                @Override
-                public void onShow(final DialogInterface dialog) {
-                    Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
-                    positiveButton.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            String badtext_complete = "";
-                            int checkedNum = 0;
+        mBadTextDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(final DialogInterface dialog) {
+                Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                positiveButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        String badtext_complete = "";
+                        int checkedNum = 0;
 
-                            for (int i = 0; i < mBadCheckBoxs.length; i++) {
-                                if (mBadCheckBoxs[i].isChecked()) {
-                                    checkedNum++;
-                                    badtext_complete += (" " + mBadCheckBoxs[i].getText());
-                                }
+                        for (int i = 0; i < mBadCheckBoxs.length; i++) {
+                            if (mBadCheckBoxs[i].isChecked()) {
+                                checkedNum++;
+                                badtext_complete += (" " + mBadCheckBoxs[i].getText());
                             }
-
-                            if (checkedNum > 5) {
-                                // toast
-                                text_toast.setText("5개까지 선택할 수 있습니다.");
-                                Toast toast = new Toast(getApplicationContext());
-                                toast.setDuration(Toast.LENGTH_SHORT);
-                                toast.setView(layout_toast);
-                                toast.show();
-                                return;
-                            }
-
-                            bad_text.setText(badtext_complete);
-                            dialog.dismiss();
                         }
-                    });
-                }
-            });
-        }
 
+                        if (checkedNum > 5) {
+                            // toast
+                            text_toast.setText("5개까지 선택할 수 있습니다.");
+                            Toast toast = new Toast(getApplicationContext());
+                            toast.setDuration(Toast.LENGTH_SHORT);
+                            toast.setView(layout_toast);
+                            toast.show();
+                            return;
+                        }
+
+                        if (mBadCheckBoxs[0].isChecked()) {
+                            bad_text.setText("선택안함");
+                        } else {
+                            bad_text.setText(badtext_complete);
+                        }
+
+                        dialog.dismiss();
+                    }
+                });
+            }
+        });
         mBadTextDialog.show();
     }
 
@@ -1247,7 +1273,7 @@ public class ReviewRegisterActivity extends Activity {
             mGoodCheckBoxs = new CheckBox[]{(CheckBox) innerView.findViewById(R.id.checkbox1), (CheckBox) innerView.findViewById(R.id.checkbox2), (CheckBox) innerView.findViewById(R.id.checkbox3), (CheckBox) innerView.findViewById(R.id.checkbox4), (CheckBox) innerView.findViewById(R.id.checkbox5)
                     , (CheckBox) innerView.findViewById(R.id.checkbox6), (CheckBox) innerView.findViewById(R.id.checkbox7), (CheckBox) innerView.findViewById(R.id.checkbox8), (CheckBox) innerView.findViewById(R.id.checkbox9), (CheckBox) innerView.findViewById(R.id.checkbox10),
                     (CheckBox) innerView.findViewById(R.id.checkbox11), (CheckBox) innerView.findViewById(R.id.checkbox12), (CheckBox) innerView.findViewById(R.id.checkbox13), (CheckBox) innerView.findViewById(R.id.checkbox14), (CheckBox) innerView.findViewById(R.id.checkbox15),
-                    (CheckBox) innerView.findViewById(R.id.checkbox16), (CheckBox) innerView.findViewById(R.id.checkbox17), (CheckBox) innerView.findViewById(R.id.checkbox18)};
+                    (CheckBox) innerView.findViewById(R.id.checkbox16), (CheckBox) innerView.findViewById(R.id.checkbox17), (CheckBox) innerView.findViewById(R.id.checkbox18), (CheckBox) innerView.findViewById(R.id.checkbox19)};
 
             // checkbox 내용 입력
             for (int i = 0; i < mGoodCheckBoxs.length; i++) {
@@ -1261,7 +1287,7 @@ public class ReviewRegisterActivity extends Activity {
             mBadCheckBoxs = new CheckBox[]{(CheckBox) innerView.findViewById(R.id.checkbox1), (CheckBox) innerView.findViewById(R.id.checkbox2), (CheckBox) innerView.findViewById(R.id.checkbox3), (CheckBox) innerView.findViewById(R.id.checkbox4), (CheckBox) innerView.findViewById(R.id.checkbox5)
                     , (CheckBox) innerView.findViewById(R.id.checkbox6), (CheckBox) innerView.findViewById(R.id.checkbox7), (CheckBox) innerView.findViewById(R.id.checkbox8), (CheckBox) innerView.findViewById(R.id.checkbox9), (CheckBox) innerView.findViewById(R.id.checkbox10),
                     (CheckBox) innerView.findViewById(R.id.checkbox11), (CheckBox) innerView.findViewById(R.id.checkbox12), (CheckBox) innerView.findViewById(R.id.checkbox13), (CheckBox) innerView.findViewById(R.id.checkbox14), (CheckBox) innerView.findViewById(R.id.checkbox15),
-                    (CheckBox) innerView.findViewById(R.id.checkbox16), (CheckBox) innerView.findViewById(R.id.checkbox17), (CheckBox) innerView.findViewById(R.id.checkbox18)};
+                    (CheckBox) innerView.findViewById(R.id.checkbox16), (CheckBox) innerView.findViewById(R.id.checkbox17), (CheckBox) innerView.findViewById(R.id.checkbox18), (CheckBox) innerView.findViewById(R.id.checkbox19)};
 
             // checkbox 내용 입력
             for (int i = 0; i < mBadCheckBoxs.length; i++) {
