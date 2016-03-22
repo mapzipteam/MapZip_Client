@@ -39,6 +39,7 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
     private FragmentTransaction mFragmentTransaction;
 
     private GoogleMap mMap;
+    private Marker isClickedMarker;
 
     private BottomSheetBehavior mBehavior;
     private View mBottomsheet;
@@ -109,6 +110,7 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
 
     private void closeDetailReview() {
         mBehavior.setState(BottomSheetBehavior.STATE_HIDDEN);
+        isClickedMarker.hideInfoWindow();
         isDetailReviewShowing = false;
     }
 
@@ -151,19 +153,21 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
                     .position(data.getLatLng())
                     .title(data.getLocationName()));
 
-            mLocationHashMap.put(marker, data.getLocationID());
+            mActionsListener.putMarkerToMap(marker, data.getLocationID());
             boundBuilder.include(data.getLatLng());
         }
         mMap.moveCamera(CameraUpdateFactory.newLatLngBounds(boundBuilder.build(), 100));
     }
 
     @Override
-    public void showDetailReview(ReviewData data) {
+    public void showDetailReview(Marker marker, ReviewData data) {
         if (mBottomsheet.getVisibility() == View.GONE) {
             mBottomsheet.setVisibility(View.VISIBLE);
         }
         mBehavior.setState(BottomSheetBehavior.STATE_COLLAPSED);
         isDetailReviewShowing = true;
+        isClickedMarker = marker;
+        isClickedMarker.showInfoWindow();
 
         mMap.animateCamera(CameraUpdateFactory.newLatLng(data.getLatLng()));
 
@@ -203,8 +207,9 @@ public class MapInfosActivity extends AppCompatActivity implements MapInfosContr
 
     @Override
     public boolean onMarkerClick(Marker marker) {
-        int locationID = mLocationHashMap.get(marker);
+        int locationID = mActionsListener.getMarkerFromMap(marker);
         mActionsListener.openUserReview(locationID);
+
         return true;
     }
 

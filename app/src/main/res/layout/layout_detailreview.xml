@@ -12,6 +12,7 @@
         android:id="@+id/detailreview_image"
         android:layout_width="match_parent"
         android:layout_height="200dp"
+        android:clickable="true"
         android:scaleType="centerCrop"
         android:src="@drawable/backwall1" />
 
@@ -21,6 +22,7 @@
         android:layout_height="107dp"
         android:layout_below="@id/detailreview_image"
         android:background="@color/colorPrimary"
+        android:clickable="true"
         android:gravity="center_vertical"
         android:padding="16dp">
 

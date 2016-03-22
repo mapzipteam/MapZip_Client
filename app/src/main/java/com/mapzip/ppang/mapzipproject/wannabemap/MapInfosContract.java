@@ -3,6 +3,7 @@ package com.mapzip.ppang.mapzipproject.wannabemap;
 
 import android.support.annotation.Nullable;
 
+import com.google.android.gms.maps.model.Marker;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
 
 import java.util.List;
@@ -19,7 +20,7 @@ public interface MapInfosContract {
         interface Activity {
             void showLocationMarker(List<ReviewData> datas);
 
-            void showDetailReview(ReviewData data);
+            void showDetailReview(Marker marker, ReviewData data);
         }
 
         interface InfosList {
@@ -35,5 +36,9 @@ public interface MapInfosContract {
         void loadLocationInfos(boolean forceUpdate);
 
         void openUserReview(@Nullable int locationID);
+
+        void putMarkerToMap(Marker marker, int locationID);
+
+        int getMarkerFromMap(Marker marker);
     }
 }
