@@ -30,7 +30,7 @@ public class MapzipApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        initMapzip(true); // release 할때는 false 로 바꿔주셔야 합니다
+        initMapzip(false); // release 할때는 false 로 바꿔주셔야 합니다
         initFabric();
 
 
