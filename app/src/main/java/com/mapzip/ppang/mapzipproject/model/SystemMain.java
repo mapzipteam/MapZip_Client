@@ -31,7 +31,7 @@ public class SystemMain {
     public static final String SERVER_RESETMAPDATA_URL = SERVER_ROOT_URL+"/client_data/client_map_clear.php";
     public static final String SERVER_REMOVEMAPMARK_URL = SERVER_ROOT_URL+"/friend/friend_delete.php";
 
-    
+
     /**
      * SharedPreferences name define
      */
