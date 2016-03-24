@@ -43,6 +43,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.adapter.ImageAdapter;
+import com.mapzip.ppang.mapzipproject.model.MapZipDialog;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
@@ -122,7 +123,7 @@ public class ReviewRegisterActivity extends Activity {
     // review Dialog
     private boolean mGoodTextD_Created = false;
     private boolean mBadTextD_Created = false;
-    private Dialog mGoodTextDialog;
+    private MapZipDialog mGoodTextDialog;
     private Dialog mBadTextDialog;
     private CheckBox[] mGoodCheckBoxs;
     private CheckBox[] mBadCheckBoxs;
@@ -148,6 +149,8 @@ public class ReviewRegisterActivity extends Activity {
         ActionBar actionBar = getActionBar();
         actionBar.hide();
         setContentView(R.layout.activity_review_regi);
+
+        final ViewGroup rootView = (ViewGroup) ((ViewGroup) this.findViewById(android.R.id.content)).getChildAt(0);
 
         // toast
         LayoutInflater inflater = this.getLayoutInflater();
@@ -350,8 +353,12 @@ public class ReviewRegisterActivity extends Activity {
         /*
          *  Dialog
          */
+
+        //ViewGroup container = null;
+        //View rootView = inflater.inflate(R.layout.activity_review_regi, container, false);
+
         mBadTextDialog = createDialog(BADTEXT);
-        mGoodTextDialog = createDialog(GOODTEXT);
+        mGoodTextDialog = new MapZipDialog(rootView.getContext(),SystemMain.DialogSet.GOOD_CHECK_REVIEW_REGI);
     }
 
     //  onResult - findImageonClick
@@ -1177,6 +1184,7 @@ public class ReviewRegisterActivity extends Activity {
 
     // 좋은말 리뷰 더하기 버튼
     public void goodtextClick_review_regi(View v) {
+        /*
         mGoodTextDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(final DialogInterface dialog) {
@@ -1215,6 +1223,7 @@ public class ReviewRegisterActivity extends Activity {
                 });
             }
         });
+        */
         mGoodTextDialog.show();
     }
 
