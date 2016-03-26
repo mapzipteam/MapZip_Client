@@ -93,6 +93,10 @@
                 android:id="@+id/checkbox18"
                 style="@style/checkbox_style_review_regi" />
 
+            <CheckBox
+                android:id="@+id/checkbox19"
+                style="@style/checkbox_style_review_regi" />
+
         </LinearLayout>
 
     </ScrollView>
