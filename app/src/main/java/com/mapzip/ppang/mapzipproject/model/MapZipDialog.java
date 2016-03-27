@@ -1,9 +1,12 @@
 package com.mapzip.ppang.mapzipproject.model;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
-import android.widget.Button;
+import android.util.Log;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 
 import com.mapzip.ppang.mapzipproject.R;
@@ -41,15 +44,17 @@ public class MapZipDialog extends Dialog {
     }
 
     private void goodCheckCreate(){
+        String[] goodReviewText = getContext().getResources().getStringArray(R.array.goodtext_review_regi);
+
         LinearLayout layout = (LinearLayout) findViewById(R.id.dialog_layout);
 
-        Button gg = new Button(getContext());
-        gg.setText("testBtn");
+        for(int i=0; i<goodReviewText.length; i++){
+            CheckBox checkBox = new CheckBox(getContext());
+            checkBox.setText(goodReviewText[i]);
+            layout.addView(checkBox);
+        }
 
-        layout.addView(gg);
-
-        setTitle("test");
+        setTitle("칭찬해주세요");
     }
-
 }
 
