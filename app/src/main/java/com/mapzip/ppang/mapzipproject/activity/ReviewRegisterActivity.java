@@ -359,6 +359,7 @@ public class ReviewRegisterActivity extends Activity {
 
         mBadTextDialog = createDialog(BADTEXT);
         mGoodTextDialog = new MapZipDialog(rootView.getContext(),SystemMain.DialogSet.GOOD_CHECK_REVIEW_REGI);
+        mGoodCheckBoxs = mGoodTextDialog.getmGoodCheckBoxes();
     }
 
     //  onResult - findImageonClick
@@ -1184,11 +1185,10 @@ public class ReviewRegisterActivity extends Activity {
 
     // 좋은말 리뷰 더하기 버튼
     public void goodtextClick_review_regi(View v) {
-        /*
         mGoodTextDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
-            public void onShow(final DialogInterface dialog) {
-                Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+            public void onShow(DialogInterface dialog) {
+                Button positiveButton = mGoodTextDialog.getmPositiveBtn();
                 positiveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1218,12 +1218,12 @@ public class ReviewRegisterActivity extends Activity {
                             good_text.setText(goodtext_complete);
                         }
 
-                        dialog.dismiss();
+                        mGoodTextDialog.dismiss();
                     }
                 });
             }
         });
-        */
+
         mGoodTextDialog.show();
     }
 
