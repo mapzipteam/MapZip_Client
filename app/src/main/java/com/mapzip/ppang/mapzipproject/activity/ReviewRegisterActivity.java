@@ -74,6 +74,8 @@ public class ReviewRegisterActivity extends Activity {
     private int state = 0; // 0: default review enroll, 1: modify review
     private String primap_id;
 
+    int flag;
+
     // toast
     private View layout_toast;
     private TextView text_toast;
@@ -474,6 +476,10 @@ public class ReviewRegisterActivity extends Activity {
     // in enroll Btn
     public void DoReviewset(View v) {
 
+        reviewData.setFlag_type(flagspinner.getSelectedItemPosition());
+        Toast.makeText(getApplicationContext(),"flag :"+flagspinner.getSelectedItemPosition(),Toast.LENGTH_SHORT).show();
+
+
         if (direct_text.getVisibility() == View.INVISIBLE) {
             reviewData.setReview_text("");
         } else {
@@ -503,6 +509,7 @@ public class ReviewRegisterActivity extends Activity {
             builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_GU_NUM, reviewData.getGu_num());
             builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_POSITIVE_TEXT, reviewData.getGood_text());
             builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_NEGATIVE_TEXT, reviewData.getBad_text());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_FLAG_TYPE, reviewData.getFlag_type());
             builder.showInside();
 
         } catch (JSONException e) {

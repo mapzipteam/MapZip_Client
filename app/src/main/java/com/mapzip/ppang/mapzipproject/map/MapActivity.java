@@ -329,7 +329,7 @@ public class MapActivity extends NMapActivity {
                     double store_y = Double.parseDouble(jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_STORE_Y));
                     String store_name = jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_STORE_NAME);
                     int store_id = Integer.parseInt(jarr.getJSONObject(arrnum).getString(NetworkUtil.STORE_ID));
-
+                    int flag_type= Integer.parseInt(jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_FLAG_TYPE));
 
 
                     //NMapPOIitem addPOIitem(NGeoPoint point, String title, int markerId, Object tag, int id)
@@ -338,7 +338,7 @@ public class MapActivity extends NMapActivity {
                     객체로 추가적인 정보를 설정할 수 있다.*/
 
                     //poiData.addPOIitem(Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_x")), Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_y")), jarr.getJSONObject(arrnum).getString("store_name"), markerId, 0, Integer.parseInt(jarr.getJSONObject(arrnum).getString("store_id")));
-                    poiData.addPOIitem(store_x, store_y, store_name, markerId, 0, store_id);
+                    poiData.addPOIitem(store_x, store_y, store_name, flag_type, 0, store_id);
                 }
                 poiData.endPOIdata();
             } catch (JSONException ex) {

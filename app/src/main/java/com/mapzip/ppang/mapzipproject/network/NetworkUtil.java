@@ -35,7 +35,7 @@ public class NetworkUtil {
     public static final String CONTENTS = "contents";
     public static final String STORE_ID = "store_id";
 
-    public static final String FLAG_TYPE= "flag_type";
+    public static final String REVIEW_DATA_FLAG_TYPE= "flag_type";
 
     public static final String REVIEW_DATA_STORE_X = "store_x";
     public static final String REVIEW_DATA_STORE_Y = "store_y";
