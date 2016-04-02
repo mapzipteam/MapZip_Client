@@ -121,10 +121,8 @@ public class ReviewRegisterActivity extends Activity {
     private EditText direct_text;
 
     // review Dialog
-    private boolean mGoodTextD_Created = false;
-    private boolean mBadTextD_Created = false;
     private MapZipDialog mGoodTextDialog;
-    private Dialog mBadTextDialog;
+    private MapZipDialog mBadTextDialog;
     private CheckBox[] mGoodCheckBoxs;
     private CheckBox[] mBadCheckBoxs;
 
@@ -357,7 +355,8 @@ public class ReviewRegisterActivity extends Activity {
         //ViewGroup container = null;
         //View rootView = inflater.inflate(R.layout.activity_review_regi, container, false);
 
-        mBadTextDialog = createDialog(BADTEXT);
+        mBadTextDialog = new MapZipDialog(rootView.getContext(),SystemMain.DialogSet.BAD_CHECK_REVIEW_REGI);
+        mBadCheckBoxs = mBadTextDialog.getmBadCheckBoxes();
         mGoodTextDialog = new MapZipDialog(rootView.getContext(),SystemMain.DialogSet.GOOD_CHECK_REVIEW_REGI);
         mGoodCheckBoxs = mGoodTextDialog.getmGoodCheckBoxes();
     }
@@ -1223,7 +1222,6 @@ public class ReviewRegisterActivity extends Activity {
                 });
             }
         });
-
         mGoodTextDialog.show();
     }
 
@@ -1232,7 +1230,7 @@ public class ReviewRegisterActivity extends Activity {
         mBadTextDialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(final DialogInterface dialog) {
-                Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                Button positiveButton = mBadTextDialog.getmPositiveBtn();
                 positiveButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -1268,61 +1266,6 @@ public class ReviewRegisterActivity extends Activity {
             }
         });
         mBadTextDialog.show();
-    }
-
-    // Dialog Create
-    private Dialog createDialog(int tag) {
-        View innerView = null;
-        AlertDialog.Builder ab = new AlertDialog.Builder(this);
-        String[] reviewtxt = null;
-
-        if (tag == GOODTEXT) {
-            innerView = getLayoutInflater().inflate(R.layout.v_textcheckbox_a_reviewregi, null);
-            reviewtxt = getResources().getStringArray(R.array.goodtext_review_regi);
-            mGoodCheckBoxs = new CheckBox[]{(CheckBox) innerView.findViewById(R.id.checkbox1), (CheckBox) innerView.findViewById(R.id.checkbox2), (CheckBox) innerView.findViewById(R.id.checkbox3), (CheckBox) innerView.findViewById(R.id.checkbox4), (CheckBox) innerView.findViewById(R.id.checkbox5)
-                    , (CheckBox) innerView.findViewById(R.id.checkbox6), (CheckBox) innerView.findViewById(R.id.checkbox7), (CheckBox) innerView.findViewById(R.id.checkbox8), (CheckBox) innerView.findViewById(R.id.checkbox9), (CheckBox) innerView.findViewById(R.id.checkbox10),
-                    (CheckBox) innerView.findViewById(R.id.checkbox11), (CheckBox) innerView.findViewById(R.id.checkbox12), (CheckBox) innerView.findViewById(R.id.checkbox13), (CheckBox) innerView.findViewById(R.id.checkbox14), (CheckBox) innerView.findViewById(R.id.checkbox15),
-                    (CheckBox) innerView.findViewById(R.id.checkbox16), (CheckBox) innerView.findViewById(R.id.checkbox17), (CheckBox) innerView.findViewById(R.id.checkbox18), (CheckBox) innerView.findViewById(R.id.checkbox19)};
-
-            // checkbox 내용 입력
-            for (int i = 0; i < mGoodCheckBoxs.length; i++) {
-                mGoodCheckBoxs[i].setText(reviewtxt[i]);
-            }
-
-            ab.setTitle("칭찬해주세요.");
-        } else if (tag == BADTEXT) {
-            innerView = getLayoutInflater().inflate(R.layout.v_textcheckbox_a_reviewregi, null);
-            reviewtxt = getResources().getStringArray(R.array.badtext_review_regi);
-            mBadCheckBoxs = new CheckBox[]{(CheckBox) innerView.findViewById(R.id.checkbox1), (CheckBox) innerView.findViewById(R.id.checkbox2), (CheckBox) innerView.findViewById(R.id.checkbox3), (CheckBox) innerView.findViewById(R.id.checkbox4), (CheckBox) innerView.findViewById(R.id.checkbox5)
-                    , (CheckBox) innerView.findViewById(R.id.checkbox6), (CheckBox) innerView.findViewById(R.id.checkbox7), (CheckBox) innerView.findViewById(R.id.checkbox8), (CheckBox) innerView.findViewById(R.id.checkbox9), (CheckBox) innerView.findViewById(R.id.checkbox10),
-                    (CheckBox) innerView.findViewById(R.id.checkbox11), (CheckBox) innerView.findViewById(R.id.checkbox12), (CheckBox) innerView.findViewById(R.id.checkbox13), (CheckBox) innerView.findViewById(R.id.checkbox14), (CheckBox) innerView.findViewById(R.id.checkbox15),
-                    (CheckBox) innerView.findViewById(R.id.checkbox16), (CheckBox) innerView.findViewById(R.id.checkbox17), (CheckBox) innerView.findViewById(R.id.checkbox18), (CheckBox) innerView.findViewById(R.id.checkbox19)};
-
-            // checkbox 내용 입력
-            for (int i = 0; i < mBadCheckBoxs.length; i++) {
-                mBadCheckBoxs[i].setText(reviewtxt[i]);
-            }
-
-            ab.setTitle("비판해주세요.");
-        }
-
-        ab.setView(innerView);
-
-        ab.setNegativeButton("취소", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.dismiss();
-            }
-        });
-
-        ab.setPositiveButton("확인", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-
-            }
-        });
-
-        return ab.create();
     }
 
     // 직접입력 더하기 버튼

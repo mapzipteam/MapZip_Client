@@ -21,6 +21,7 @@ public class MapZipDialog extends Dialog {
     private Button mNegativeBtn;
 
     private CheckBox[] mGoodCheckBoxes;
+    private CheckBox[] mBadCheckBoxes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +37,6 @@ public class MapZipDialog extends Dialog {
                 onClick_NegativeBtn();
             }
         });
-
         mPositiveBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -52,6 +52,7 @@ public class MapZipDialog extends Dialog {
                 goodCheckCreate();
                 return;
             case SystemMain.DialogSet.BAD_CHECK_REVIEW_REGI:
+                badCheckCreate();
                 return;
         }
     }
@@ -74,6 +75,13 @@ public class MapZipDialog extends Dialog {
                 }
                 return;
             case SystemMain.DialogSet.BAD_CHECK_REVIEW_REGI:
+                String[] badReviewText = getContext().getResources().getStringArray(R.array.badtext_review_regi);
+                mBadCheckBoxes = new CheckBox[badReviewText.length];
+                for(int i=0; i<badReviewText.length; i++){
+                    CheckBox checkBox = new CheckBox(getContext());
+                    mBadCheckBoxes[i] = checkBox;
+                    mBadCheckBoxes[i].setText(badReviewText[i]);
+                }
                 return;
         }
     }
@@ -88,7 +96,16 @@ public class MapZipDialog extends Dialog {
             layout.addView(mGoodCheckBoxes[i]);
         }
 
-        setTitle("칭찬해주세요");
+        setTitle("칭찬해주세요 (0~5개 선택)");
+    }
+
+    private void badCheckCreate(){
+        LinearLayout layout = (LinearLayout) findViewById(R.id.dialog_layout);
+        for(int i=0; i<mBadCheckBoxes.length; i++){
+            layout.addView(mBadCheckBoxes[i]);
+        }
+
+        setTitle("비판해주세요 (0~5개 선택)");
     }
 
     public void onClick_NegativeBtn(){
@@ -96,18 +113,15 @@ public class MapZipDialog extends Dialog {
     }
 
     public void onClick_PositiveBtn(){
-        switch (DialogNum){
-            case SystemMain.DialogSet.NOMAL:
-                return;
-            case SystemMain.DialogSet.GOOD_CHECK_REVIEW_REGI:
-                return;
-            case SystemMain.DialogSet.BAD_CHECK_REVIEW_REGI:
-                return;
-        }
+        dismiss();
     }
 
     public CheckBox[] getmGoodCheckBoxes() {
         return mGoodCheckBoxes;
+    }
+
+    public CheckBox[] getmBadCheckBoxes() {
+        return mBadCheckBoxes;
     }
 
     public Button getmPositiveBtn() {
