@@ -103,9 +103,26 @@
 
                 <Spinner
                     android:id="@+id/spinner_review"
-                    android:layout_width="match_parent"
+                    android:layout_width="111dp"
                     android:layout_height="wrap_content"
                     android:padding="5dp" />
+
+                <TextView
+                    android:id="@+id/spinner_text_review2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:padding="5dp"
+                    android:text="류선택   " />
+
+                <Spinner
+                    android:id="@+id/spinner_review2"
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:padding="5dp" />
+
+
+
             </LinearLayout>
 
             <TextView
