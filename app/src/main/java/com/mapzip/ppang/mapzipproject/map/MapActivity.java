@@ -84,6 +84,8 @@ public class MapActivity extends NMapActivity {
     private ImageLoader imageLoader;
     private int image_num = 0;
 
+    Intent flagIntent;
+
     // user data
     private UserData user;
     private FriendData fuser;
@@ -327,6 +329,8 @@ public class MapActivity extends NMapActivity {
                     double store_y = Double.parseDouble(jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_STORE_Y));
                     String store_name = jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_STORE_NAME);
                     int store_id = Integer.parseInt(jarr.getJSONObject(arrnum).getString(NetworkUtil.STORE_ID));
+
+
 
                     //NMapPOIitem addPOIitem(NGeoPoint point, String title, int markerId, Object tag, int id)
                     /*POI 아이템을 추가한다. 아이템이 표시될 좌표와 마커 Id는 필수 인자이며, title을 null로 전달하면 마커 선택 시 말풍선이 표시되지 않는다.

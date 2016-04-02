@@ -58,7 +58,6 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,6 +87,11 @@ public class ReviewRegisterActivity extends Activity {
     private TextView contactText;
     private Button enrollBtn;
     private Button modifyBtn;
+    //
+
+    Intent flagIntent;      // 깃발정보를 보내줄 flag
+
+
 
     // Image View
     private ViewPager viewPager;
@@ -133,8 +137,11 @@ public class ReviewRegisterActivity extends Activity {
 
     // map spinner
     private ArrayList<String> mapsppinerList; // map name
+    private ArrayList<String> flagspinnerList;
     private Spinner mapspinner;
+    private Spinner flagspinner;
     private ArrayAdapter mapadapter;
+    private ArrayAdapter flagadapter;
 
     // to send Review Data
     private ReviewData reviewData = new ReviewData();
@@ -195,6 +202,7 @@ public class ReviewRegisterActivity extends Activity {
         reviewData.setStore_x(getIntent().getDoubleExtra("store_x", 0));
         reviewData.setStore_y(getIntent().getDoubleExtra("store_y", 0));
         reviewData.setStore_name(getIntent().getStringExtra("store_name"));
+        reviewData.setFlag_type(getIntent().getFlags());
         reviewData.setStore_address(getIntent().getStringExtra("store_address"));
         reviewData.setStore_contact(getIntent().getStringExtra("store_contact"));
         reviewData.setGu_num(getGunum());
@@ -232,6 +240,52 @@ public class ReviewRegisterActivity extends Activity {
         /*
          *  map spinner
          */
+
+        // flag spinner
+
+        flagspinnerList = new ArrayList<String>();
+        try{
+
+            /*    for(int i=0;i<2; i++ ){         // 나중에 지도와 함께 flag 종류 함께 수정할 수 있도록
+                      flagspinnerList.add()                         //
+                }*/
+            flagspinnerList.add("flag1");
+            flagspinnerList.add("flag2");
+            flagspinnerList.add("flag3");
+        } catch( Exception ex){
+            Log.v(TAG, "JSON ex review_regi_mapspinner");
+        }
+
+        flagspinner = (Spinner) findViewById(R.id.spinner_review2);
+        flagadapter = new ArrayAdapter(this,android.R.layout.simple_spinner_dropdown_item,flagspinnerList);
+        flagadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        flagspinner.setAdapter(flagadapter);
+
+
+
+        //
+/*
+        flagspinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+
+                flagIntent = new Intent(getApplicationContext(), MapActivity.class);
+                if(position==0) {
+                    flagIntent.putExtra("flag", 0);
+                }
+                else if(position==1){
+                    flagIntent.putExtra("flag",1);
+                }
+                else{
+                    flagIntent.putExtra("flag",2);
+                }
+
+
+            }
+        });
+
+
+        */
         // get map name
         mapsppinerList = new ArrayList<String>();
         try {
@@ -1132,7 +1186,14 @@ public class ReviewRegisterActivity extends Activity {
     // 리뷰등록 버튼
     public void enrollonClick_review_regi(View v) {
         if (reviewtextset() == 1) {
+
+
+
             DoReviewset(v); // 서버 통신
+
+
+
+
             user.setMapforpinNum(Integer.parseInt(reviewData.getMapid()), 0); // to review loading
         }
     }

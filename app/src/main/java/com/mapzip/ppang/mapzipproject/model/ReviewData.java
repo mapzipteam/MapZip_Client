@@ -12,6 +12,9 @@ public class ReviewData implements Cloneable {
     private String store_address;
     private String store_contact;
     private int review_emotion;
+
+    private int flag_type;
+
     private String good_text;
     private String bad_text;
     private String review_text;
@@ -54,6 +57,8 @@ public class ReviewData implements Cloneable {
 
     public int getGu_num() { return gu_num; }
 
+    public int getFlag_type(){ return flag_type; }
+
     public void setStore_id(String store_id) { this.store_id = store_id; }
 
     public void setMapid(String mapid) {
@@ -85,6 +90,9 @@ public class ReviewData implements Cloneable {
     }
 
     public void setGu_num(int gu_num) { this.gu_num = gu_num; }
+
+    public void setFlag_type(int flag_type){ this.flag_type= flag_type; }
+
 
     public int getImage_num() {
         return image_num;
