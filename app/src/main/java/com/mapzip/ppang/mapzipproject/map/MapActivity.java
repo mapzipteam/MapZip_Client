@@ -24,9 +24,9 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.ImageLoader;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.activity.ReviewActivity;
+import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
 import com.mapzip.ppang.mapzipproject.network.MapzipRequestBuilder;
@@ -68,7 +68,7 @@ public class MapActivity extends NMapActivity {
     //아마 튜토리얼을 찬찬히 읽어보시면 이해가 되실거라고 믿어 의심치 않습니다.
 
     private static final String LOG_TAG = "MapActivity";
-    private static final boolean DEBUG = false;
+    private static final boolean DEBUG = true;
 
     public static final String API_KEY = "1205a9af6f6c01148e2d24a2f39c03de";
 
@@ -193,11 +193,16 @@ public class MapActivity extends NMapActivity {
 
             if (DEBUG) {
                 Log.e("dSJW :" + LOG_TAG, "NMapPOIdataOVerlay.OnstateChangListener onFocusChanged");
+
+                for(int i=0;i<poiData.count();i++)
+                    Log.e("갯수 :",""+poiData.getPOIitem(i).getMarkerId());
+
             }
 
             if (nMapPOIitem != null) {
                 if (DEBUG) {
                     Log.i("dSJW :" + LOG_TAG, "onFocusChanged: " + nMapPOIitem.toString());
+                    Log.i("dSJW :" + LOG_TAG, "onFocusChanged: " + nMapPOIitem.getMarkerId());
                 }
             } else {
                 if (DEBUG) {
@@ -210,12 +215,13 @@ public class MapActivity extends NMapActivity {
         public void onCalloutClick(NMapPOIdataOverlay nMapPOIdataOverlay, NMapPOIitem nMapPOIitem) {
 
             if (DEBUG) {
-                Log.e("dSJW :" + LOG_TAG, "NMapPOIdataOVerlay.OnstateChangListener onCalloutClick");
+                Log.e("dSJW :" + LOG_TAG, "NMapPOIdataOVerlay.OnstateChangListener onCalloutClick "+ nMapPOIitem.getMarkerId());
                 Log.e("dSJW :" + LOG_TAG, "NMapPOIdataOVerlay.OnstateChangListener onCalloutClick" + "\t\t+ getIntent()..getStringExtra(\"fragment_id\")toString() == " + getIntent().getStringExtra("fragment_id").toString());
             }
             if ((getIntent().getStringExtra("fragment_id").equals("home")) || (getIntent().getStringExtra("fragment_id").equals("friend_home"))) {
 
                 GetMapDetail(nMapPOIitem.getId());
+
             }
         }
     };
@@ -338,7 +344,9 @@ public class MapActivity extends NMapActivity {
                     객체로 추가적인 정보를 설정할 수 있다.*/
 
                     //poiData.addPOIitem(Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_x")), Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_y")), jarr.getJSONObject(arrnum).getString("store_name"), markerId, 0, Integer.parseInt(jarr.getJSONObject(arrnum).getString("store_id")));
-                    poiData.addPOIitem(store_x, store_y, store_name, flag_type, 0, store_id);
+                    poiData.addPOIitem(store_x, store_y, store_name, 5096+flag_type, 0, store_id);
+                    Log.v(LOG_TAG + "markerid : ", "" + flag_type + 5096);
+
                 }
                 poiData.endPOIdata();
             } catch (JSONException ex) {
@@ -363,6 +371,8 @@ public class MapActivity extends NMapActivity {
                     double store_y = Double.parseDouble(jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_STORE_Y));
                     String store_name = jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_STORE_NAME);
                     int store_id = Integer.parseInt(jarr.getJSONObject(arrnum).getString(NetworkUtil.STORE_ID));
+                    int flag_type= Integer.parseInt(jarr.getJSONObject(arrnum).getString(NetworkUtil.REVIEW_DATA_FLAG_TYPE));
+
 
                     //NMapPOIitem addPOIitem(NGeoPoint point, String title, int markerId, Object tag, int id)
                     /*POI 아이템을 추가한다. 아이템이 표시될 좌표와 마커 Id는 필수 인자이며, title을 null로 전달하면 마커 선택 시 말풍선이 표시되지 않는다.
@@ -370,7 +380,9 @@ public class MapActivity extends NMapActivity {
                     객체로 추가적인 정보를 설정할 수 있다.*/
 
                     //poiData.addPOIitem(Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_x")), Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_y")), jarr.getJSONObject(arrnum).getString("store_name"), markerId, 0, Integer.parseInt(jarr.getJSONObject(arrnum).getString("store_id")));
-                    poiData.addPOIitem(store_x, store_y, store_name, markerId, 0, store_id);
+                    poiData.addPOIitem(store_x, store_y, store_name, flag_type+5096, 0, store_id);
+
+                    Log.v(LOG_TAG+"markerid : ",""+flag_type+5096);
                 }
                 poiData.endPOIdata();
             } catch (JSONException ex) {
@@ -498,10 +510,10 @@ public class MapActivity extends NMapActivity {
 
                         if ((getIntent().getStringExtra("fragment_id").equals("home"))) {
                             user.initReviewData();
-                            user.setReviewData(reviewDetailObj.getString(NetworkUtil.STORE_ID), reviewDetailObj.getString(NetworkUtil.MAP_ID), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_CONTACT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_EMOTION), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_ADDRESS), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_NAME), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_GU_NUM), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_IMAGE_NUM), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_POSITIVE_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_NEGATIVE_TEXT));
+                            user.setReviewData(reviewDetailObj.getString(NetworkUtil.STORE_ID), reviewDetailObj.getString(NetworkUtil.MAP_ID), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_CONTACT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_EMOTION), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_ADDRESS), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_NAME), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_FLAG_TYPE), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_GU_NUM), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_IMAGE_NUM), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_POSITIVE_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_NEGATIVE_TEXT));
                         } else if ((getIntent().getStringExtra("fragment_id").equals("friend_home"))) {
                             fuser.initReviewData();
-                            fuser.setReviewData(reviewDetailObj.getString(NetworkUtil.STORE_ID), reviewDetailObj.getString(NetworkUtil.MAP_ID), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_CONTACT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_EMOTION), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_ADDRESS), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_NAME), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_POSITIVE_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_NEGATIVE_TEXT));
+                            fuser.setReviewData(reviewDetailObj.getString(NetworkUtil.STORE_ID), reviewDetailObj.getString(NetworkUtil.MAP_ID), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_CONTACT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_EMOTION), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_ADDRESS),   reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_NAME), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_FLAG_TYPE), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_POSITIVE_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_NEGATIVE_TEXT));
                         }
 
                         // get default image

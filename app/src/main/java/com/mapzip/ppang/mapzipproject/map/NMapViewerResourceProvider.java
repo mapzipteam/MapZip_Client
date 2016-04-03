@@ -183,7 +183,9 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
         int resourceId = 0;
 
         if (DEBUG) {
-            Log.i(LOG_TAG, "getResourceIdForMarker: markerId=" + markerId + ", focused=" + focused);
+            Log.i(LOG_TAG, "getResourceIdForMarker: markerId=" + markerId + ", focused=" + focused + ", NMapPOIflagType.SINGLE_MARKER_END="+NMapPOIflagType.SINGLE_MARKER_END);
+            Log.i(LOG_TAG, "NMapPOIflagType.NUMBER_BASE="+NMapPOIflagType.NUMBER_BASE+" ,NMapPOIflagType.NUMBER_END="+NMapPOIflagType.NUMBER_END);
+            Log.i(LOG_TAG, "NMapPOIflagType.CUSTOM_BASE="+NMapPOIflagType.CUSTOM_BASE+" ,NMapPOIflagType.CUSTON_END="+NMapPOIflagType.CUSTOM_END);
         }
 
         if (markerId < NMapPOIflagType.SINGLE_MARKER_END) {
@@ -195,8 +197,17 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
 
         if (markerId >= NMapPOIflagType.NUMBER_BASE && markerId < NMapPOIflagType.NUMBER_END) { // Direction Number icons
 
-        } else if (markerId >= NMapPOIflagType.CUSTOM_BASE && markerId < NMapPOIflagType.CUSTOM_END) { // Custom POI icons
-
+        }/* else if (markerId >= NMapPOIflagType.CUSTOM_BASE && markerId < NMapPOIflagType.CUSTOM_END) { // Custom POI icons
+            resourceId = R.drawable.btn_minus;
+        }*/
+        else if(markerId == NMapPOIflagType.CUSTOM_BASE){
+            resourceId = R.drawable.ic_pin_01;
+        }
+        else if(markerId == NMapPOIflagType.CUSTOM_BASE+1){
+            resourceId = R.drawable.btn_close;
+        }
+        else if(markerId == NMapPOIflagType.CUSTOM_BASE+2){
+            resourceId = R.drawable.btn_green_pressed;
         }
 
         return resourceId;

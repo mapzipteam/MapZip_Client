@@ -75,6 +75,7 @@ public class ReviewRegisterActivity extends Activity {
     private String primap_id;
 
     int flag;
+    private boolean DEBUG;
 
     // toast
     private View layout_toast;
@@ -477,6 +478,9 @@ public class ReviewRegisterActivity extends Activity {
     public void DoReviewset(View v) {
 
         reviewData.setFlag_type(flagspinner.getSelectedItemPosition());
+        if(DEBUG){
+            Log.i("flagspinner : ",""+flagspinner.getSelectedItemPosition());
+        }
         Toast.makeText(getApplicationContext(),"flag :"+flagspinner.getSelectedItemPosition(),Toast.LENGTH_SHORT).show();
 
 
@@ -551,6 +555,10 @@ public class ReviewRegisterActivity extends Activity {
 
     // in modify Btn
     public void DoModifyset(View v) {
+        if(DEBUG){
+            Log.i("flagspinner : ",""+flagspinner.getSelectedItemPosition());
+        }
+
         if (direct_text.getVisibility() == View.INVISIBLE) {
             reviewData.setReview_text("");
         } else {
@@ -560,6 +568,7 @@ public class ReviewRegisterActivity extends Activity {
         reviewData.setBad_text(bad_text.getText().toString());
 
         reviewData.setImage_num(reviewData.getImage_num() + afterimagenum);
+        reviewData.setFlag_type(flagspinner.getSelectedItemPosition());
 
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
         MapzipRequestBuilder builder = null;
@@ -572,6 +581,8 @@ public class ReviewRegisterActivity extends Activity {
             builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_POSITIVE_TEXT, reviewData.getGood_text());
             builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_NEGATIVE_TEXT, reviewData.getBad_text());
             builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_IMAGE_NUM, reviewData.getImage_num());
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_FLAG_TYPE, reviewData.getFlag_type());
+
             builder.setCustomAttribute(NetworkUtil.STORE_ID, getIntent().getStringExtra("store_id"));
             builder.showInside();
 

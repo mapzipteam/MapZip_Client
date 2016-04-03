@@ -404,7 +404,7 @@ public class UserData {
         reviewData = new ReviewData();
     }
 
-    public void setReviewData(String s_id, String m_id, String s_contact, String r_text, String r_emotion, String s_address, String s_name, String g_num, String i_num, String pr_text, String nr_text) {
+    public void setReviewData(String s_id, String m_id, String s_contact, String r_text, String r_emotion, String s_address, String s_name, String f_type,String g_num, String i_num, String pr_text, String nr_text) {
         reviewData.setStore_id(s_id);
         reviewData.setMapid(m_id);
         reviewData.setStore_contact(s_contact);
@@ -412,6 +412,7 @@ public class UserData {
         reviewData.setReview_emotion(Integer.parseInt(r_emotion));
         reviewData.setStore_address(s_address);
         reviewData.setStore_name(s_name);
+        reviewData.setFlag_type(Integer.parseInt(f_type));
         reviewData.setGu_num(Integer.parseInt(g_num));
         reviewData.setImage_num(Integer.parseInt(i_num));
         reviewData.setGood_text(pr_text);
