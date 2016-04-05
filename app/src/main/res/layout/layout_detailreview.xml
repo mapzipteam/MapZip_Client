@@ -52,8 +52,8 @@
         <TextView
             android:id="@+id/detailreview_goodreview"
             style="@style/DetailReviewContentsItemStyle"
-            android:drawableLeft="@drawable/ic_mood_24px"
-            android:drawableStart="@drawable/ic_mood_24px"
+            android:drawableLeft="@drawable/ic_mood_bad_black_24dp"
+            android:drawableStart="@drawable/ic_mood_black_24dp"
             android:textColor="@android:color/primary_text_light" />
 
         <View
@@ -64,8 +64,8 @@
         <TextView
             android:id="@+id/detailreview_badreview"
             style="@style/DetailReviewContentsItemStyle"
-            android:drawableLeft="@drawable/ic_mood_bad_24px"
-            android:drawableStart="@drawable/ic_mood_bad_24px"
+            android:drawableLeft="@drawable/ic_mood_bad_black_24dp"
+            android:drawableStart="@drawable/ic_mood_bad_black_24dp"
             android:textColor="@android:color/primary_text_light" />
 
         <View
@@ -76,8 +76,8 @@
         <TextView
             android:id="@+id/detailreview_customreview"
             style="@style/DetailReviewContentsItemStyle"
-            android:drawableLeft="@drawable/ic_stars_24px"
-            android:drawableStart="@drawable/ic_stars_24px"
+            android:drawableLeft="@drawable/ic_stars_black_24dp"
+            android:drawableStart="@drawable/ic_stars_black_24dp"
             android:textColor="@android:color/primary_text_light" />
 
         <View
@@ -88,8 +88,8 @@
         <TextView
             android:id="@+id/detailreview_address"
             style="@style/DetailReviewContentsItemStyle"
-            android:drawableLeft="@drawable/ic_place_24px"
-            android:drawableStart="@drawable/ic_place_24px"
+            android:drawableLeft="@drawable/ic_location_on_black_24dp"
+            android:drawableStart="@drawable/ic_location_on_black_24dp"
             android:textColor="@android:color/primary_text_light" />
 
         <View
@@ -100,8 +100,8 @@
         <TextView
             android:id="@+id/detailreview_contact"
             style="@style/DetailReviewContentsItemStyle"
-            android:drawableLeft="@drawable/ic_contact_phone_24px"
-            android:drawableStart="@drawable/ic_contact_phone_24px"
+            android:drawableLeft="@drawable/ic_contact_phone_black_24dp"
+            android:drawableStart="@drawable/ic_contact_phone_black_24dp"
             android:textColor="@android:color/primary_text_light" />
 
     </LinearLayout>
@@ -114,7 +114,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
         android:layout_margin="16dp"
-        android:src="@drawable/ic_delete_24px"
+        android:src="@drawable/ic_delete_white_24dp"
         app:elevation="6dp"
         app:fabSize="normal" />
 
@@ -127,6 +127,6 @@
         android:layout_alignParentTop="true"
         android:layout_margin="16dp"
         android:clickable="true"
-        android:src="@drawable/ic_clear_24px" />
+        android:src="@drawable/ic_clear_white_24dp" />
 
 </RelativeLayout>
