@@ -195,19 +195,20 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
             }
         }
 
-        if (markerId >= NMapPOIflagType.NUMBER_BASE && markerId < NMapPOIflagType.NUMBER_END) { // Direction Number icons
-
-        }/* else if (markerId >= NMapPOIflagType.CUSTOM_BASE && markerId < NMapPOIflagType.CUSTOM_END) { // Custom POI icons
-            resourceId = R.drawable.btn_minus;
-        }*/
-        else if(markerId == NMapPOIflagType.CUSTOM_BASE){
+        if(markerId == NMapPOIflagType.CUSTOM_BASE){            // BASE 가 5096 > flag1
             resourceId = R.drawable.ic_pin_01;
         }
-        else if(markerId == NMapPOIflagType.CUSTOM_BASE+1){
+        else if(markerId == NMapPOIflagType.CUSTOM_BASE+1){     // 5096 > flag2
             resourceId = R.drawable.btn_close;
         }
-        else if(markerId == NMapPOIflagType.CUSTOM_BASE+2){
+        else if(markerId == NMapPOIflagType.CUSTOM_BASE+2){     // 5096 > flag3
             resourceId = R.drawable.btn_green_pressed;
+        }
+        else if(markerId == NMapPOIflagType.CUSTOM_END){        // 6096 > 가장 최근에 추가된 데이터
+            resourceId = R.drawable.btn_minus;
+        }
+        else{
+            resourceId = R.drawable.ic_pin_01;
         }
 
         return resourceId;

@@ -205,7 +205,7 @@ public class ReviewRegisterActivity extends Activity {
         reviewData.setStore_x(getIntent().getDoubleExtra("store_x", 0));
         reviewData.setStore_y(getIntent().getDoubleExtra("store_y", 0));
         reviewData.setStore_name(getIntent().getStringExtra("store_name"));
-        reviewData.setFlag_type(getIntent().getFlags());
+        reviewData.setFlag_type(getIntent().getIntExtra("flag_type",0));
         reviewData.setStore_address(getIntent().getStringExtra("store_address"));
         reviewData.setStore_contact(getIntent().getStringExtra("store_contact"));
         reviewData.setGu_num(getGunum());
@@ -221,6 +221,8 @@ public class ReviewRegisterActivity extends Activity {
         /*
          *  setting for Image
          */
+
+
         viewPager = (ViewPager) findViewById(R.id.pager_review_regi);
 
         oPerlishArray = new ArrayList<Bitmap>();
@@ -264,6 +266,7 @@ public class ReviewRegisterActivity extends Activity {
         flagadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         flagspinner.setAdapter(flagadapter);
 
+        flagspinner.setSelection(reviewData.getFlag_type());
 
 
         //
@@ -590,6 +593,8 @@ public class ReviewRegisterActivity extends Activity {
             Log.e(TAG, "제이손 에러");
         }
 
+
+
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_REVIEWMODIFY_URL,
                 builder.build(),
@@ -685,11 +690,17 @@ public class ReviewRegisterActivity extends Activity {
                             }
                         } else {
                             // toast
-                            text_toast.setText("리뷰가 수정되었습니다.");
+                            text_toast.setText("리뷰가 수정되었습니다. " + flagspinner.getSelectedItemPosition());
+
                             Toast toast = new Toast(getApplicationContext());
                             toast.setDuration(Toast.LENGTH_SHORT);
                             toast.setView(layout_toast);
                             toast.show();
+
+
+                            //
+
+                            //
 
                             finish();
                         }
