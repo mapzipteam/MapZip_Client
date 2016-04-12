@@ -82,7 +82,7 @@
         android:background="@drawable/loginbtn"
         android:id="@+id/btnLogin" />
 
-    <CheckBox
+    <android.support.v7.widget.AppCompatCheckBox
         android:id="@+id/check_auto"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
