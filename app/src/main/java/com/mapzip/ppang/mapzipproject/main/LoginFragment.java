@@ -70,8 +70,7 @@ public class LoginFragment extends Fragment {
     private String auto_pw;
     private CheckBox check_auto;
 
-
-    public static LoginFragment create(int pageNumber,int isAuto,String auto_id, String auto_pw) {
+    public static LoginFragment create(int pageNumber, int isAuto, String auto_id, String auto_pw) {
 
         LoginFragment fragment = new LoginFragment();
         Bundle args = new Bundle();
@@ -107,7 +106,9 @@ public class LoginFragment extends Fragment {
         layout_toast = inflater.inflate(R.layout.my_custom_toast, (ViewGroup) getActivity().findViewById(R.id.custom_toast_layout));
         text_toast = (TextView) layout_toast.findViewById(R.id.textToShow);
 
-        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_layout, container, false);
+        Log.v(TAG,"11111");
+        ViewGroup rootView = (ViewGroup) inflater.inflate(R.layout.login_layout, container,false);
+        Log.v(TAG,"22222");
 
         inputID = (EditText) rootView.findViewById(R.id.InputID);
         inputPW = (EditText) rootView.findViewById(R.id.InputPW);
