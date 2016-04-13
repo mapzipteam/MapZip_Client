@@ -164,4 +164,10 @@ public class SystemMain {
         public static final int GARNET_END = 100;
     }
 
+    public class DialogSet{
+        public static final int NOMAL = 1;
+        public static final int GOOD_CHECK_REVIEW_REGI = 2;
+        public static final int BAD_CHECK_REVIEW_REGI = 3;
+    }
+
 }
