@@ -44,6 +44,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.adapter.ImageAdapter;
 import com.mapzip.ppang.mapzipproject.model.MapZipDialog;
+import com.mapzip.ppang.mapzipproject.model.MapzipNotification;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
 import com.mapzip.ppang.mapzipproject.model.UserData;
@@ -680,6 +681,12 @@ public class ReviewRegisterActivity extends Activity {
                             serverchoice = 1; // no image
                             loading.execute();
                         }
+
+                        /*
+                        MapzipNotification notiBuilder = new MapzipNotification(getApplicationContext());
+                        notiBuilder.sendNotification(MapzipNotification.BY_REVIEW_REGI);
+                        */
+
                     } else if (!mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_ENROLL)) { // 612
                         //1번째 통신에서 중복가게 걸러내기
                         // toast

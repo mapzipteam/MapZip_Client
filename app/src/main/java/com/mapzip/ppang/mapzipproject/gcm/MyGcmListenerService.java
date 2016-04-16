@@ -14,6 +14,7 @@ import com.google.android.gms.gcm.GcmListenerService;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.adapter.MapzipApplication;
 import com.mapzip.ppang.mapzipproject.main.SplashActivity;
+import com.mapzip.ppang.mapzipproject.model.MapzipNotification;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -44,7 +45,11 @@ public class MyGcmListenerService extends GcmListenerService {
             Log.d(TAG, "Message: " + message);
             Log.d(TAG, "extra : "+json_extra.toString());
             if(notification_type.equals("true")){
-                sendNotification(title, message);
+                /**
+                 * MapzipNotification 을 이용하는 예시입니다
+                 */
+                MapzipNotification mapzipNotification = new MapzipNotification(getApplicationContext());
+                mapzipNotification.sendNotification(title, message, MapzipNotification.BY_GCM);
             }else{
                 // no not notification
             }
@@ -54,35 +59,8 @@ public class MyGcmListenerService extends GcmListenerService {
             e.printStackTrace();
         }
 
-
-        // GCM으로 받은 메세지를 디바이스에 알려주는 sendNotification()을 호출한다.
-
     }
 
 
-    /**
-     * 실제 디바에스에 GCM으로부터 받은 메세지를 알려주는 함수이다. 디바이스 Notification Center에 나타난다.
-     * @param title
-     * @param message
-     */
-    private void sendNotification(String title, String message) {
-        Intent intent = new Intent(this, SplashActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
-                PendingIntent.FLAG_ONE_SHOT);
 
-        Uri defaultSoundUri= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                .setSmallIcon(R.drawable.egg)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setContentIntent(pendingIntent);
-
-        NotificationManager notificationManager =
-                (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-
-        notificationManager.notify(0 /* ID of notification */, notificationBuilder.build());
-    }
 }
