@@ -2,8 +2,6 @@ package com.mapzip.ppang.mapzipproject.activity;
 
 import android.app.ActionBar;
 import android.app.Activity;
-import android.app.AlertDialog;
-import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -43,6 +41,7 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.adapter.ImageAdapter;
+import com.mapzip.ppang.mapzipproject.adapter.MapzipApplication;
 import com.mapzip.ppang.mapzipproject.model.MapZipDialog;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
@@ -72,8 +71,8 @@ public class ReviewRegisterActivity extends Activity {
     private final int GOODTEXT = 1;
     private final int BADTEXT = 2;
 
-    // state
-    private int state = 0; // 0: default review enroll, 1: modify review
+    // is_modify_mode
+    private int is_modify_mode = 0; // 0: default review enroll, 1: modify review
     private String primap_id;
 
     // toast
@@ -102,11 +101,11 @@ public class ReviewRegisterActivity extends Activity {
     private boolean oncreatelock = false; // image array clear -> false: oPerlishArray.clear() , true: x
 
     // Image Send
-    private int serverchoice = 0; // Image send check -> 0: default, 1: only text, 2: image send in Loding Background
-    private int imagenum = 0; // to identify Image -> increase in doUpload
+    private int upload_mode = 0; /// / Image send mode -> 0: default, 1: only text, 2: image send in Loding Background
+    private int image_num = 0; // to identify Image -> increase in doUpload
 
     // modify image
-    private boolean modifyedcheck = false; // image modify check -> false: no modify, true: modified
+    private boolean is_image_modified = false; // image modify check -> false: no modify, true: modified
     private int afterimagenum = 0;
 
     // Loading
@@ -155,24 +154,15 @@ public class ReviewRegisterActivity extends Activity {
         layout_toast = inflater.inflate(R.layout.my_custom_toast, (ViewGroup) findViewById(R.id.custom_toast_layout));
         text_toast = (TextView) layout_toast.findViewById(R.id.textToShow);
 
-        // user Data
-        user = UserData.getInstance();
-
-        /*
-         *  Init var & Setting view
-         */
-        res = getResources();
-        loading = new LoadingTask();
-        serverchoice = 0;
-        imagenum = 0;
+        init();
 
         textReviewBtn = (Button) findViewById(R.id.textBtn_review_regi);
         enrollBtn = (Button) findViewById(R.id.enrollBtn_review_regi);
         modifyBtn = (Button) findViewById(R.id.modifyBtn_review_regi);
 
-        // state
+        // is_modify_mode
         if (getIntent().getStringExtra("state").equals("modify") == true) {
-            state = 1;
+            is_modify_mode = 1;
             try {
                 reviewData = user.getReviewData().clone();
             } catch (Exception ex) {
@@ -181,16 +171,16 @@ public class ReviewRegisterActivity extends Activity {
 
             primap_id = reviewData.getMapid();
         } else
-            state = 0;
+            is_modify_mode = 0;
 
-        if (state == 0) {
+        if (is_modify_mode == 0) {
             enrollBtn.setVisibility(View.VISIBLE);
             modifyBtn.setVisibility(View.GONE);
         } else {
             enrollBtn.setVisibility(View.GONE);
             modifyBtn.setVisibility(View.VISIBLE);
         }
-        Log.v("state", String.valueOf(state));
+        MapzipApplication.doLogging(TAG, String.valueOf(is_modify_mode));
 
         // setting reviewData to send
         reviewData.setStore_x(getIntent().getDoubleExtra("store_x", 0));
@@ -215,7 +205,7 @@ public class ReviewRegisterActivity extends Activity {
 
         oPerlishArray = new ArrayList<Bitmap>();
 
-        if (state == 0) { // in enroll
+        if (is_modify_mode == 0) { // in enroll
             // no Image
             //noimage = drawableToBitmap(getResources().getDrawable(R.drawable.noimage));
             noimage = BitmapFactory.decodeResource(getResources(), R.drawable.noimage);
@@ -248,7 +238,7 @@ public class ReviewRegisterActivity extends Activity {
         mapadapter = new ArrayAdapter(this, android.R.layout.simple_spinner_dropdown_item, mapsppinerList);
         mapadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         mapspinner.setAdapter(mapadapter);
-        if (state == 1) // in modify
+        if (is_modify_mode == 1) // in modify
             mapspinner.setSelection(Integer.parseInt(reviewData.getMapid()) - 1);
 
         // map select
@@ -275,7 +265,7 @@ public class ReviewRegisterActivity extends Activity {
         emotion = (ImageView) findViewById(R.id.emotion_review_regi);
         emotion.setImageResource(R.drawable.sample_emotion0); // default emotion image
         seekbar = (SeekBar) findViewById(R.id.emotionBar_review_regi);
-        if (state == 1)  // in modify
+        if (is_modify_mode == 1)  // in modify
         {
             int pro = reviewData.getReview_emotion();
             seekbar.setProgress(pro);
@@ -327,7 +317,7 @@ public class ReviewRegisterActivity extends Activity {
         bad_text.setSelected(true);
 
         // in modify
-        if (state == 1) {
+        if (is_modify_mode == 1) {
             // 리뷰: 좋은말, 나쁜말.
             if (reviewData.getGood_text().equals("null"))
                 good_text.setText("");
@@ -361,6 +351,19 @@ public class ReviewRegisterActivity extends Activity {
         mGoodCheckBoxs = mGoodTextDialog.getmGoodCheckBoxes();
     }
 
+    private void init(){
+        // user Data
+        user = UserData.getInstance();
+
+        /*
+         *  Init var & Setting view
+         */
+        res = getResources();
+        loading = new LoadingTask();
+        upload_mode = 0;
+        image_num = 0;
+    }
+
     //  onResult - findImageonClick
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -373,7 +376,7 @@ public class ReviewRegisterActivity extends Activity {
                     //이미지 데이터를 리사이징된 비트맵으로 받아온다.
                     Uri image_uri = data.getData();
 
-                    if (oncreatelock == false || state == 1) { // 사진 여러장 일 때 or modify
+                    if (oncreatelock == false || is_modify_mode == 1) { // 사진 여러장 일 때 or modify
                         oPerlishArray.clear();
                         oncreatelock = true;
                     }
@@ -400,20 +403,20 @@ public class ReviewRegisterActivity extends Activity {
                     oPerlishArray.toArray(bitarr);
 
                     // save Image in user Data
-                    if (state == 1) // in modify
+                    if (is_modify_mode == 1) // in modify
                     {
                         if ((reviewData.getImage_num() + afterimagenum) == 0)
                             user.inputGalImages(bitarr);
                         else
                             user.addGalImages(bitarr);
 
-                        modifyedcheck = true;
+                        is_image_modified = true;
                     } else {
                         user.inputGalImages(bitarr);
                     }
 
                     afterimagenum++;
-                    serverchoice = 2;
+                    upload_mode = 2;
                     imageadapter = new ImageAdapter(this, SystemMain.TYPE_USER);
                     viewPager.setAdapter(imageadapter);
                     imageadapter.notifyDataSetChanged();
@@ -431,7 +434,7 @@ public class ReviewRegisterActivity extends Activity {
     }
 
     // in enroll Btn
-    public void DoReviewset(View v) {
+    public void sendReviewTextData(View v) {
 
         if (direct_text.getVisibility() == View.INVISIBLE) {
             reviewData.setReview_text("");
@@ -451,7 +454,7 @@ public class ReviewRegisterActivity extends Activity {
             reviewData.setBad_text(bad_text.getText().toString());
         }
 
-        if (serverchoice == 2)
+        if (upload_mode == 2)
             reviewData.setImage_num(user.getGalImages().length);
 
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
@@ -481,7 +484,7 @@ public class ReviewRegisterActivity extends Activity {
         JsonObjectRequest myReq = new JsonObjectRequest(Request.Method.POST,
                 SystemMain.SERVER_REVIEWENROLL_URL,
                 builder.build(),
-                createMyReqSuccessListener(),
+                successReviewTextDataListener(),
                 createMyReqErrorListener()) {
         };
         queue.add(myReq);
@@ -635,12 +638,12 @@ public class ReviewRegisterActivity extends Activity {
                             user.setMapRefreshLock(false);
                         }
 
-                        if (modifyedcheck == true) {
+                        if (is_image_modified == true) {
                             Log.v("리뷰수정", "OK");
                             if ((reviewData.getImage_num() - afterimagenum) == 0)
                                 MakeImageDir();
                             else {
-                                serverchoice = 2;
+                                upload_mode = 2;
                                 loading.execute();
                                 // 2번째통신 이미지갯수만큼 반복
                             }
@@ -663,7 +666,7 @@ public class ReviewRegisterActivity extends Activity {
     }
 
     // for enroll response
-    private Response.Listener<JSONObject> createMyReqSuccessListener() {
+    private Response.Listener<JSONObject> successReviewTextDataListener() {
         return new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
@@ -672,12 +675,12 @@ public class ReviewRegisterActivity extends Activity {
                     mapzipResponse.showAllContents();
                     if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_ENROLL)) { // 601
                         // 1번째 통신 성공
-                        Log.v("리뷰저장", "OK");
+                        MapzipApplication.doLogging(TAG, "리뷰저장 OK");
                         reviewData.setStore_id(mapzipResponse.getFieldsString(NetworkUtil.STORE_ID));
                         if (reviewData.getImage_num() != 0)
                             MakeImageDir(); // 이미지 있으면 2번째 통신 시작
                         else {
-                            serverchoice = 1; // no image
+                            upload_mode = 1; // no image
                             loading.execute();
                         }
                     } else if (!mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_ENROLL)) { // 612
@@ -691,7 +694,7 @@ public class ReviewRegisterActivity extends Activity {
                     } else if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_MAKE_IMG_DIR)) { // 602 || 621
                         // 2번째통신 성공
                         Log.v("리뷰저장2", "OK");
-                        serverchoice = 2;
+                        upload_mode = 2;
                         loading.execute();
                         // 3번째통신 이미지갯수만큼 반복
                     } else {
@@ -721,7 +724,7 @@ public class ReviewRegisterActivity extends Activity {
                     if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_MAKE_IMG_DIR)) { // 602 || 621
                         // 2번째통신 성공
                         Log.v("리뷰저장2", "OK");
-                        serverchoice = 2;
+                        upload_mode = 2;
                         loading.execute();
                         // 3번째통신 이미지갯수만큼 반복
                     } else {
@@ -796,9 +799,9 @@ public class ReviewRegisterActivity extends Activity {
             builder.setCustomAttribute(NetworkUtil.MAP_ID, reviewData.getMapid());
             builder.setCustomAttribute(NetworkUtil.STORE_ID, reviewData.getStore_id());
             builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_IMAGE_STRING, image);
-            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_IMAGE_NAME, "image" + String.valueOf(imagenum));
+            builder.setCustomAttribute(NetworkUtil.REVIEW_DATA_IMAGE_NAME, "image" + String.valueOf(image_num));
             builder.showInside();
-            imagenum++;
+            image_num++;
         } catch (JSONException e) {
             Log.e(TAG, "제이손 에러");
         }
@@ -1036,11 +1039,11 @@ public class ReviewRegisterActivity extends Activity {
 
         @Override
         protected Void doInBackground(Void... arg0) {
-            if (serverchoice == 1) {
-            } else if (serverchoice == 2) {
+            if (upload_mode == 1) {
+            } else if (upload_mode == 2) {
 /*
-                if(state==1) // in modify
-                    imagenum=(reviewData.getImage_num()-afterimagenum);
+                if(is_modify_mode==1) // in modify
+                    image_num=(reviewData.getImage_num()-afterimagenum);
 */
                 for (int i = 0; i < reviewData.getImage_num(); i++)
                     DoUpload(i);
@@ -1048,7 +1051,7 @@ public class ReviewRegisterActivity extends Activity {
                 user.setAfterModify(true);
             }
 
-            if (state == 0) {
+            if (is_modify_mode == 0) {
                 int tmp = user.getPingCount(Integer.parseInt(reviewData.getMapid()), reviewData.getGu_num());
                 user.setReviewCount(Integer.parseInt(reviewData.getMapid()), reviewData.getGu_num(), tmp + 1);
                 user.setMapImage(Integer.parseInt(reviewData.getMapid()), res);
@@ -1071,7 +1074,7 @@ public class ReviewRegisterActivity extends Activity {
             }
             Log.v(TAG, "loading finish");
 
-            if (state == 0) {
+            if (is_modify_mode == 0) {
                 // toast
                 text_toast.setText("리뷰가 등록되었습니다.");
                 Toast toast = new Toast(getApplicationContext());
@@ -1117,7 +1120,7 @@ public class ReviewRegisterActivity extends Activity {
     // 사진제거 버튼
     public void deleteImageonClick(View v) {
         if ((reviewData.getImage_num() + afterimagenum) == 0) { // 이미지가 없는 상태
-            Log.v("imagenum", String.valueOf(reviewData.getImage_num()));
+            Log.v("image_num", String.valueOf(reviewData.getImage_num()));
             Log.v("afterimagenum", String.valueOf(afterimagenum));
             // toast
             text_toast.setText("제거할 이미지가 없습니다.");
@@ -1128,7 +1131,7 @@ public class ReviewRegisterActivity extends Activity {
 
             return;
         }
-        modifyedcheck = true;
+        is_image_modified = true;
 
         Log.v("이미지카운트", String.valueOf(viewPager.getCurrentItem()));
         int delposition = viewPager.getCurrentItem();
@@ -1165,7 +1168,7 @@ public class ReviewRegisterActivity extends Activity {
     // 리뷰등록 버튼
     public void enrollonClick_review_regi(View v) {
         if (reviewtextset() == 1) {
-            DoReviewset(v); // 서버 통신
+            sendReviewTextData(v); // 서버 통신
             user.setMapforpinNum(Integer.parseInt(reviewData.getMapid()), 0); // to review loading
         }
     }
