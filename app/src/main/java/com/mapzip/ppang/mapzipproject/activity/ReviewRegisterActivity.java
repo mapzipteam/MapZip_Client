@@ -18,11 +18,13 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.util.Base64;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -70,6 +72,11 @@ public class ReviewRegisterActivity extends Activity {
     private final int GOODTEXT = 1;
     private final int BADTEXT = 2;
 
+
+    private static final int PICK_FROM_CAMERA = 0;  // onActivityResult()에서 사용할 리퀘스트 코드
+    private static final int PICK_FROM_ALBUM = 1;
+    private static final int CROP_FROM_CAMERA = 2;
+
     // state
     private int state = 0; // 0: default review enroll, 1: modify review
     private String primap_id;
@@ -94,6 +101,8 @@ public class ReviewRegisterActivity extends Activity {
 
     Intent flagIntent;      // 깃발정보를 보내줄 flag
 
+    private Uri mImageCaptureUri;
+    private ImageView mPhotoImageView;  // 이미지 경로랑 뷰
 
 
     // Image View
@@ -408,11 +417,42 @@ public class ReviewRegisterActivity extends Activity {
         }
     }
 
+    private void doTakePhoto(){
+
+        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+        String url = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
+        mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), url));
+
+        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
+
+        startActivityForResult(intent,PICK_FROM_CAMERA);
+
+    }
+
+    private void doTakeAlbumAction(){
+        Intent intent =new Intent(Intent.ACTION_PICK);
+        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+        startActivityForResult(intent,PICK_FROM_ALBUM);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return super.onOptionsItemSelected(item);
+    }
+
     //  onResult - findImageonClick
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQ_CODE_SELECT_IMAGE) {
-            if (resultCode == Activity.RESULT_OK) {
+
+
+        if(resultCode != RESULT_OK)
+            return;
+
+        switch (requestCode) {
+
+
+            case PICK_FROM_ALBUM:
+            {
                 try {
                     //Uri에서 이미지 이름을 얻어온다.
                     //String name_Str = getImageNameToUri(data.getData());
@@ -473,8 +513,49 @@ public class ReviewRegisterActivity extends Activity {
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
+
+
+
+
+                break;
+            }
+            case PICK_FROM_CAMERA: {
+
+                Intent intent = new Intent("com.android.camera.action.CROP");
+                intent.setDataAndType(mImageCaptureUri, "image/*");
+
+                intent.putExtra("outputX", 90);
+                intent.putExtra("outputY", 90);
+                intent.putExtra("aspectX", 1);
+                intent.putExtra("aspectY", 1);
+                intent.putExtra("scale", true);
+                intent.putExtra("return-data", true);
+                startActivityForResult(intent, CROP_FROM_CAMERA);
+
+                break;
+            }
+            case CROP_FROM_CAMERA :
+            {
+                // 크롭이 된 이후의 이미지를 넘겨 받습니다.
+                // 이미지뷰에 이미지를 보여준다거나 부가적인 작업 이후에
+                // 임시 파일을 삭제합니다.
+                final Bundle extras = data.getExtras();
+
+                if (extras != null) {
+                    Bitmap photo = extras.getParcelable("data");
+                    mPhotoImageView.setImageBitmap(photo);
+                }
+
+                // 임시 파일 삭제
+                File f = new File(mImageCaptureUri.getPath());
+                if (f.exists()) {
+                    f.delete();
+                }
+
+                break;
             }
         }
+
     }
 
     // in enroll Btn
@@ -501,6 +582,7 @@ public class ReviewRegisterActivity extends Activity {
         RequestQueue queue = MyVolley.getInstance(this).getRequestQueue();
         MapzipRequestBuilder builder = null;
         try {
+
             builder = new MapzipRequestBuilder();
             builder.setCustomAttribute(NetworkUtil.USER_ID, user.getUserID());
             builder.setCustomAttribute(NetworkUtil.MAP_ID, reviewData.getMapid());
@@ -604,6 +686,7 @@ public class ReviewRegisterActivity extends Activity {
         queue.add(myReq);
     }
 
+
     // for modify response
     private Response.Listener<JSONObject> createMyReqSuccessListener_modify() {
         return new Response.Listener<JSONObject>() {
@@ -613,6 +696,11 @@ public class ReviewRegisterActivity extends Activity {
                     MapzipResponse mapzipResponse = new MapzipResponse(response);
                     mapzipResponse.showAllContents();
                     if (mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_UPDATE)) { // 607
+
+
+
+
+
                         // if Map Id modified (지도 변경시)
                         if (primap_id.equals(reviewData.getMapid()) == false) {
                             int pmap_id = Integer.parseInt(primap_id); // 수정 전
@@ -655,7 +743,7 @@ public class ReviewRegisterActivity extends Activity {
 
                             // mapforpinArray modify
                             JSONArray farray = user.getMapforpinArray(pmap_id); // 이전 지도에서 리뷰디테일 삭제
-                            JSONObject moveobj = new JSONObject();
+                            JSONObject moveobj = new JSONObject();              //
                             for (int i = 0; i < farray.length(); i++) {
                                 if (farray.getJSONObject(i).getString("store_id").equals(reviewData.getStore_id()) == true) {
                                     moveobj = farray.getJSONObject(i);
@@ -676,7 +764,7 @@ public class ReviewRegisterActivity extends Activity {
                                     user.setMapforpinArray(sarray, nmap_id);
                                 }
                             }
-                            user.setMapRefreshLock(false);
+                            user.setMapRefreshLock(true);
                         }
 
                         if (modifyedcheck == true) {
@@ -691,6 +779,43 @@ public class ReviewRegisterActivity extends Activity {
                         } else {
                             // toast
                             text_toast.setText("리뷰가 수정되었습니다. " + flagspinner.getSelectedItemPosition());
+
+                            Resources res;
+                            res = getResources();
+                            int mapid = Integer.parseInt(reviewData.getMapid());
+                          //  int pingcount = user.getPingCount(mapid, reviewData.getGu_num());
+                           // user.setReviewCount(mapid, reviewData.getGu_num(), pingcount - 1);
+
+                           /* if((pingcount-1) == 0){ // no reivew check
+                                int checknonzero = 0;
+                                for(int c=1; c<=SystemMain.SeoulGuCount; c++){
+                                    if(user.getPingCount(mapid,c) != 0){
+                                        checknonzero = 1;
+                                        break;
+                                    }
+                                }
+                                if(checknonzero == 0)
+                                    user.setMapforpinNum(mapid,2);
+                            }
+                            */
+                            // map Image reload
+                            user.setMapImage(mapid, res);
+                            user.setMapmetaNum(1);
+                            JSONArray narray = user.getMapforpinArray(mapid);
+
+
+
+
+
+                            // for map activity(pin) refresh
+                            for(int i=0; i<narray.length(); i++){
+                                    narray = removeJsonObjectAtJsonArrayIndex(narray,i);
+
+                            }
+                            user.setMapforpinArray(narray, mapid);
+                            user.setMapRefreshLock(true);
+
+
 
                             Toast toast = new Toast(getApplicationContext());
                             toast.setDuration(Toast.LENGTH_SHORT);
@@ -1158,10 +1283,39 @@ public class ReviewRegisterActivity extends Activity {
             return;
         }
 
-        Intent intent = new Intent(Intent.ACTION_PICK);
-        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
-        intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-        startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
+        DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener()
+        {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                doTakePhoto();
+            }
+        };
+        DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener()
+        {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                doTakeAlbumAction();
+            }
+        };
+        DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener()
+        {
+
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                dialog.dismiss();
+            }
+        };
+
+        //
+        new AlertDialog.Builder(this)
+                .setTitle("업로드할 이미지 선택")
+                .setPositiveButton("사진촬영",cameraListener)
+                .setNeutralButton("앨범선택",albumListener)
+                .setNegativeButton("취소",cancelListener)
+                .show();
+
     }
 
     // 사진제거 버튼
@@ -1291,7 +1445,8 @@ public class ReviewRegisterActivity extends Activity {
                 @Override
                 public void onShow(final DialogInterface dialog) {
                     Button positiveButton = ((AlertDialog) dialog).getButton(AlertDialog.BUTTON_POSITIVE);
-                    positiveButton.setOnClickListener(new View.OnClickListener() {
+                    positiveButton.setOnClickListener(
+                            new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
                             String badtext_complete = "";

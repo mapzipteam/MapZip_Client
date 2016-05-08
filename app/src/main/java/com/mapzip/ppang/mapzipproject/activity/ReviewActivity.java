@@ -186,6 +186,7 @@ public class ReviewActivity extends Activity {
         intent.putExtra("store_contact", reviewData.getStore_contact());
         intent.putExtra("store_x", reviewData.getStore_x());
         intent.putExtra("store_y", reviewData.getStore_y());
+        intent.putExtra("flag_type",reviewData.getFlag_type());
         intent.putExtra("store_cx", 0);
         intent.putExtra("store_cy", 0);
         intent.putExtra("store_id", reviewData.getStore_id());
@@ -240,6 +241,7 @@ public class ReviewActivity extends Activity {
         finish();
     }
 
+    // pin을 삭제하는 리스너 , ReviewRegisterAcitivty 의 createMyReqSuccessListen_makedir 와는 다름.
     private Response.Listener<JSONObject> createMyReqSuccessListener() {
         return new Response.Listener<JSONObject>() {
             @Override
@@ -289,7 +291,43 @@ public class ReviewActivity extends Activity {
                         user.setMapRefreshLock(false);
 
                         finish();
-                    } else {
+                    }else if(mapzipResponse.getState(ResponseUtil.PROCESS_REVIEW_UPDATE)){
+
+
+                        // for home fragment(map Image) refresh - @로딩 필요
+                        Resources res;
+                        res = getResources();
+                        int mapid = Integer.parseInt(reviewData.getMapid());
+                        int pingcount = user.getPingCount(mapid, reviewData.getGu_num());
+                        user.setReviewCount(mapid, reviewData.getGu_num(), pingcount - 1);
+
+                        if((pingcount-1) == 0){ // no reivew check
+                            int checknonzero = 0;
+                            for(int c=1; c<=SystemMain.SeoulGuCount; c++){
+                                if(user.getPingCount(mapid,c) != 0){
+                                    checknonzero = 1;
+                                    break;
+                                }
+                            }
+                            if(checknonzero == 0)
+                                user.setMapforpinNum(mapid,2);
+                        }
+
+
+                        // for map activity(pin) refresh
+                        JSONArray narray = user.getMapforpinArray(mapid);
+                        for(int i=0; i<narray.length(); i++){
+                            if(narray.getJSONObject(i).getString(NetworkUtil.STORE_ID).equals(reviewData.getStore_id()) == true){
+                                narray = removeJsonObjectAtJsonArrayIndex(narray,i);
+                            }
+                        }
+                        user.setMapforpinArray(narray, mapid);
+                        user.setMapRefreshLock(true);
+
+                        finish();
+
+                    }
+                    else {
                         // toast
                         text_toast.setText("다시 시도해주세요.");
                         Toast toast = new Toast(getApplicationContext());
