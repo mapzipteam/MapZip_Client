@@ -204,9 +204,10 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
         else if(markerId == NMapPOIflagType.CUSTOM_BASE+2){     // 5096 > flag3
             resourceId = R.drawable.btn_green_pressed;
         }
-        else if(markerId == NMapPOIflagType.CUSTOM_END){        // 6096 > 가장 최근에 추가된 데이터
-            resourceId = R.drawable.btn_minus;
+        else if(markerId == 5099){        // 6096 > 가장 최근에 추가된 데이터
+            resourceId = R.drawable.addfriend;
         }
+
         else{
             resourceId = R.drawable.ic_pin_01;
         }

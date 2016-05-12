@@ -276,7 +276,7 @@ public class ReviewRegisterActivity extends Activity {
         flagadapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         flagspinner.setAdapter(flagadapter);
 
-        flagspinner.setSelection(reviewData.getFlag_type());
+        flagspinner.setSelection(user.getReviewData().getFlag_type());
 
         flagspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
@@ -312,7 +312,7 @@ public class ReviewRegisterActivity extends Activity {
         });
         flag_image= (ImageView) findViewById(R.id.flag_image);
 
-        switch (reviewData.getFlag_type()){
+        switch (user.getReviewData().getFlag_type()){
 
             case 0:{
 

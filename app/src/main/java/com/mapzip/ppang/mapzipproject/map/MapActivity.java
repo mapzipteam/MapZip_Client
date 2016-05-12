@@ -343,9 +343,14 @@ public class MapActivity extends NMapActivity {
                     tag와 id는 마커 및 말풍선 선택 시 호출되는 콜백 인터페이스에서 사용하기 위해 전달한다.
                     객체로 추가적인 정보를 설정할 수 있다.*/
 
+                    if(arrnum==0)
+                        poiData.addPOIitem(store_x, store_y, store_name, 5099, 0, store_id);
+                    else
+                        poiData.addPOIitem(store_x, store_y, store_name, flag_type+5096, 0, store_id);
+
                     //poiData.addPOIitem(Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_x")), Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_y")), jarr.getJSONObject(arrnum).getString("store_name"), markerId, 0, Integer.parseInt(jarr.getJSONObject(arrnum).getString("store_id")));
-                    poiData.addPOIitem(store_x, store_y, store_name, 5096+flag_type, 0, store_id);
-                    Log.v(LOG_TAG + "markerid : ", "" + flag_type + 5096);
+                //    Log.v(LOG_TAG +  "가게정보",""+store_name+ flag_type + 5096 +jarr.getJSONObject(arrnum).getString(NetworkUtil.GU_ENROLL_NUM));
+
 
                 }
                 poiData.endPOIdata();
@@ -380,13 +385,19 @@ public class MapActivity extends NMapActivity {
                     객체로 추가적인 정보를 설정할 수 있다.*/
 
                     //poiData.addPOIitem(Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_x")), Double.parseDouble(jarr.getJSONObject(arrnum).getString("store_y")), jarr.getJSONObject(arrnum).getString("store_name"), markerId, 0, Integer.parseInt(jarr.getJSONObject(arrnum).getString("store_id")));
-                    poiData.addPOIitem(store_x, store_y, store_name, flag_type+5096, 0, store_id);
+
+                    if(arrnum==0)
+                        poiData.addPOIitem(store_x, store_y, store_name, 5099, 0, store_id);
+                    else
+                        poiData.addPOIitem(store_x, store_y, store_name, flag_type+5096, 0, store_id);
+
 
                     Log.v(LOG_TAG+"markerid : ",""+flag_type+5096);
                 }
                 poiData.endPOIdata();
             } catch (JSONException ex) {
                 if (DEBUG) {
+                   // Log.v(LOG_TAG + )
                     Log.v(LOG_TAG + "맵액티비티", "JSONEX");
                 }
             }
