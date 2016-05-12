@@ -97,9 +97,10 @@
                     android:id="@+id/spinner_text_review"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dp"
                     android:padding="5dp"
                     android:text="지도선택   " />
+
+
 
                 <Spinner
                     android:id="@+id/spinner_review"
@@ -113,7 +114,13 @@
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="10dp"
                     android:padding="5dp"
-                    android:text="깃발 선택   " />
+                    android:text="깃발" />
+
+                <ImageView
+                    android:id="@+id/flag_image"
+                    android:layout_width="25dp"
+                    android:layout_height="35dp"
+                    />
 
                 <Spinner
                     android:id="@+id/spinner_review2"

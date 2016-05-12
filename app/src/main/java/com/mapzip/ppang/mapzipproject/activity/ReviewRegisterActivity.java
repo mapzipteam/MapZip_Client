@@ -92,6 +92,7 @@ public class ReviewRegisterActivity extends Activity {
     private UserData user;
 
     // UI
+    private ImageView flag_image;
     private TextView titleText;
     private TextView addressText;
     private TextView contactText;
@@ -277,6 +278,60 @@ public class ReviewRegisterActivity extends Activity {
 
         flagspinner.setSelection(reviewData.getFlag_type());
 
+        flagspinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                switch (position){
+
+                    case 0:{
+
+                        flag_image.setImageResource(R.drawable.ic_pin_01);
+                        break;
+
+                    }
+                    case 1:{
+
+
+                        flag_image.setImageResource(R.drawable.addfriend2);
+                        break;
+                    }
+                    case 2:{
+
+                        flag_image.setImageResource(R.drawable.addfriend);
+                        break;
+                    }
+                }
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        flag_image= (ImageView) findViewById(R.id.flag_image);
+
+        switch (reviewData.getFlag_type()){
+
+            case 0:{
+
+                flag_image.setImageResource(R.drawable.ic_pin_01);
+                break;
+
+            }
+            case 1:{
+
+
+                flag_image.setImageResource(R.drawable.addfriend2);
+                break;
+            }
+            case 2:{
+
+                flag_image.setImageResource(R.drawable.addfriend);
+                break;
+            }
+        }
 
         //
 /*
