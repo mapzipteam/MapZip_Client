@@ -54,6 +54,7 @@ dependencies {
     compile('org.apache.httpcomponents:httpmime:4.3.6') {
         exclude module: 'httpclient'
     }
+    compile 'com.github.bumptech.glide:glide:3.7.0'
     compile project(':nmaps')
     compile project(':httpcore-4.4.1')
     compile('com.crashlytics.sdk.android:crashlytics:2.5.5@aar') {
