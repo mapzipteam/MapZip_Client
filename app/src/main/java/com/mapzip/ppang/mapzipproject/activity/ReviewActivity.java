@@ -21,9 +21,9 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
-import com.bumptech.glide.Glide;
 import com.mapzip.ppang.mapzipproject.R;
-import com.mapzip.ppang.mapzipproject.adapter.ImageAdapter;
+import com.mapzip.ppang.mapzipproject.adapter.ImageLoadAdapter;
+import com.mapzip.ppang.mapzipproject.adapter.ImageLoadUtil;
 import com.mapzip.ppang.mapzipproject.model.FriendData;
 import com.mapzip.ppang.mapzipproject.model.ReviewData;
 import com.mapzip.ppang.mapzipproject.model.SystemMain;
@@ -66,7 +66,7 @@ public class ReviewActivity extends Activity {
     private TextView store_contact;
 
     // image
-    private ImageAdapter imageadapter;
+    private ImageLoadAdapter imageLoadAdapter;
     private ViewPager viewPager;
 
     // Btn
@@ -170,13 +170,15 @@ public class ReviewActivity extends Activity {
         viewPager = (ViewPager) findViewById(R.id.pager_review);
 
         // set Imageadapter
+        String[] urlArr;
         if(userlock == false)
-            imageadapter = new ImageAdapter(getApplicationContext(), SystemMain.TYPE_USER);
+            urlArr = ImageLoadUtil.getImageURLArr(user.getUserID(),reviewData.getStore_id(),reviewData.getImage_num());
         else
-            imageadapter = new ImageAdapter(getApplicationContext(), SystemMain.TYPE_FRIEND);
+            urlArr = ImageLoadUtil.getImageURLArr(fuser.getUserID(),reviewData.getStore_id(),reviewData.getImage_num());
 
-        viewPager.setAdapter(imageadapter);
-        imageadapter.notifyDataSetChanged();
+        imageLoadAdapter = new ImageLoadAdapter(getApplicationContext(), urlArr);
+        viewPager.setAdapter(imageLoadAdapter);
+        imageLoadAdapter.notifyDataSetChanged();
     }
 
     // modify Btn
@@ -337,4 +339,5 @@ public class ReviewActivity extends Activity {
         }
         return copy;
     }
+
 }

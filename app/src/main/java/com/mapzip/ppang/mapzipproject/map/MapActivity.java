@@ -500,63 +500,10 @@ public class MapActivity extends NMapActivity {
                             fuser.setReviewData(reviewDetailObj.getString(NetworkUtil.STORE_ID), reviewDetailObj.getString(NetworkUtil.MAP_ID), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_CONTACT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_EMOTION), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_ADDRESS), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_STORE_NAME), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_POSITIVE_TEXT), reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_NEGATIVE_TEXT));
                         }
 
-                        // get default image
-                        oPerlishArray = new ArrayList<Bitmap>();
-
-                        Bitmap noimage = drawableToBitmap(getResources().getDrawable(R.drawable.noimage));
-
-                        oPerlishArray.add(noimage);
-                        bitarrfornone = new Bitmap[oPerlishArray.size()];
-                        oPerlishArray.toArray(bitarrfornone); // fill the array
-
-                        // set default image
-                        if (getIntent().getStringExtra("fragment_id").equals("friend_home")) {
-                            fuser.inputGalImages(bitarrfornone);
-                        } else {
-                            user.inputGalImages(bitarrfornone);
-                        }
-
-                        image_num = Integer.parseInt(reviewDetailObj.getString(NetworkUtil.REVIEW_DATA_IMAGE_NUM));
-
-                        // if image exist, get & set Image
-                        if (image_num != 0) {
-
-                            imageLoader = MyVolley.getInstance(getApplicationContext()).getImageLoader();
-
-                            for (int i = 0; i < image_num; i++) {
-                                if (DEBUG) {
-                                    Log.v(LOG_TAG + "imagenum", String.valueOf(i));
-                                }
-
-                                // if first, clear array. (remove noimage)
-                                if (i == 0) {
-                                    oPerlishArray.clear();
-                                    bitarr = new Bitmap[image_num];
-                                }
-
-                                if (getIntent().getStringExtra("fragment_id").equals("friend_home")) {
-
-                                    imageLoad(i, SystemMain.SERVER_ROOT_URL + "/client_data/client_" + fuser.getUserID() + "/store_" + fuser.getReviewData().getStore_id() + "/image" + String.valueOf(i) + ".jpg");
-                                } else {
-
-                                    String url = SystemMain.SERVER_ROOT_URL + "/client_data/client_" + user.getUserID() + "/store_" + user.getReviewData().getStore_id() + "/image" + String.valueOf(i) + ".jpg";
-
-                                    if (user.isAfterModify()) {
-
-                                        MyVolley.getInstance(getApplicationContext()).clearCache();
-                                    }
-                                    user.setAfterModify(false);
-
-                                    imageLoad(i, url);
-                                }
-                            }
-                        } else {
-                            Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
-                            intent.putExtra("fragment_id", getIntent().getStringExtra("fragment_id"));
-                            startActivity(intent);
-                            onResume();
-
-                        }
+                        Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
+                        intent.putExtra("fragment_id", getIntent().getStringExtra("fragment_id"));
+                        startActivity(intent);
+                        onResume();
                     }
                 } catch (JSONException e) {
                     if (DEBUG) {
@@ -590,72 +537,6 @@ public class MapActivity extends NMapActivity {
                 }
             }
         };
-    }
-
-    // get review Image from server
-    public void imageLoad(final int nownum, String imageURL) {
-        if (DEBUG) {
-            Log.v(LOG_TAG + "imageLoader", "함수진입");
-        }
-
-        imageLoader.get(imageURL, new ImageLoader.ImageListener() {
-            @Override
-            public void onResponse(ImageLoader.ImageContainer response, boolean isImmediate) {
-
-                if (response != null && response.getBitmap() != null) {
-
-                    if (DEBUG) {
-                        Log.v(LOG_TAG + "이미지이미지", response.getRequestUrl().toString());
-                    }
-
-                    // add image to array
-                    oPerlishArray.add(response.getBitmap());
-                    if (DEBUG) {
-                        Log.v(LOG_TAG + "리스폰스", response.getBitmap().toString());
-                    }
-                    // set image to user Data, if receive completed.
-                    if (image_num == oPerlishArray.size()) {
-
-                        //bitarr = new Bitmap[image_num];
-                        oPerlishArray.toArray(bitarr); // fill the array
-
-                        if (!getIntent().getStringExtra("fragment_id").equals("friend_home")) {
-
-                            user.inputGalImages(bitarr);
-                            for (int i = 0; i < image_num; i++) {
-                                if (DEBUG) {
-                                    Log.v(LOG_TAG + "갤러리", user.getGalImages()[i].toString());
-                                }
-                            }
-                        } else {
-
-                            fuser.inputGalImages(bitarr);
-                            for (int i = 0; i < image_num; i++) {
-                                if (DEBUG) {
-                                    Log.v(LOG_TAG + "갤러리", fuser.getGalImages()[i].toString());
-                                }
-                            }
-                        }
-
-                        Intent intent = new Intent(getApplicationContext(), ReviewActivity.class);
-                        intent.putExtra("fragment_id", getIntent().getStringExtra("fragment_id"));
-                        startActivity(intent);
-                    }
-
-                    if (DEBUG) {
-                        Log.v(LOG_TAG + "imageLoad c", String.valueOf(nownum));
-                    }
-                }
-            }
-
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                if (DEBUG) {
-                    Log.v(LOG_TAG + "imageLoader", "에러");
-                }
-            }
-        });
-
     }
 
     // drawable to bitmap
