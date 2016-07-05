@@ -199,13 +199,13 @@ public class NMapViewerResourceProvider extends NMapResourceProvider implements
             resourceId = R.drawable.ic_pin_01;
         }
         else if(markerId == NMapPOIflagType.CUSTOM_BASE+1){     // 5096 > flag2
-            resourceId = R.drawable.btn_close;
+            resourceId = R.drawable.ic_pin_02;
         }
         else if(markerId == NMapPOIflagType.CUSTOM_BASE+2){     // 5096 > flag3
-            resourceId = R.drawable.btn_green_pressed;
+            resourceId = R.drawable.ic_pin_03;
         }
         else if(markerId == 5099){        // 6096 > 가장 최근에 추가된 데이터
-            resourceId = R.drawable.addfriend;
+            resourceId = R.drawable.ic_pin_01;
         }
 
         else{

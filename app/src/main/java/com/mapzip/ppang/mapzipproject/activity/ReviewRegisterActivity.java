@@ -293,12 +293,12 @@ public class ReviewRegisterActivity extends Activity {
                     case 1:{
 
 
-                        flag_image.setImageResource(R.drawable.addfriend2);
+                        flag_image.setImageResource(R.drawable.ic_pin_02);
                         break;
                     }
                     case 2:{
 
-                        flag_image.setImageResource(R.drawable.addfriend);
+                        flag_image.setImageResource(R.drawable.ic_pin_03);
                         break;
                     }
                 }
@@ -323,39 +323,18 @@ public class ReviewRegisterActivity extends Activity {
             case 1:{
 
 
-                flag_image.setImageResource(R.drawable.addfriend2);
+                flag_image.setImageResource(R.drawable.ic_pin_02);
                 break;
             }
             case 2:{
 
-                flag_image.setImageResource(R.drawable.addfriend);
+                flag_image.setImageResource(R.drawable.ic_pin_03);
                 break;
             }
         }
 
         //
-/*
-        flagspinner.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-                flagIntent = new Intent(getApplicationContext(), MapActivity.class);
-                if(position==0) {
-                    flagIntent.putExtra("flag", 0);
-                }
-                else if(position==1){
-                    flagIntent.putExtra("flag",1);
-                }
-                else{
-                    flagIntent.putExtra("flag",2);
-                }
-
-
-            }
-        });
-
-
-        */
         // get map name
         mapsppinerList = new ArrayList<String>();
         try {
@@ -833,44 +812,8 @@ public class ReviewRegisterActivity extends Activity {
                             }
                         } else {
                             // toast
-                            text_toast.setText("리뷰가 수정되었습니다. " + flagspinner.getSelectedItemPosition());
 
-                            Resources res;
-                            res = getResources();
-                            int mapid = Integer.parseInt(reviewData.getMapid());
-                          //  int pingcount = user.getPingCount(mapid, reviewData.getGu_num());
-                           // user.setReviewCount(mapid, reviewData.getGu_num(), pingcount - 1);
-
-                           /* if((pingcount-1) == 0){ // no reivew check
-                                int checknonzero = 0;
-                                for(int c=1; c<=SystemMain.SeoulGuCount; c++){
-                                    if(user.getPingCount(mapid,c) != 0){
-                                        checknonzero = 1;
-                                        break;
-                                    }
-                                }
-                                if(checknonzero == 0)
-                                    user.setMapforpinNum(mapid,2);
-                            }
-                            */
-                            // map Image reload
-                            user.setMapImage(mapid, res);
-                            user.setMapmetaNum(1);
-                            JSONArray narray = user.getMapforpinArray(mapid);
-
-
-
-
-
-                            // for map activity(pin) refresh
-                            for(int i=0; i<narray.length(); i++){
-                                    narray = removeJsonObjectAtJsonArrayIndex(narray,i);
-
-                            }
-                            user.setMapforpinArray(narray, mapid);
-                            user.setMapRefreshLock(true);
-
-
+                            text_toast.setText("리뷰가 수정되었습니다. ");
 
                             Toast toast = new Toast(getApplicationContext());
                             toast.setDuration(Toast.LENGTH_SHORT);
@@ -878,11 +821,36 @@ public class ReviewRegisterActivity extends Activity {
                             toast.show();
 
 
+
+                            Resources res;
+                            res = getResources();
+                            int mapid = Integer.parseInt(reviewData.getMapid());
+
+                            JSONArray narray = user.getMapforpinArray(mapid);
+                            for(int i=0; i<narray.length(); i++){
+                                if(narray.getJSONObject(i).getString(NetworkUtil.STORE_ID).equals(reviewData.getStore_id()) == true){
+                                    narray.getJSONObject(i).put(NetworkUtil.REVIEW_DATA_FLAG_TYPE,reviewData.getFlag_type());
+                                }
+                            }
+
+
+
+                            user.setMapforpinArray(narray, mapid);
+                            user.setMapRefreshLock(false);
+
+
+
+
                             //
 
                             //
 
                             finish();
+
+
+
+
+
                         }
                     }
                 } catch (JSONException e) {
