@@ -18,7 +18,6 @@ import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.v4.view.ViewPager;
 import android.util.Base64;
@@ -454,18 +453,14 @@ public class ReviewRegisterActivity extends Activity {
     private void doTakePhoto(){
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        String url = "tmp_" + String.valueOf(System.currentTimeMillis()) + ".jpg";
-        mImageCaptureUri = Uri.fromFile(new File(Environment.getExternalStorageDirectory(), url));
 
-        intent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, mImageCaptureUri);
-
-        startActivityForResult(intent,PICK_FROM_CAMERA);
+        startActivityForResult(intent,PICK_FROM_ALBUM);
 
     }
 
     private void doTakeAlbumAction(){
         Intent intent =new Intent(Intent.ACTION_PICK);
-        intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
+     //   intent.setType(MediaStore.Images.Media.CONTENT_TYPE);
         startActivityForResult(intent,PICK_FROM_ALBUM);
     }
 
@@ -476,7 +471,7 @@ public class ReviewRegisterActivity extends Activity {
 
     //  onResult - findImageonClick
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
 
 
         if(resultCode != RESULT_OK)
@@ -492,7 +487,7 @@ public class ReviewRegisterActivity extends Activity {
                     //String name_Str = getImageNameToUri(data.getData());
 
                     //이미지 데이터를 리사이징된 비트맵으로 받아온다.
-                    Uri image_uri = data.getData();
+                    Uri image_uri = intent.getData();
 
                     if (oncreatelock == false || state == 1) { // 사진 여러장 일 때 or modify
                         oPerlishArray.clear();
@@ -555,7 +550,7 @@ public class ReviewRegisterActivity extends Activity {
             }
             case PICK_FROM_CAMERA: {
 
-                Intent intent = new Intent("com.android.camera.action.CROP");
+              /*  Intent intent = new Intent("com.android.camera.action.CROP");
                 intent.setDataAndType(mImageCaptureUri, "image/*");
 
                 intent.putExtra("outputX", 90);
@@ -565,6 +560,19 @@ public class ReviewRegisterActivity extends Activity {
                 intent.putExtra("scale", true);
                 intent.putExtra("return-data", true);
                 startActivityForResult(intent, CROP_FROM_CAMERA);
+*/
+
+
+                Bitmap mImageBitmap;
+
+                Bundle extras = intent.getExtras();
+                mImageBitmap = (Bitmap)extras.get("data");
+             //   mImageView.setImageBitmap(mImageBitmap);
+
+                afterimagenum++;
+                serverchoice = 2;
+
+
 
                 break;
             }
@@ -573,7 +581,7 @@ public class ReviewRegisterActivity extends Activity {
                 // 크롭이 된 이후의 이미지를 넘겨 받습니다.
                 // 이미지뷰에 이미지를 보여준다거나 부가적인 작업 이후에
                 // 임시 파일을 삭제합니다.
-                final Bundle extras = data.getExtras();
+                final Bundle extras = intent.getExtras();
 
                 if (extras != null) {
                     Bitmap photo = extras.getParcelable("data");
@@ -1311,7 +1319,9 @@ public class ReviewRegisterActivity extends Activity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                doTakePhoto();
+                Toast.makeText(getApplicationContext(),"사진찍어줘",Toast.LENGTH_LONG).show();
+              //
+                  doTakePhoto();
             }
         };
         DialogInterface.OnClickListener albumListener = new DialogInterface.OnClickListener()
@@ -1319,7 +1329,9 @@ public class ReviewRegisterActivity extends Activity {
 
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                doTakeAlbumAction();
+                Toast.makeText(getApplicationContext(),"앨범",Toast.LENGTH_LONG).show();
+
+                 doTakeAlbumAction();
             }
         };
         DialogInterface.OnClickListener cancelListener = new DialogInterface.OnClickListener()
