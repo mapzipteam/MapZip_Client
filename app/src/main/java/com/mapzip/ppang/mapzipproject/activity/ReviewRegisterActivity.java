@@ -480,7 +480,7 @@ public class ReviewRegisterActivity extends Activity {
         switch (requestCode) {
 
 
-            case PICK_FROM_ALBUM:
+            case REQ_CODE_SELECT_IMAGE:
             {
                 try {
                     //Uri에서 이미지 이름을 얻어온다.
@@ -1314,6 +1314,12 @@ public class ReviewRegisterActivity extends Activity {
             return;
         }
 
+        Intent intent = new Intent(Intent.ACTION_PICK);
+        intent.setType(android.provider.MediaStore.Images.Media.CONTENT_TYPE);
+        intent.setData(android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+        startActivityForResult(intent, REQ_CODE_SELECT_IMAGE);
+
+/*
         DialogInterface.OnClickListener cameraListener = new DialogInterface.OnClickListener()
         {
 
@@ -1350,7 +1356,7 @@ public class ReviewRegisterActivity extends Activity {
                 .setNeutralButton("앨범선택",albumListener)
                 .setNegativeButton("취소",cancelListener)
                 .show();
-
+*/
     }
 
     // 사진제거 버튼
