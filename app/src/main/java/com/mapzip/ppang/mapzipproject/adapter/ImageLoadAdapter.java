@@ -39,6 +39,11 @@ public class ImageLoadAdapter extends PagerAdapter {
         this.mTotalCount = urlArr.length;
     }
 
+    public ImageLoadAdapter(Context context){ // no image test
+        this.mContext = context;
+        this.mTotalCount = 0;
+    }
+
     // getCount()의 return 값에 따라 page 갯수가 결정됨.
     @Override
     public int getCount() {

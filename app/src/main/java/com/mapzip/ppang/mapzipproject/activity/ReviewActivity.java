@@ -21,6 +21,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.mapzip.ppang.mapzipproject.R;
 import com.mapzip.ppang.mapzipproject.adapter.ImageLoadAdapter;
 import com.mapzip.ppang.mapzipproject.adapter.ImageLoadUtil;
@@ -170,7 +171,10 @@ public class ReviewActivity extends Activity {
         viewPager = (ViewPager) findViewById(R.id.pager_review);
 
         // set Imageadapter
-        String[] urlArr;
+        String[] urlArr = null;
+        //imageLoadAdapter = new ImageLoadAdapter(getApplicationContext());
+        //viewPager.setAdapter(imageLoadAdapter);
+        //Log.v(TAG,String.valueOf(viewPager.getHeight()) + String.valueOf(viewPager.getWidth()));
         if(userlock == false)
             urlArr = ImageLoadUtil.getImageURLArr(user.getUserID(),reviewData.getStore_id(),reviewData.getImage_num());
         else

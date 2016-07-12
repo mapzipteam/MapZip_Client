@@ -893,7 +893,6 @@ public class ReviewRegisterActivity extends Activity {
         Bitmap bitmap_resized = BitmapFactory.decodeFile(imagePath, options);
 
         return bitmap_resized;
-
     }
 
     public String getPathFromUri(Uri uri) {
