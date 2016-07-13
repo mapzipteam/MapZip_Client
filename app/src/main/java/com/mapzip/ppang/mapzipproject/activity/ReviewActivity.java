@@ -7,6 +7,7 @@ import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -172,15 +173,14 @@ public class ReviewActivity extends Activity {
 
         // set Imageadapter
         String[] urlArr = null;
-        //imageLoadAdapter = new ImageLoadAdapter(getApplicationContext());
-        //viewPager.setAdapter(imageLoadAdapter);
-        //Log.v(TAG,String.valueOf(viewPager.getHeight()) + String.valueOf(viewPager.getWidth()));
         if(userlock == false)
             urlArr = ImageLoadUtil.getImageURLArr(user.getUserID(),reviewData.getStore_id(),reviewData.getImage_num());
         else
             urlArr = ImageLoadUtil.getImageURLArr(fuser.getUserID(),reviewData.getStore_id(),reviewData.getImage_num());
 
-        imageLoadAdapter = new ImageLoadAdapter(getApplicationContext(), urlArr);
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        imageLoadAdapter = new ImageLoadAdapter(getApplicationContext(), urlArr, displayMetrics.widthPixels/2, displayMetrics.heightPixels/2);
         viewPager.setAdapter(imageLoadAdapter);
         imageLoadAdapter.notifyDataSetChanged();
     }

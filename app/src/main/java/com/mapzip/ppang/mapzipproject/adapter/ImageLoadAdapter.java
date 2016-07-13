@@ -26,9 +26,7 @@ public class ImageLoadAdapter extends PagerAdapter {
 
     // width와 height 입력시 지정한 크기만큼만 이미지 로딩.
     public ImageLoadAdapter(Context context, String[] urlArr, int width, int height){
-        this.mContext = context;
-        this.mImageUrlArr = urlArr;
-        this.mTotalCount = urlArr.length;
+        this(context, urlArr);
         this.mWidth = width;
         this.mHeight = height;
     }
@@ -71,16 +69,16 @@ public class ImageLoadAdapter extends PagerAdapter {
         }else {
             if (mWidth == 0 || mHeight == 0)
                 Glide.with(mContext).load(mImageUrlArr[position])
-                        .placeholder(R.drawable.noimage)
+                        .placeholder(R.drawable.load)
                         .thumbnail(0.1f)
-                        .error(R.drawable.noimage)
+                        .error(R.drawable.loadfail)
                         .into(imageView);
             else
                 Glide.with(mContext).load(mImageUrlArr[position])
                         .override(mWidth, mHeight) // image 사이즈 조절
-                        .placeholder(R.drawable.noimage)
+                        .placeholder(R.drawable.load)
                         .thumbnail(0.1f)
-                        .error(R.drawable.noimage)
+                        .error(R.drawable.loadfail)
                         .into(imageView);
         }
 
